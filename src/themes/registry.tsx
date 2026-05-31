@@ -3,6 +3,9 @@ import ElegantGold from './ElegantGold';
 import DarkPremium from './DarkPremium';
 import RealisticRomance from './RealisticRomance';
 
+import MinimalistMonochrome from './MinimalistMonochrome';
+import FloralBlossom from './FloralBlossom';
+
 export type ThemeCategory = 'Elegant' | 'Dark' | 'Minimalist' | 'Islamic' | 'Floral';
 
 export interface ThemeMeta {
@@ -15,6 +18,22 @@ export interface ThemeMeta {
 }
 
 export const THEME_REGISTRY: ThemeMeta[] = [
+  {
+    id: 'floral-blossom',
+    name: 'Floral Blossom',
+    category: 'Floral',
+    price: 180000,
+    thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop',
+    component: FloralBlossom
+  },
+  {
+    id: 'minimalist-monochrome',
+    name: 'Monochrome Minimalist',
+    category: 'Minimalist',
+    price: 180000,
+    thumbnail: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=800&auto=format&fit=crop',
+    component: MinimalistMonochrome
+  },
   {
     id: 'realistic-romance',
     name: 'Realistic Romance',

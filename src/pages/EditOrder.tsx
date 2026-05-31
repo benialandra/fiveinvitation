@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 export default function EditOrder() {
   const { orderCode } = useParams();
   const navigate = useNavigate();
-  const { themeMode } = useOutletContext<{ lang: 'en' | 'id', themeMode: string }>();
+  const { lang, themeMode } = useOutletContext<{ lang: 'en' | 'id', themeMode: string }>();
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -101,14 +101,15 @@ export default function EditOrder() {
       });
 
       if (response.ok) {
-        toast.success('Data berhasil disimpan!');
+        toast.success(lang === 'id' ? 'Data berhasil disimpan!' : 'Data saved successfully!');
         navigate(`/track/${orderCode}`);
       } else {
-        toast.error('Gagal menyimpan data.');
+        const result = await response.json().catch(() => ({}));
+        toast.error(`${lang === 'id' ? 'Gagal menyimpan data' : 'Failed to save data'}: ${result.error || 'Server Error'}`);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      toast.error('Terjadi kesalahan.');
+      toast.error(`${lang === 'id' ? 'Terjadi kesalahan' : 'An error occurred'}: ${err.message}`);
     } finally {
       setSaving(false);
     }
@@ -160,25 +161,25 @@ export default function EditOrder() {
         className="flex items-center text-sm text-gray-500 hover:text-gray-900 dark:text-white/50 dark:hover:text-white transition-colors mb-8"
       >
         <ArrowLeft size={16} className="mr-2" />
-        Kembali ke Status
+        {lang === 'id' ? 'Kembali ke Status' : 'Back to Status'}
       </button>
 
       <div className="mb-10">
         <h1 className="font-serif text-3xl md:text-4xl text-gray-900 dark:text-white mb-3">
-          Lengkapi Data Undangan
+          {lang === 'id' ? 'Lengkapi Data Undangan' : 'Complete Invitation Data'}
         </h1>
         <p className="text-gray-500 dark:text-white/60">
-          Silakan lengkapi informasi detail untuk undangan pernikahan Anda (Kode: {orderCode}).
+          {lang === 'id' ? 'Silakan lengkapi informasi detail untuk undangan pernikahan Anda' : 'Please complete the detailed information for your wedding invitation'} (Kode: {orderCode}).
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* URL Undangan */}
         <div className={`p-6 md:p-8 rounded-2xl ${themeMode === 'dark' ? 'bg-white/5 ring-1 ring-white/10' : 'bg-white shadow-sm ring-1 ring-gray-100'}`}>
-          <h2 className="text-xl font-serif text-gray-900 dark:text-white mb-6 border-b border-gray-100 dark:border-white/10 pb-4">URL Undangan</h2>
+          <h2 className="text-xl font-serif text-gray-900 dark:text-white mb-6 border-b border-gray-100 dark:border-white/10 pb-4">{lang === 'id' ? 'URL Undangan' : 'Invitation URL'}</h2>
           <div className="grid grid-cols-1 gap-6">
             <div>
-              <label className={labelClass}>Slug Undangan (URL)</label>
+              <label className={labelClass}>{lang === 'id' ? 'Slug Undangan (URL)' : 'Invitation Slug (URL)'}</label>
               <div className="flex items-center">
                 <span className="px-4 py-3 rounded-l-xl border-y border-l bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-white/50 border-gray-200 dark:border-white/20">
                   yoursite.com/invitation/
@@ -191,56 +192,56 @@ export default function EditOrder() {
                   className={`${inputClass} rounded-l-none border-l-0 opacity-70 cursor-not-allowed`}
                 />
               </div>
-              <p className="mt-2 text-xs text-gray-500 dark:text-white/40">URL ini otomatis dibuat dan tidak dapat diubah lagi.</p>
+              <p className="mt-2 text-xs text-gray-500 dark:text-white/40">{lang === 'id' ? 'URL ini otomatis dibuat dan tidak dapat diubah lagi.' : 'This URL is auto-generated and cannot be changed.'}</p>
             </div>
           </div>
         </div>
 
         {/* Mempelai */}
         <div className={`p-6 md:p-8 rounded-2xl ${themeMode === 'dark' ? 'bg-white/5 ring-1 ring-white/10' : 'bg-white shadow-sm ring-1 ring-gray-100'}`}>
-          <h2 className="text-xl font-serif text-gray-900 dark:text-white mb-6 border-b border-gray-100 dark:border-white/10 pb-4">Data Mempelai</h2>
+          <h2 className="text-xl font-serif text-gray-900 dark:text-white mb-6 border-b border-gray-100 dark:border-white/10 pb-4">{lang === 'id' ? 'Data Mempelai' : 'Couple Data'}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className={labelClass}>Nama Mempelai Pria</label>
+              <label className={labelClass}>{lang === 'id' ? 'Nama Mempelai Pria' : 'Groom Name'}</label>
               <input type="text" name="groom_name" value={formData.groom_name} onChange={handleChange} className={inputClass} required />
             </div>
             <div>
-              <label className={labelClass}>Nama Orang Tua Mempelai Pria</label>
-              <input type="text" name="groom_parents" value={formData.groom_parents} onChange={handleChange} placeholder="Putra dari Bapak ... & Ibu ..." className={inputClass} />
+              <label className={labelClass}>{lang === 'id' ? 'Nama Orang Tua Mempelai Pria' : 'Groom Parents Name'}</label>
+              <input type="text" name="groom_parents" value={formData.groom_parents} onChange={handleChange} placeholder={lang === 'id' ? "Putra dari Bapak ... & Ibu ..." : "Son of Mr. ... & Mrs. ..."} className={inputClass} />
             </div>
             <div>
-              <label className={labelClass}>Nama Mempelai Wanita</label>
+              <label className={labelClass}>{lang === 'id' ? 'Nama Mempelai Wanita' : 'Bride Name'}</label>
               <input type="text" name="bride_name" value={formData.bride_name} onChange={handleChange} className={inputClass} required />
             </div>
             <div>
-              <label className={labelClass}>Nama Orang Tua Mempelai Wanita</label>
-              <input type="text" name="bride_parents" value={formData.bride_parents} onChange={handleChange} placeholder="Putri dari Bapak ... & Ibu ..." className={inputClass} />
+              <label className={labelClass}>{lang === 'id' ? 'Nama Orang Tua Mempelai Wanita' : 'Bride Parents Name'}</label>
+              <input type="text" name="bride_parents" value={formData.bride_parents} onChange={handleChange} placeholder={lang === 'id' ? "Putri dari Bapak ... & Ibu ..." : "Daughter of Mr. ... & Mrs. ..."} className={inputClass} />
             </div>
           </div>
         </div>
 
         {/* Acara */}
         <div className={`p-6 md:p-8 rounded-2xl ${themeMode === 'dark' ? 'bg-white/5 ring-1 ring-white/10' : 'bg-white shadow-sm ring-1 ring-gray-100'}`}>
-          <h2 className="text-xl font-serif text-gray-900 dark:text-white mb-6 border-b border-gray-100 dark:border-white/10 pb-4">Detail Acara</h2>
+          <h2 className="text-xl font-serif text-gray-900 dark:text-white mb-6 border-b border-gray-100 dark:border-white/10 pb-4">{lang === 'id' ? 'Detail Acara' : 'Event Details'}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className={labelClass}>Waktu Akad / Pemberkatan</label>
+              <label className={labelClass}>{lang === 'id' ? 'Waktu Akad / Pemberkatan' : 'Matrimony Time'}</label>
               <div className="relative">
                 <input type="datetime-local" name="akad_date" value={formData.akad_date} onChange={handleChange} min={new Date().toISOString().slice(0, 16)} className={`${inputClass} cursor-pointer shadow-sm`} />
               </div>
             </div>
             <div>
-              <label className={labelClass}>Waktu Resepsi</label>
+              <label className={labelClass}>{lang === 'id' ? 'Waktu Resepsi' : 'Reception Time'}</label>
               <div className="relative">
                 <input type="datetime-local" name="resepsi_date" value={formData.resepsi_date} onChange={handleChange} min={new Date().toISOString().slice(0, 16)} className={`${inputClass} cursor-pointer shadow-sm`} />
               </div>
             </div>
             <div className="md:col-span-2">
-              <label className={labelClass}>Nama & Alamat Lokasi</label>
-              <textarea name="location_name" value={formData.location_name} onChange={handleChange} className={`${inputClass} min-h-[100px]`} placeholder="Contoh: Gedung Serbaguna ABC, Jl. Raya No. 123..." />
+              <label className={labelClass}>{lang === 'id' ? 'Nama & Alamat Lokasi' : 'Venue Name & Address'}</label>
+              <textarea name="location_name" value={formData.location_name} onChange={handleChange} className={`${inputClass} min-h-[100px]`} placeholder={lang === 'id' ? "Contoh: Gedung Serbaguna ABC, Jl. Raya No. 123..." : "E.g. Grand Ballroom, 123 Main St..."} />
             </div>
             <div className="md:col-span-2">
-              <label className={labelClass}>Link Google Maps</label>
+              <label className={labelClass}>{lang === 'id' ? 'Link Google Maps' : 'Google Maps Link'}</label>
               <div className="flex gap-3">
                 <input type="url" name="maps_link" value={formData.maps_link} onChange={handleChange} className={inputClass} placeholder="https://maps.app.goo.gl/..." />
                 <button
@@ -249,7 +250,7 @@ export default function EditOrder() {
                   className="px-4 py-3 bg-gray-100 dark:bg-white/10 text-gray-700 dark:text-white rounded-xl hover:bg-gray-200 dark:hover:bg-white/20 transition-colors whitespace-nowrap flex items-center font-medium shadow-sm"
                 >
                   <MapPin size={18} className="mr-2 text-[#C5A059]" />
-                  Cari Lokasi Saat Ini
+                  {lang === 'id' ? 'Cari Lokasi Saat Ini' : 'Find Current Location'}
                 </button>
               </div>
             </div>
@@ -258,17 +259,17 @@ export default function EditOrder() {
 
         {/* Tambahan & Wallpaper */}
         <div className={`p-6 md:p-8 rounded-2xl ${themeMode === 'dark' ? 'bg-white/5 ring-1 ring-white/10' : 'bg-white shadow-sm ring-1 ring-gray-100'}`}>
-          <h2 className="text-xl font-serif text-gray-900 dark:text-white mb-6 border-b border-gray-100 dark:border-white/10 pb-4">Foto & Wallpaper Tema</h2>
+          <h2 className="text-xl font-serif text-gray-900 dark:text-white mb-6 border-b border-gray-100 dark:border-white/10 pb-4">{lang === 'id' ? 'Foto & Wallpaper Tema' : 'Photos & Theme Wallpaper'}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div>
-              <label className={labelClass}>Foto Sampul Undangan (Awal Masuk / Cover)</label>
+              <label className={labelClass}>{lang === 'id' ? 'Foto Sampul Undangan (Awal Masuk / Cover)' : 'Invitation Cover Photo'}</label>
               {formData.cover_image && !coverFile && (
                 <img src={formData.cover_image} className="w-full h-32 object-cover rounded-xl mb-3 border border-gray-200 dark:border-white/10" alt="Cover" />
               )}
               <input type="file" accept="image/*" onChange={e => handleFileChange(e, 'cover')} className={`${inputClass} !py-2`} />
             </div>
             <div>
-              <label className={labelClass}>Wallpaper Tema (Background Hero Section)</label>
+              <label className={labelClass}>{lang === 'id' ? 'Wallpaper Tema (Background Hero Section)' : 'Theme Wallpaper'}</label>
               {formData.hero_image && !heroFile && (
                 <img src={formData.hero_image} className="w-full h-32 object-cover rounded-xl mb-3 border border-gray-200 dark:border-white/10" alt="Wallpaper" />
               )}
@@ -276,16 +277,16 @@ export default function EditOrder() {
             </div>
           </div>
 
-          <h2 className="text-xl font-serif text-gray-900 dark:text-white mb-6 border-b border-gray-100 dark:border-white/10 pb-4">Cerita & Musik</h2>
+          <h2 className="text-xl font-serif text-gray-900 dark:text-white mb-6 border-b border-gray-100 dark:border-white/10 pb-4">{lang === 'id' ? 'Cerita & Musik' : 'Story & Music'}</h2>
           <div className="grid grid-cols-1 gap-6">
             <div>
-              <label className={labelClass}>Kisah Cinta (Opsional)</label>
-              <textarea name="story" value={formData.story} onChange={handleChange} className={`${inputClass} min-h-[120px]`} placeholder="Ceritakan singkat perjalanan cinta Anda..." />
+              <label className={labelClass}>{lang === 'id' ? 'Kisah Cinta (Opsional)' : 'Love Story (Optional)'}</label>
+              <textarea name="story" value={formData.story} onChange={handleChange} className={`${inputClass} min-h-[120px]`} placeholder={lang === 'id' ? "Ceritakan singkat perjalanan cinta Anda..." : "Tell your love story briefly..."} />
             </div>
             <div>
-              <label className={labelClass}>Pilih Musik Latar (Mockup)</label>
+              <label className={labelClass}>{lang === 'id' ? 'Pilih Musik Latar (Mockup)' : 'Background Music (Mockup)'}</label>
               <select name="music_url" value={formData.music_url} onChange={(e) => setFormData(prev => ({...prev, music_url: e.target.value}))} className={`${inputClass} cursor-pointer appearance-none`}>
-                <option value="">-- Tidak Memakai Musik --</option>
+                <option value="">{lang === 'id' ? '-- Tidak Memakai Musik --' : '-- No Music --'}</option>
                 <option value="romantic_1.mp3">A Thousand Years - Instrumental</option>
                 <option value="romantic_2.mp3">Perfect - Cover Acoustic</option>
                 <option value="romantic_3.mp3">Canon in D - Piano</option>
@@ -309,7 +310,7 @@ export default function EditOrder() {
             ) : (
               <>
                 <Save size={20} className="mr-2" />
-                Simpan Data Undangan
+                {lang === 'id' ? 'Simpan Data Undangan' : 'Save Invitation Data'}
               </>
             )}
           </button>

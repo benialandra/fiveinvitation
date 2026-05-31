@@ -10,13 +10,13 @@ export default function Track() {
   const navigate = useNavigate();
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const { themeMode } = useOutletContext<{ lang: 'en' | 'id', themeMode: string }>();
+  const { lang, themeMode } = useOutletContext<{ lang: 'en' | 'id', themeMode: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     const status = searchParams.get('status');
-    if (status === 'success') toast.success('Pembayaran berhasil!');
-    if (status === 'error') toast.error('Pembayaran gagal atau dibatalkan.');
+    if (status === 'success') toast.success(lang === 'id' ? 'Pembayaran berhasil!' : 'Payment successful!');
+    if (status === 'error') toast.error(lang === 'id' ? 'Pembayaran gagal atau dibatalkan.' : 'Payment failed or cancelled.');
     
     // Clean up to prevent duplicate toasts on refresh
     if (status) {
@@ -76,8 +76,8 @@ export default function Track() {
           <div className="w-16 h-16 rounded-full bg-[#C5A059]/10 text-[#C5A059] flex items-center justify-center mx-auto mb-6">
              <Search size={28} />
           </div>
-          <h1 className="font-serif text-3xl font-light mb-2 text-gray-900 dark:text-white">Lacak Pesanan</h1>
-          <p className="text-gray-500 dark:text-white/50 text-sm mb-8 leading-relaxed">Masukkan kode unik Invoice Anda (Format: INV-XXXXX) untuk melihat detail dan status undangan Anda.</p>
+          <h1 className="font-serif text-3xl font-light mb-2 text-gray-900 dark:text-white">{lang === 'id' ? 'Lacak Pesanan' : 'Track Order'}</h1>
+          <p className="text-gray-500 dark:text-white/50 text-sm mb-8 leading-relaxed">{lang === 'id' ? 'Masukkan kode unik Invoice Anda (Format: INV-XXXXX) untuk melihat detail dan status undangan Anda.' : 'Enter your unique Invoice code (Format: INV-XXXXX) to view your invitation details and status.'}</p>
           <div className="relative group">
             <input 
               type="text" 
@@ -113,12 +113,12 @@ export default function Track() {
       <Loader2 className="w-10 h-10 animate-spin text-[#C5A059]" />
     </div>
   );
-  if (!order) return <div className="p-12 text-center text-red-500">Pesanan tidak ditemukan.</div>;
+  if (!order) return <div className="p-12 text-center text-red-500">{lang === 'id' ? 'Pesanan tidak ditemukan.' : 'Order not found.'}</div>;
 
   const themeName = THEME_REGISTRY.find(t => t.id === order.theme_id)?.name || 'Unknown Theme';
 
   return (
-    <div className="flex-1 w-full py-12 md:py-24 animate-in fade-in duration-700">
+    <div className="flex-1 w-full py-12 md:py-24 animate-in fade-in bg-transparent duration-700">
       <div className="max-w-2xl mx-auto px-6">
         <div className={`rounded-[32px] p-8 md:p-12 border ${themeMode === 'dark' ? 'border-white/10 glass-card bg-[#111]/80' : 'border-gray-200 bg-white shadow-2xl shadow-black/5'}`}>
           
@@ -135,10 +135,10 @@ export default function Track() {
             )}
 
             <h1 className="font-serif text-3xl text-gray-900 dark:text-white mb-2">
-              {order.status === 'PAID' ? 'Pembayaran Berhasil' : 'Menunggu Pembayaran'}
+              {order.status === 'PAID' ? (lang === 'id' ? 'Pembayaran Berhasil' : 'Payment Successful') : (lang === 'id' ? 'Menunggu Pembayaran' : 'Awaiting Payment')}
             </h1>
             <p className="text-gray-500 dark:text-white/50 mb-6 text-sm flex items-center gap-2">
-              Invoice Code: <span className="font-mono bg-gray-100 dark:bg-white/10 px-3 py-1 rounded-lg text-gray-900 dark:text-white">{order.unique_code}</span>
+              {lang === 'id' ? 'Kode Invoice:' : 'Invoice Code:'} <span className="font-mono bg-gray-100 dark:bg-white/10 px-3 py-1 rounded-lg text-gray-900 dark:text-white">{order.unique_code}</span>
             </p>
             
             <button 
@@ -147,21 +147,21 @@ export default function Track() {
               className="mb-10 px-4 py-2 bg-gray-100 dark:bg-white/10 text-gray-700 dark:text-white/80 rounded-full text-sm font-medium flex items-center gap-2 hover:bg-gray-200 dark:hover:bg-white/20 transition-colors"
             >
               <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
-              Refresh Status
+              {lang === 'id' ? 'Refresh Status' : 'Refresh Status'}
             </button>
           </div>
 
           <div className={`w-full space-y-5 border-t pt-8 ${themeMode === 'dark' ? 'border-white/10' : 'border-gray-100'}`}>
             <div className="flex justify-between items-center text-sm">
-              <span className="text-gray-500 dark:text-white/50">Mempelai</span>
+              <span className="text-gray-500 dark:text-white/50">{lang === 'id' ? 'Mempelai' : 'The Couple'}</span>
               <span className="font-semibold text-gray-900 dark:text-white text-base">{order.groom_name} <span className="text-[#C5A059] mx-1">&</span> {order.bride_name}</span>
             </div>
             <div className="flex justify-between items-center text-sm">
-              <span className="text-gray-500 dark:text-white/50">Tema Dipilih</span>
+              <span className="text-gray-500 dark:text-white/50">{lang === 'id' ? 'Tema Dipilih' : 'Chosen Theme'}</span>
               <span className="font-medium text-gray-900 dark:text-white">{themeName}</span>
             </div>
             <div className="flex justify-between items-center text-sm">
-              <span className="text-gray-500 dark:text-white/50">URL Undangan</span>
+              <span className="text-gray-500 dark:text-white/50">{lang === 'id' ? 'URL Undangan' : 'Invitation URL'}</span>
               <span className="font-medium text-[#C5A059] bg-[#C5A059]/10 px-3 py-1.5 rounded-lg border border-[#C5A059]/20">/invitation/{order.slug}</span>
             </div>
           </div>
@@ -173,7 +173,7 @@ export default function Track() {
                   to={`/edit-order/${order.unique_code}`}
                   className="w-full h-14 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl flex items-center justify-center gap-2 hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors font-semibold uppercase tracking-widest text-sm shadow-xl"
                   >
-                  Lengkapi Data Undangan
+                  {lang === 'id' ? 'Lengkapi Data Undangan' : 'Complete Invitation Data'}
                 </Link>
                 <a 
                   href={`/invitation/${order.slug}`}
@@ -182,21 +182,21 @@ export default function Track() {
                   className="w-full h-14 gold-gradient text-black rounded-2xl flex items-center justify-center gap-2 hover:opacity-90 transition-opacity font-semibold uppercase tracking-widest text-sm shadow-xl shadow-[#C5A059]/20"
                   >
                   <Eye className="w-5 h-5"/>
-                  Preview Undangan Publik
+                  {lang === 'id' ? 'Preview Undangan Publik' : 'Preview Public Invitation'}
                 </a>
               </>
             ) : (
                <div className="p-5 bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-500 text-sm rounded-2xl flex items-start gap-4 border border-amber-200 dark:border-amber-500/20 leading-relaxed">
                  <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
                  <div>
-                    <span className="font-semibold block mb-1">Menunggu Pelunasan</span>
-                    Silahkan selesaikan pembayaran invoice melalui email yang telah kami kirimkan untuk mengaktifkan URL undangan Anda.
+                    <span className="font-semibold block mb-1">{lang === 'id' ? 'Menunggu Pelunasan' : 'Awaiting Payment'}</span>
+                    {lang === 'id' ? 'Silahkan selesaikan pembayaran invoice melalui email yang telah kami kirimkan untuk mengaktifkan URL undangan Anda.' : 'Please complete the invoice payment via the email we sent to activate your invitation URL.'}
                  </div>
                </div>
             )}
             
             <Link to="/" className="w-full h-14 mt-4 rounded-2xl flex items-center justify-center gap-2 text-gray-500 dark:text-white/50 hover:text-gray-900 dark:hover:text-white transition-colors font-medium text-sm">
-              Kembali ke Beranda
+              {lang === 'id' ? 'Kembali ke Beranda' : 'Back to Home'}
             </Link>
           </div>
         </div>

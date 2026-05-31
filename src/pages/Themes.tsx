@@ -33,7 +33,12 @@ export default function Themes() {
   }, []);
 
   const filteredThemes = useMemo(() => {
-    const baseThemes = dbThemes.length > 0 ? dbThemes : [...THEME_REGISTRY, ...uploadedThemes];
+    const baseThemes = (() => {
+      const map = new Map();
+      [...THEME_REGISTRY, ...uploadedThemes].forEach(t => map.set(t.id, t));
+      dbThemes.forEach(t => map.set(t.id, t));
+      return Array.from(map.values());
+    })();
     return baseThemes.filter(theme => {
       const matchSearch = theme.name.toLowerCase().includes(search.toLowerCase());
       const matchCategory = category === 'All' || theme.category === category;
@@ -48,7 +53,7 @@ export default function Themes() {
   const categories: (ThemeCategory | 'All')[] = ['All', 'Elegant', 'Dark', 'Minimalist', 'Islamic', 'Floral'];
 
   return (
-    <div className="w-full min-h-screen bg-[#fafafa] dark:bg-[#0A0A0B] py-16 transition-colors duration-300">
+    <div className="w-full min-h-screen bg-transparent py-16 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6">
         <div className="mb-12">
           <h1 className="text-4xl md:text-5xl font-semibold text-gray-900 dark:text-white tracking-tight font-serif mb-4">
@@ -151,7 +156,7 @@ export default function Themes() {
                         to={`/order/${theme.id}`}
                         className="px-5 py-2 bg-gray-900 dark:bg-white text-white dark:text-black rounded-full text-xs font-bold uppercase tracking-wider hover:bg-[#C5A059] dark:hover:bg-gray-200 transition-colors"
                       >
-                        {lang === 'id' ? 'Beli' : 'Buy'}
+                        {lang === 'id' ? 'Pesan' : 'Order'}
                       </Link>
                     </div>
                   </div>

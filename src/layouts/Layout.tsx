@@ -81,9 +81,13 @@ export default function Layout() {
         <div className="flex items-center gap-4 w-[160px] justify-end">
           <button 
              onClick={() => setLang(prev => prev === 'en' ? 'id' : 'en')} 
-             className="text-[10px] font-bold uppercase tracking-widest w-8 h-8 rounded-full flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+             className="text-[10px] font-bold uppercase tracking-widest w-12 h-8 rounded-full flex items-center justify-center gap-1.5 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
           >
-            {lang.toUpperCase()}
+            {lang === 'id' ? (
+               <><img src="https://flagcdn.com/w20/id.png" alt="ID" className="w-4 h-3 object-cover rounded-sm" /> ID</>
+            ) : (
+               <><img src="https://flagcdn.com/w20/gb.png" alt="EN" className="w-4 h-3 object-cover rounded-sm" /> EN</>
+            )}
           </button>
           <button 
              onClick={toggleTheme} 

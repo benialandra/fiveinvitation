@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
 import { THEME_REGISTRY } from '../themes/registry';
 import { generateOrderCode } from '../lib/utils';
 import { ChevronRight, ArrowLeft, Loader2 } from 'lucide-react';
@@ -20,6 +20,7 @@ const useScript = (url: string) => {
 
 export default function Order() {
   const { themeId } = useParams();
+  const { lang, themeMode } = useOutletContext<{ lang: 'en' | 'id', themeMode: string }>();
   const [theme, setTheme] = useState(THEME_REGISTRY.find(t => t.id === themeId));
   const navigate = useNavigate();
   
@@ -48,7 +49,7 @@ export default function Order() {
     slug: ''
   });
 
-  if (!theme) return <div className="p-12 text-center text-gray-500">Tema tidak ditemukan.</div>;
+  if (!theme) return <div className="p-12 text-center text-gray-500">{lang === 'id' ? 'Tema tidak ditemukan.' : 'Theme not found.'}</div>;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,14 +86,14 @@ export default function Order() {
       const payload = await res.json();
       
       if (!res.ok) {
-        toast.error(payload.error || "Gagal memproses pesanan.");
-        setErrorMessage(payload.error || "Gagal memproses pesanan. Silakan periksa kembali data Anda.");
+        toast.error(payload.error || (lang === 'id' ? "Gagal memproses pesanan." : "Failed to process order."));
+        setErrorMessage(payload.error || (lang === 'id' ? "Gagal memproses pesanan. Silakan periksa kembali data Anda." : "Failed to process order. Please check your data."));
         setLoading(false);
         return;
       }
       
       const { token } = payload;
-      toast.success('Pesanan berhasil dibuat! Menunggu pembayaran...');
+      toast.success(lang === 'id' ? 'Pesanan berhasil dibuat! Menunggu pembayaran...' : 'Order created! Waiting for payment...');
       
       // 2. We now rely completely on the backend to store data into Google Sheets
       // instead of using Supabase here.
@@ -116,23 +117,23 @@ export default function Order() {
           }
         });
       } else {
-        toast.error("Gagal memuat sistem pembayaran");
-        setErrorMessage("Midtrans script not loaded");
+        toast.error(lang === 'id' ? "Gagal memuat sistem pembayaran" : "Failed to load payment system");
+        setErrorMessage(lang === 'id' ? "Gagal memuat sistem pembayaran" : "Payment system not loaded");
       }
     } catch (err: any) {
       console.error(err);
-      toast.error(err.message || "Terjadi kesalahan. Pastikan backend berjalan.");
-      setErrorMessage("Terjadi kesalahan. Pastikan backend berjalan.");
+      toast.error(err.message || (lang === 'id' ? "Terjadi kesalahan. Pastikan backend berjalan." : "An error occurred."));
+      setErrorMessage(lang === 'id' ? "Terjadi kesalahan. Pastikan backend berjalan." : "An error occurred.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#fafafa] dark:bg-transparent py-12">
+    <div className="w-full min-h-screen bg-transparent py-12">
       <div className="max-w-3xl mx-auto px-6">
         <button onClick={() => navigate(-1)} className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white mb-8 transition-colors">
-          <ArrowLeft className="w-4 h-4" /> Kembali
+          <ArrowLeft className="w-4 h-4" /> {lang === 'id' ? 'Kembali' : 'Back'}
         </button>
 
         {errorMessage && (
@@ -147,24 +148,24 @@ export default function Order() {
         <div className="bg-white dark:bg-[#111] rounded-3xl p-8 border border-black/5 dark:border-white/10 shadow-xl shadow-black/5 dark:shadow-[0_0_20px_rgba(255,255,255,0.02)]">
           <div className="flex items-start justify-between border-b border-black/5 dark:border-white/10 pb-8 mb-8">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Checkout Undangan</h1>
-              <p className="text-gray-500 dark:text-gray-400">Tema: <span className="font-semibold text-black dark:text-white">{theme.name}</span></p>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{lang === 'id' ? 'Checkout Undangan' : 'Invitation Checkout'}</h1>
+              <p className="text-gray-500 dark:text-gray-400">{lang === 'id' ? 'Tema:' : 'Theme:'} <span className="font-semibold text-black dark:text-white">{theme.name}</span></p>
             </div>
             <div className="text-right">
-              <span className="block text-sm text-gray-500 dark:text-gray-400 mb-1">Total Biaya</span>
+              <span className="block text-sm text-gray-500 dark:text-gray-400 mb-1">{lang === 'id' ? 'Total Biaya' : 'Total Cost'}</span>
               <span className="text-2xl font-bold text-rose-600">Rp {theme.price.toLocaleString('id-ID')}</span>
             </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6 flex flex-col">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">1. Data Pemesan & Mempelai</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">1. {lang === 'id' ? 'Data Pemesan & Mempelai' : 'Customer & Couple Data'}</h2>
             
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Email Pemesan</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{lang === 'id' ? 'Email Pemesan' : 'Customer Email'}</label>
               <input 
                 type="email" 
                 required
-                placeholder="Contoh: user@email.com"
+                placeholder={lang === 'id' ? "Contoh: user@email.com" : "E.g. user@email.com"}
                 className="w-full px-4 h-11 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-black/30 text-gray-900 dark:text-white focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all"
                 value={formData.email}
                 onChange={e => setFormData({...formData, email: e.target.value})}
@@ -173,22 +174,22 @@ export default function Order() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Nama Panggilan Pria</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{lang === 'id' ? 'Nama Panggilan Pria' : 'Groom Nickname'}</label>
                 <input 
                   type="text" 
                   required
-                  placeholder="Contoh: Beni"
+                  placeholder={lang === 'id' ? "Contoh: Beni" : "E.g. Beni"}
                   className="w-full px-4 h-11 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-black/30 text-gray-900 dark:text-white focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all"
                   value={formData.groom_name}
                   onChange={e => setFormData({...formData, groom_name: e.target.value})}
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Nama Panggilan Wanita</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{lang === 'id' ? 'Nama Panggilan Wanita' : 'Bride Nickname'}</label>
                 <input 
                   type="text" 
                   required
-                  placeholder="Contoh: Salsa"
+                  placeholder={lang === 'id' ? "Contoh: Salsa" : "E.g. Salsa"}
                   className="w-full px-4 h-11 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-black/30 text-gray-900 dark:text-white focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all"
                   value={formData.bride_name}
                   onChange={e => setFormData({...formData, bride_name: e.target.value})}
@@ -197,9 +198,9 @@ export default function Order() {
             </div>
 
             <div className="space-y-4 pt-4 border-t border-black/5 dark:border-white/5">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">2. Data Acara</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">2. {lang === 'id' ? 'Data Acara' : 'Event Data'}</h2>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal Akad</label>
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{lang === 'id' ? 'Tanggal Akad' : 'Matrimony Date'}</label>
                 <div className="relative">
                   <input 
                     type="datetime-local" 
@@ -214,8 +215,8 @@ export default function Order() {
             </div>
 
             <div className="space-y-4 pt-4 border-t border-black/5 dark:border-white/5">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">3. Upload Foto Pre-Wedding</h2>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Pilih hingga 5 foto pre-wedding. Maksimal 2MB per foto.</p>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">3. {lang === 'id' ? 'Upload Foto Pre-Wedding' : 'Upload Pre-Wedding Photos'}</h2>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{lang === 'id' ? 'Pilih hingga 5 foto pre-wedding. Maksimal 2MB per foto.' : 'Choose up to 5 photos. Max 2MB per photo.'}</p>
               
               <div className="flex items-center gap-4">
                 <input 
@@ -230,14 +231,14 @@ export default function Order() {
                       const maxSize = 2 * 1024 * 1024; // 2MB
                       
                       if (files.length > maxFiles) {
-                        setErrorMessage("Maksimal 5 foto yang diizinkan.");
+                        setErrorMessage(lang === 'id' ? "Maksimal 5 foto yang diizinkan." : "Max 5 photos allowed.");
                         e.target.value = '';
                         return;
                       }
 
                       for (let i = 0; i < files.length; i++) {
                         if (files[i].size > maxSize) {
-                          setErrorMessage(`Menolak foto "${files[i].name}" karena melebihi 2MB.`);
+                          setErrorMessage(lang === 'id' ? `Menolak foto "${files[i].name}" karena melebihi 2MB.` : `Rejected photo "${files[i].name}" as it exceeds 2MB.`);
                           e.target.value = '';
                           return;
                         }
@@ -252,10 +253,10 @@ export default function Order() {
 
             {/* URL Auto-generated, no longer an input field here */}
             <div className="space-y-2 pt-4 border-t border-black/5 dark:border-white/5">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">4. URL Undangan Anda</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">4. {lang === 'id' ? 'URL Undangan Anda' : 'Your Invitation URL'}</h2>
               <div className="flex items-center">
                 <span className="h-11 px-4 bg-gray-100 dark:bg-black/50 border border-gray-300 dark:border-white/10 rounded-lg flex items-center text-sm text-gray-500 whitespace-nowrap w-full">
-                  fiveinvitation.com/invitation/{(formData.groom_name || formData.bride_name) ? `${formData.groom_name.toLowerCase()}-${formData.bride_name.toLowerCase()}`.replace(/\s+/g, '-') : 'nama-pasangan'}
+                  fiveinvitation.com/invitation/{(formData.groom_name || formData.bride_name) ? `${formData.groom_name.toLowerCase()}-${formData.bride_name.toLowerCase()}`.replace(/\s+/g, '-') : (lang === 'id' ? 'nama-pasangan' : 'couple-name')}
                 </span>
               </div>
             </div>
@@ -266,7 +267,7 @@ export default function Order() {
                 disabled={loading}
                 className="h-12 px-8 bg-black dark:bg-[#C5A059] text-white rounded-full font-medium inline-flex items-center justify-center gap-2 hover:bg-gray-800 dark:hover:bg-[#b08d4a] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Bayar Sekarang"}
+                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (lang === 'id' ? 'Bayar Sekarang' : 'Pay Now')}
                 {!loading && <ChevronRight className="w-5 h-5" />}
               </button>
             </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import imageCompression from 'browser-image-compression';
 import { LayoutDashboard, ShoppingBag, Palette, LogOut, CheckCircle2, Clock, Database, Menu, Moon, Sun, Info, Settings, Loader2, Home as HomeIcon, Search, ChevronLeft, ChevronRight, ArrowUpDown, X, Upload as UploadIcon, Image as ImageIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -23,7 +24,55 @@ export default function Admin() {
   
   const [activeTab, setActiveTab] = useState<'dashboard' | 'orders' | 'themes' | 'settings'>('dashboard');
   const [editingTheme, setEditingTheme] = useState<any>(null);
+  const [showDocs, setShowDocs] = useState(false);
   
+  // Gallery files state for Add/Edit Theme
+  const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
+  const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
+  const [existingGallery, setExistingGallery] = useState<string[]>([]);
+
+  const handleGalleryChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+     if (!e.target.files?.length) return;
+     const files = Array.from(e.target.files);
+     const currentTotal = galleryFiles.length + existingGallery.length;
+     if (currentTotal + files.length > 5) {
+        toast.error('Maksimal 5 foto!');
+        return;
+     }
+
+     const newFiles: File[] = [];
+     const newPreviews: string[] = [];
+
+     const toastId = toast.loading('Mengompresi gambar...');
+     try {
+        for (const file of files) {
+           const options = {
+              maxSizeMB: 2,
+              maxWidthOrHeight: 1920,
+              useWebWorker: true
+           };
+           const compressedFile = await imageCompression(file as File, options);
+           newFiles.push(compressedFile);
+           newPreviews.push(URL.createObjectURL(compressedFile));
+        }
+        setGalleryFiles(prev => [...prev, ...newFiles]);
+        setGalleryPreviews(prev => [...prev, ...newPreviews]);
+        toast.success('Gambar berhasil ditambahkan', { id: toastId });
+     } catch (err) {
+        toast.error('Gagal mengompresi gambar', { id: toastId });
+     }
+  };
+
+  const removeGalleryFile = (index: number) => {
+     URL.revokeObjectURL(galleryPreviews[index]);
+     setGalleryFiles(prev => prev.filter((_, i) => i !== index));
+     setGalleryPreviews(prev => prev.filter((_, i) => i !== index));
+  };
+  
+  const removeExistingGallery = (index: number) => {
+     setExistingGallery(prev => prev.filter((_, i) => i !== index));
+  };
+
   // Orders State
   const [orders, setOrders] = useState<any[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(false);
@@ -163,7 +212,12 @@ export default function Admin() {
 
   // Process Themes (Use dbThemes if available)
   const processedThemes = useMemo(() => {
-    let baseThemes = dbThemes.length > 0 ? dbThemes : [...THEME_REGISTRY, ...uploadedThemes];
+    const baseThemes = (() => {
+      const map = new Map();
+      [...THEME_REGISTRY, ...uploadedThemes].forEach(t => map.set(t.id, t));
+      dbThemes.forEach(t => map.set(t.id, t));
+      return Array.from(map.values());
+    })();
     return baseThemes.map((t, idx) => {
       const override = themeOverrides[t.id] || {};
       return {
@@ -343,35 +397,29 @@ export default function Admin() {
 
            {activeTab === 'settings' && (
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-                <h2 className={`font-serif text-3xl mb-8 ${headingClass}`}>System Settings</h2>
+                <h2 className={`font-serif text-3xl mb-8 ${headingClass}`}>Dokumentasi & Pengaturan Sistem</h2>
                 
-                {/* Database Card */}
-                <div className={`p-8 rounded-3xl border-2 ${themeMode === 'dark' ? 'border-[#C5A059]/30 glass-card text-white bg-black/20' : 'border-[#C5A059]/30 bg-white text-gray-900'} relative overflow-hidden shadow-2xl`}>
-                    <div className="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-[#C5A059]/5 to-transparent pointer-events-none"></div>
-                    <div className="flex items-center gap-4 mb-6">
-                       <div className="w-12 h-12 rounded-2xl bg-[#C5A059]/20 flex items-center justify-center text-[#C5A059]">
-                          <Database className="w-6 h-6" />
-                       </div>
-                       <div>
-                         <h3 className="text-xl font-serif">Supabase Database</h3>
-                         <p className={`text-xs ${themeMode === 'dark' ? 'text-white/60' : 'text-gray-500'}`}>Sistem menggunakan Supabase PostgreSQL</p>
-                       </div>
-                    </div>
-                    
-                    <div className="relative z-10 w-full max-w-4xl">
-                       <p className={`text-sm leading-relaxed ${textDimClass}`}>
-                          Sistem database Supabase telah dikonfigurasi pada source code. Anda hanya perlu membuat tabel pada project Supabase milik Anda sendiri dan memasukkan kredensial ke file environment.
-                       </p>
-                       <div className={`p-6 mt-6 rounded-2xl border ${borderDimClass} ${themeMode === 'dark' ? 'bg-black/40' : 'bg-gray-50/50'}`}>
-                          <div className="flex items-center gap-3 mb-4">
-                             <Info className={`w-5 h-5 ${themeMode === 'dark' ? 'text-[#C5A059]' : 'text-blue-500'}`} />
-                             <h4 className={`font-semibold ${headingClass}`}>Panduan Singkat Setup</h4>
-                          </div>
-                          <ol className={`list-decimal list-inside space-y-3 text-sm leading-relaxed ${textDimClass}`}>
-                             <li>Buka dashboard <b>Supabase</b> Anda dan arahkan ke SQL Editor.</li>
-                             <li>Jalankan query SQL di bawah ini untuk menginisialisasi skema tabel pesanan:</li>
-                             <pre className={`p-4 rounded-xl mt-3 overflow-x-auto border ${borderDimClass} ${themeMode === 'dark' ? 'bg-[#050505]' : 'bg-white'}`}>
-                               <code className="text-xs font-mono text-emerald-600 dark:text-emerald-400">
+                <div className="space-y-6">
+                  {/* Setup Database Card */}
+                  <div className={`p-8 rounded-3xl border-2 ${themeMode === 'dark' ? 'border-[#C5A059]/30 glass-card text-white bg-black/20' : 'border-[#C5A059]/30 bg-white text-gray-900'} relative overflow-hidden shadow-2xl`}>
+                      <div className="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-[#C5A059]/5 to-transparent pointer-events-none"></div>
+                      <div className="flex items-center gap-4 mb-6">
+                         <div className="w-12 h-12 rounded-2xl bg-[#C5A059]/20 flex items-center justify-center text-[#C5A059]">
+                            <Database className="w-6 h-6" />
+                         </div>
+                         <div>
+                           <h3 className="text-xl font-serif">1. Konfigurasi Database (Supabase)</h3>
+                           <p className={`text-xs ${themeMode === 'dark' ? 'text-white/60' : 'text-gray-500'}`}>Setup tabel dan skema</p>
+                         </div>
+                      </div>
+                      
+                      <div className="relative z-10 w-full">
+                         <ol className={`list-decimal list-inside space-y-4 text-sm leading-relaxed ${textDimClass}`}>
+                            <li>Buat project baru di <a href="https://supabase.com" target="_blank" rel="noreferrer" className="text-[#C5A059] hover:underline">Supabase</a>.</li>
+                            <li>Masuk ke menu <b>SQL Editor</b>.</li>
+                            <li>Jalankan querry tabel utama pesanan untuk mencatat semua transaksi:</li>
+                            <pre className={`p-4 rounded-xl mt-3 overflow-x-auto border ${borderDimClass} ${themeMode === 'dark' ? 'bg-[#050505]' : 'bg-white'}`}>
+                              <code className="text-xs font-mono text-emerald-600 dark:text-emerald-400">
 {`CREATE TABLE orders (
   id uuid default gen_random_uuid() primary key,
   unique_code text unique not null,
@@ -380,81 +428,153 @@ export default function Admin() {
   theme_id text,
   status text default 'PENDING',
   customer_email text,
+  akad_date timestamp with time zone,
+  resepsi_date timestamp with time zone,
+  hero_image text,
+  cover_image text,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );`}
-                               </code>
-                             </pre>
-                             <li className="pt-2">Setelah berhasil, buka menu <b>Project Settings - API</b>.</li>
-                             <li>Salin <b>Project URL</b> dan <b>anon public key</b>, masukkan sebagai environment <code>VITE_SUPABASE_URL</code> dan <code>VITE_SUPABASE_ANON_KEY</code>.</li>
-                          </ol>
-                       </div>
+                              </code>
+                            </pre>
+                            <li className="mt-4">Jalankan querry untuk membuat tabel tema (Katalog JSON-Driven):</li>
+                            <pre className={`p-4 rounded-xl mt-3 overflow-x-auto border ${borderDimClass} ${themeMode === 'dark' ? 'bg-[#050505]' : 'bg-white'}`}>
+                              <code className="text-xs font-mono text-emerald-600 dark:text-emerald-400">
+{`CREATE TABLE themes (
+    id VARCHAR(100) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    category VARCHAR(50) NOT NULL,
+    price INTEGER NOT NULL,
+    thumbnail TEXT,
+    config_json JSONB,
+    sales INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);`}
+                              </code>
+                            </pre>
+                         </ol>
+                      </div>
+                  </div>
 
-                       <div className={`p-6 mt-6 rounded-2xl border ${borderDimClass} ${themeMode === 'dark' ? 'bg-black/40' : 'bg-gray-50/50'}`}>
-                          <div className="flex items-center gap-3 mb-4">
-                             <Database className={`w-5 h-5 ${themeMode === 'dark' ? 'text-[#C5A059]' : 'text-blue-500'}`} />
-                             <h4 className={`font-semibold ${headingClass}`}>Panduan Penyimpanan Foto (Storage)</h4>
-                          </div>
-                          <ol className={`list-decimal list-inside space-y-3 text-sm leading-relaxed ${textDimClass}`}>
-                             <li>Untuk manajemen file gambar undangan, buka menu <b>Storage</b> di Supabase.</li>
-                             <li>Klik <b>New Bucket</b> dan beri nama <code>wedding-assets</code>. Pastikan centang <b>Public bucket</b>.</li>
-                             <li>Di dalam menu <b>Policies</b> pda bucket <code>wedding-assets</code>, berikan akses <code>SELECT</code>, <code>INSERT</code>, dan <code>UPDATE</code> kepada semua orang atau <code>anon</code> policy.</li>
-                             <li>Setelah setup, aplikasi akan otomatis mengirim file foto (via halaman checkout) ke folder sesuai nama unik order tersebut untuk ditampilkan ditiap tema.</li>
-                          </ol>
-                       </div>
+                  {/* Setup Environment Settings */}
+                  <div className={`p-8 rounded-3xl border-2 ${themeMode === 'dark' ? 'border-[#C5A059]/30 glass-card text-white bg-black/20' : 'border-[#C5A059]/30 bg-white text-gray-900'} relative overflow-hidden shadow-2xl`}>
+                      <div className="flex items-center gap-4 mb-6">
+                         <div className="w-12 h-12 rounded-2xl bg-[#C5A059]/20 flex items-center justify-center text-[#C5A059]">
+                            <Settings className="w-6 h-6" />
+                         </div>
+                         <div>
+                           <h3 className="text-xl font-serif">2. Menghubungkan Aplikasi dengan Kredensial</h3>
+                           <p className={`text-xs ${themeMode === 'dark' ? 'text-white/60' : 'text-gray-500'}`}>Edit file .env di source code</p>
+                         </div>
+                      </div>
+                      
+                      <div className="relative z-10 w-full">
+                         <ol className={`list-decimal list-inside space-y-4 text-sm leading-relaxed ${textDimClass}`}>
+                            <li>Di Supabase, buka menu <b>Project Settings - API</b>.</li>
+                            <li>Salin <b>Project URL</b> dan <b>anon public key</b>. Buka file <code>.env.example</code> atau panel secrets sistem Anda. Masukkan nilai untuk <code>VITE_SUPABASE_URL</code> dan <code>VITE_SUPABASE_ANON_KEY</code>.</li>
+                            <li>Untuk sistem admin default ini masuk dengan mengetik <code>admin123</code> (Bisa diubah dan diset pada env: <code>VITE_ADMIN_PASSWORD</code>).</li>
+                         </ol>
+                      </div>
+                  </div>
 
-                       <div className={`p-6 mt-6 rounded-2xl border ${borderDimClass} ${themeMode === 'dark' ? 'bg-black/40' : 'bg-gray-50/50'}`}>
-                          <div className="flex items-center gap-3 mb-4">
-                             <Palette className={`w-5 h-5 ${themeMode === 'dark' ? 'text-[#C5A059]' : 'text-blue-500'}`} />
-                             <h4 className={`font-semibold ${headingClass}`}>Menambah Tema Baru (HTML / React)</h4>
-                          </div>
-                          <div className={`space-y-4 text-sm leading-relaxed ${textDimClass}`}>
-                             <p>Secara bawaan, aplikasi ini menggunakan komponen React. Namun jika Anda memiliki 1 folder penuh berisi file <code>index.html</code> dan folder <code>assets</code>, Anda bisa mengintegrasikannya dengan cara berikut:</p>
-                             
-                             <h5 className="font-semibold text-gray-900 dark:text-white mt-4">Metode 1: Menggunakan Folder Statis HTML (Tanpa Convert)</h5>
-                             <ol className="list-decimal list-inside space-y-2 ml-2">
-                                <li>Pindahkan folder tema HTML Anda (misal folder <code>tema-bunga</code>) ke dalam folder <b><code>public/</code></b> pada source code aplikasi ini.</li>
-                                <li>Agar teks dalam file HTML bisa berubah sesuai data pesanan (seperti nama mempelai), Anda perlu menambahkan sedikit script JavaScript di dalam <code>index.html</code> Anda untuk membaca data dari <i>Query Parameter URL</i> atau localStorage.</li>
-                                <li>Buat komponen React pembungkus (Iframe) di <code>src/themes/</code> yang merender file HTML tersebut. Contoh: <br/><code className={`p-1 px-2 rounded mt-2 inline-block ${themeMode === 'dark' ? 'bg-black/60' : 'bg-gray-100'}`}>{'<iframe src="/tema-bunga/index.html?bride=Salsa&groom=Beni" />'}</code></li>
-                                <li>Daftarkan tema di file <code>src/themes/registry.ts</code>.</li>
-                             </ol>
+                  {/* Setup Seeding & Storage */}
+                  <div className={`p-8 rounded-3xl border-2 ${themeMode === 'dark' ? 'border-[#C5A059]/30 glass-card text-white bg-black/20' : 'border-[#C5A059]/30 bg-white text-gray-900'} relative overflow-hidden shadow-2xl`}>
+                      <div className="flex items-center gap-4 mb-6">
+                         <div className="w-12 h-12 rounded-2xl bg-[#C5A059]/20 flex items-center justify-center text-[#C5A059]">
+                            <UploadIcon className="w-6 h-6" />
+                         </div>
+                         <div>
+                           <h3 className="text-xl font-serif">3. Konfigurasi Upload Gambar (NodeJS/Local vs Supabase)</h3>
+                           <p className={`text-xs ${themeMode === 'dark' ? 'text-white/60' : 'text-gray-500'}`}>Penyimpanan Media Assets</p>
+                         </div>
+                      </div>
+                      
+                      <div className="relative z-10 w-full">
+                         <div className={`space-y-4 text-sm leading-relaxed ${textDimClass}`}>
+                            <p>Saat ini karena ini berjalan di environment Node.js server kita (Docker/Container), kita menyimpan gambar secara lokal di direktori <code>public/uploads</code> agar pengguna bisa langung melihat gambar masuk.</p>
+                            <p>Namun untuk skala <b>Production</b>, gambar seharusnya diunggah ke Storage (S3 / Supabase). Caranya:</p>
+                            <ol className="list-decimal list-inside space-y-2 ml-4">
+                               <li>Buat bucket di menu <b>Storage</b> Supabase bernama <code>wedding-assets</code>. Setting menjadi "Public".</li>
+                               <li>Berikan akses (Policies) untuk <code>INSERT</code> dan <code>SELECT</code> pada "anon" users agar gambar bisa diakses dari web.</li>
+                               <li>Saat membuat produk baru, frontend harus diubah untuk me-upload file lagsung ke Supabase Storage, lalu URL link public-nya yg disimpan pada tabel Database <b>themes</b>.</li>
+                            </ol>
+                            
+                            <hr className={`my-4 border-${borderDimClass}`} />
+                            
+                            <p className="font-semibold text-gray-900 dark:text-white mt-4">Lakukan Seeding Tema Default</p>
+                            <p>Buka <b>Tab Themes</b> pada admin panel ini lalu klik tombol <b>Seed DB</b> untuk memasukkan database sampel awal <i>(themes hardcode statik)</i> ke dalam database Supabase agar langsung bisa dikelola lewat dashboard admin ini.</p>
+                         </div>
+                      </div>
+                  </div>
 
-                             <h5 className="font-semibold text-gray-900 dark:text-white mt-6">Metode 2: Convert ke React (Disarankan)</h5>
-                             <ol className="list-decimal list-inside space-y-2 ml-2">
-                                <li>Buat file baru berakhiran <code>.tsx</code> di dalam folder <code>src/themes/</code> (Misal: <code>FloralTheme.tsx</code>).</li>
-                                <li>Salin struktur baris HTML Anda ke dalam file komponen React tersebut.</li>
-                                <li>Ganti class HTML statis menjadi dinamis dengan menangkap props (contoh: <code>{`{props.bride}`}</code>).</li>
-                                <li>Tambahkan komponen Anda ke dalam array <code>THEME_REGISTRY</code> di file <code>src/themes/registry.ts</code>.</li>
-                             </ol>
-                          </div>
-                       </div>
-                       
-                       <div className={`p-6 mt-6 rounded-2xl border ${borderDimClass} ${themeMode === 'dark' ? 'bg-black/40' : 'bg-gray-50/50'}`}>
-                          <div className="flex items-center gap-3 mb-4">
-                             <span className="flex items-center justify-center w-6 h-6 rounded-md bg-[#C5A059]/10 font-bold text-[#C5A059]">!</span>
-                             <h4 className={`font-semibold ${headingClass}`}>Info Sistem Lainnya</h4>
-                          </div>
-                          <div className={`space-y-4 text-sm leading-relaxed ${textDimClass}`}>
-                             <h5 className="font-semibold text-gray-900 dark:text-white mt-2">1. Ganti Password Admin</h5>
-                             <p>Secara bawaan password login adalah <code>admin123</code>. Untuk menggantinya dengan aman tanpa mengubah kode, tambahkan variabel <code>VITE_ADMIN_PASSWORD=PasswordBaruKamu</code> di pengaturan environment server hosting Anda.</p>
+                  {/* Payment Gateway Midtrans */}
+                  <div className={`p-8 rounded-3xl border-2 ${themeMode === 'dark' ? 'border-[#C5A059]/30 glass-card text-white bg-black/20' : 'border-[#C5A059]/30 bg-white text-gray-900'} relative overflow-hidden shadow-2xl`}>
+                      <div className="flex items-center gap-4 mb-6">
+                         <div className="w-12 h-12 rounded-2xl bg-[#C5A059]/20 flex items-center justify-center text-[#C5A059]">
+                            <Search className="w-6 h-6" />
+                         </div>
+                         <div>
+                           <h3 className="text-xl font-serif">4. Payment Gateway (Midtrans)</h3>
+                           <p className={`text-xs ${themeMode === 'dark' ? 'text-white/60' : 'text-gray-500'}`}>Automasi Pembayaran dan Webhook</p>
+                         </div>
+                      </div>
+                      
+                      <div className="relative z-10 w-full">
+                         <ol className={`list-decimal list-inside space-y-4 text-sm leading-relaxed ${textDimClass}`}>
+                            <li>Daftar ke <b>Midtrans Dashboard</b>. Ambil <code>Client Key</code> dan <code>Server Key</code> Anda.</li>
+                            <li>Isi environment <code>VITE_MIDTRANS_CLIENT_KEY</code> dan <code>MIDTRANS_SERVER_KEY</code>. Client key dipakai di React (Front-end), server key dipakai di NodeJS (<code>server.ts</code>).</li>
+                            <li>Pastikan backend/server ini di-hosting pada domain publik (seperti menggunakan cloud run). Pada Midtrans Settings, atur "Payment Notification URL / Webhook" agar mengarah ke <code>https://domain-anda.com/api/webhook/midtrans</code>.</li>
+                            <li>Ketika ada guest bayar, status di Database tabel `orders` yang tadinya <code>PENDING</code> secara ajaib akan di-update Midtrans menjadi <code>PAID</code>. Order siap diaktifkan!</li>
+                         </ol>
+                      </div>
+                  </div>
 
-                             <h5 className="font-semibold text-gray-900 dark:text-white mt-4">2. Integrasi Pembayaran Midtrans</h5>
-                             <p>Saat ini checkout berjalan dengan simulasi di front-end. Untuk integrasi nyata yang aman (server-side):</p>
-                             <ul className="list-disc list-inside space-y-1 ml-2">
-                                <li>Aplikasikan backend berbasis Node.js/Express.</li>
-                                <li>Minta midtrans SNAP Token dari API Server menggunakan Server Key rahasi.</li>
-                                <li>Buat URL Endpoint (Webhook) untuk menerima notifikasi pembayaran masuk dan mengupdate status pada Supabase secara otomatis menjadi PAID.</li>
-                             </ul>
+                  {/* Future Architecture: JSON Driven Theme */}
+                  <div className={`p-8 rounded-3xl border-2 ${themeMode === 'dark' ? 'border-[#C5A059]/30 glass-card text-white bg-black/20' : 'border-[#C5A059]/30 bg-white text-gray-900'} relative overflow-hidden shadow-2xl`}>
+                      <div className="flex items-center gap-4 mb-6">
+                         <div className="w-12 h-12 rounded-2xl shadow-xl shadow-[#C5A059]/30 bg-gradient-to-tr from-[#C5A059] to-[#b08d4a] flex items-center justify-center text-white">
+                            <Palette className="w-6 h-6" />
+                         </div>
+                         <div>
+                           <h3 className="text-xl font-serif text-[#C5A059] dark:text-[#E2C384]">5. Arsitektur Masa Depan: JSON-Driven Theme</h3>
+                           <p className={`text-xs font-medium uppercase tracking-widest ${themeMode === 'dark' ? 'text-[#C5A059]/60' : 'text-[#C5A059]/60'}`}>Ultimate Dynamic Solution</p>
+                         </div>
+                      </div>
+                      
+                      <div className="relative z-10 w-full">
+                         <div className={`space-y-4 text-sm leading-relaxed ${textDimClass}`}>
+                            <p><b>Masalah saat ini:</b> Menambah tema harus mengubah source-code (React, Vite, Deploy UI ulang). Sangat tidak efisien jika Anda menjadi platform SaaS.</p>
+                            <p><b>Solusi: JSON-Driven Themes.</b> Anda hanya butuh SATU file React Component, layaknya kanvas kosong, di mana setiap warna, jarak, typografi, ikon grafis, transisi, animasi, dan layoutnya ditarik (di fetch) dalam bentuk JSON dari Supabase Database.</p>
+                            
+                            <h5 className="font-semibold text-gray-900 dark:text-white mt-6">Konsep Desain JSON Payload (Struktur Basis Database):</h5>
+                            <pre className={`p-4 rounded-xl mt-3 overflow-x-auto border ${borderDimClass} ${themeMode === 'dark' ? 'bg-[#050505]' : 'bg-gray-50'}`}>
+                              <code className="text-xs font-mono text-[#C5A059] dark:text-[#C5A059]">
+{`{
+  "theme_id": "floral-gold",
+  "styling": {
+      "backgroundColor": "#FDFBF7",
+      "primaryColor": "#C5A059",
+      "fontHeading": "'Playfair Display', serif",
+      "fontBody": "'Inter', sans-serif"
+  },
+  "layout_blocks": [
+      {
+         "type": "hero",
+         "elements": { "title": "The Wedding Of", "date_format": "DD/MM/YYYY" },
+         "animation": "fade-in-up"
+      },
+      {
+         "type": "gallery",
+         "style": "masonry"
+      }
+  ]
+}`}
+                              </code>
+                            </pre>
 
-                             <h5 className="font-semibold text-gray-900 dark:text-white mt-4">3. Otomatisasi Tema (Dynamic Database Theme)</h5>
-                             <p>Menjawab kebutuhan Anda untuk tidak mau menambah file berulang kali (hardcode): Pendekatan terbaik adalah membuat 1 komponen master yang membaca dari database.</p>
-                             <ul className="list-decimal list-inside space-y-2 ml-2">
-                                <li>Di Supabase, buat tabel <code>themes</code> yang memuat field: Nama Tema, URL Gambar, dan URL Direktori Tema Statis Anda.</li>
-                                <li>Ketika Anda upload tema lengkap (HTML) lewat S3 atau Supabase Storage, daftarkan linknya di database <code>themes</code> tadi.</li>
-                                <li>Pada halaman tema (atau Preview Undangan), cukup buat satu buah komponen master saja yang membaca link tersebut dari Database lalu menampilkannya menggunakan elemen pembungkus <code>&lt;iframe src={"{url_sumber_html}"} &gt;</code>. Database akan mengurus pembaruan katalog tersebut 100% otomatis, tanpa Anda menyentuh source-code.</li>
-                             </ul>
-                          </div>
-                       </div>
-                    </div>
+                            <p className="mt-4">Dengan begini, admin di masa depan hanya perlu mengisi form Dashboard ini (Warna apa? Font apa? Blok susunan galerinya gimana?). Begitu klik Simpan JSON, halaman undangan pelanggan langsung ganti gaya di detik yang sama, <b>Tanpa Programming sama sekali!</b>.</p>
+                         </div>
+                      </div>
+                  </div>
                 </div>
               </div>
            )}
@@ -606,12 +726,63 @@ export default function Admin() {
                      {isSeeding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Database className="w-4 h-4" />}
                      Seed DB
                    </button>
+                   <button onClick={() => setShowDocs(!showDocs)} className={`px-5 py-2.5 h-[42px] border text-xs uppercase tracking-widest rounded-xl transition-colors flex items-center gap-2 ${themeMode === 'dark' ? 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10' : 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10'}`}><Info className="w-4 h-4" /> Panduan</button>
                    <button onClick={() => setIsUploadModalOpen(true)} className={`px-6 py-2.5 h-[42px] border text-xs uppercase tracking-widest rounded-xl transition-colors ${themeMode === 'dark' ? 'border-white/20 hover:bg-white/10 text-white' : 'border-gray-200 hover:bg-gray-100 text-gray-900'}`}>
                      Upload
                    </button>
                  </div>
                </div>
                
+               {showDocs && (
+                 <div className={`p-6 mb-8 rounded-3xl ${themeMode === 'dark' ? 'bg-[#C5A059]/10 border border-[#C5A059]/20 text-white' : 'bg-gray-50 border border-gray-200 text-gray-900'}`}>
+                    <h3 className="text-lg font-serif mb-4 flex items-center gap-2"><Info size={20} className="text-[#C5A059]" /> Panduan Pembuatan Tema Baru</h3>
+                    
+                    <div className="space-y-4 text-sm opacity-90 leading-relaxed text-left">
+                       <p>
+                          Anda dapat membuat tema dengan konfigurasi murni JSON menggunakan <strong>Database JSON Config</strong> saat mengedit atau menambahkan tema. Opsi ini membuat Anda tidak perlu mengunggah file source code (.zip) dan cukup mengubah konfigurasi komponen standar MasterTheme yang sudah ada (komponen ini membaca JSON).
+                       </p>
+                       <div>
+                          <strong className="text-[#C5A059]">Format JSON Tema:</strong>
+                          <pre className={`p-4 rounded-xl text-xs overflow-x-auto mt-2 ${themeMode === 'dark' ? 'bg-black/50 text-emerald-400' : 'bg-gray-900 text-emerald-400'}`}>
+{`{
+  "colors": {
+    "primary": "#C5A059",
+    "background": "#FFFFFF",
+    "text": "#1A1A1A"
+  },
+  "fonts": {
+    "heading": "Playfair Display",
+    "body": "Inter"
+  },
+  "music": "https://url-file.mp3",
+  "content": {
+    "groom": "Beni",
+    "bride": "Salsa",
+    "date": "12 Desember 2026",
+    "ceremonyTime": "09:00 WIB",
+    "ceremonyLocation": "Hotel Mulia, Jakarta",
+    "receptionTime": "11:00 WIB",
+    "receptionLocation": "Grand Ballroom Hotel Mulia",
+    "message": "Terima kasih atas doa restunya."
+  },
+  "layout": [
+    { "type": "hero" },
+    { "type": "couple" },
+    { "type": "events" },
+    { "type": "gallery" }
+  ]
+}`}
+                          </pre>
+                       </div>
+                       <ul className="list-disc pl-5 space-y-2 mt-4">
+                          <li><strong>music:</strong> Properti opsional untuk autoplay latar musik (butuh link audio .mp3).</li>
+                          <li><strong>content:</strong> Anda dapat menimpa konten teks (mempelai, tanggal, tempat, dsb). Jika dikosongkan, tema akan mengambil sampel konten default.</li>
+                          <li><strong>Gallery:</strong> Saat Anda mengunggah lima foto dari fitur "Upload Gambar Tema", foto tersebut otomatis masuk ke key <code>gallery</code> pada config JSON dan akan merender foto-foto baru di blok galeri.</li>
+                       </ul>
+                    </div>
+                 </div>
+               )}
+
                {paginatedThemes.length === 0 ? (
                  <div className={`p-12 text-center rounded-3xl ${cardClass} ${textDimClass}`}>
                     Tema tidak ditemukan.
@@ -625,22 +796,37 @@ export default function Admin() {
                             <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-semibold">
                               {theme.sales} Terjual
                             </div>
-                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                            <div className="absolute inset-0 bg-black\/40 opacity-0 group-hover:opacity-100 flex flex-col gap-2 items-center justify-center transition-opacity">
                                <button 
                                  onClick={() => {
+                                   let gals = [];
+                                   if (theme.config_json && Array.isArray(theme.config_json.gallery)) {
+                                      gals = theme.config_json.gallery;
+                                   } else if (theme.thumbnail) {
+                                      gals = [theme.thumbnail];
+                                   }
+                                   setExistingGallery(gals);
+                                   setGalleryFiles([]);
+                                   setGalleryPreviews([]);
                                    setEditingTheme({
                                      id: theme.id,
                                      name: theme.name,
                                      category: theme.category,
                                      price: theme.price,
                                      thumbnail: theme.thumbnail || '',
-                                     file: null
+                                     config_json: theme.config_json || null
                                    });
                                  }}
-                                 className="px-4 py-2 bg-[#C5A059] text-white text-xs uppercase tracking-widest rounded-lg hover:bg-[#b08d4a] transition-colors"
+                                 className="px-4 py-2 bg-[#C5A059] text-white text-xs uppercase tracking-widest rounded-lg hover:bg-[#b08d4a] transition-colors w-32"
                                >
                                  Edit Tema
                                </button>
+                               <a 
+                                 href={`/preview/${theme.id}`} target="_blank" rel="noopener noreferrer"
+                                 className="px-4 py-2 bg-white text-black text-xs uppercase tracking-widest rounded-lg hover:bg-gray-200 transition-colors w-32 text-center"
+                               >
+                                 Preview
+                               </a>
                             </div>
                          </div>
                          <div className="p-6">
@@ -759,13 +945,37 @@ export default function Admin() {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-1">URL Gambar Cover (Opsional)</label>
-                    <input name="thumbnail" className={`w-full px-4 py-2 border rounded-xl text-sm ${themeMode === 'dark' ? 'bg-white/5 border-white/10 focus:border-[#C5A059] text-white' : 'bg-gray-50 border-gray-200 focus:border-[#C5A059] text-gray-900'} outline-none transition-colors`} />
+                    <label className="block text-sm font-medium mb-1">Upload Gambar Tema (Maks 5 Foto max 2MB)</label>
+                    <div className={`border-2 border-dashed rounded-xl p-4 text-center relative overflow-hidden ${themeMode === 'dark' ? 'border-white/20 bg-white/5' : 'border-gray-200 bg-gray-50'}`}>
+                       <input type="file" multiple accept="image/*" onChange={handleGalleryChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                       <ImageIcon className="w-8 h-8 mx-auto mb-2 text-[#C5A059]" />
+                       <p className={`text-xs font-medium mb-1 ${themeMode === 'dark' ? 'text-white' : 'text-gray-900'}`}>Klik atau Drag untuk upload foto</p>
+                    </div>
+                    {galleryPreviews.length > 0 && (
+                       <div className="grid grid-cols-5 gap-2 mt-3">
+                          {galleryPreviews.map((preview, idx) => (
+                             <div key={idx} className="relative aspect-square rounded-lg overflow-hidden border border-gray-200">
+                                <img src={preview} className="w-full h-full object-cover" alt="Preview" />
+                                <button type="button" onClick={() => removeGalleryFile(idx)} className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 hover:bg-red-500 transition-colors">
+                                   <X size={12} />
+                                </button>
+                             </div>
+                          ))}
+                       </div>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1 tracking-wide flex justify-between items-center">
+                       <span>Database JSON Config (Opsional)</span>
+                       <span className="text-[10px] bg-[#C5A059] text-white px-2 py-0.5 rounded">Dynamic UI</span>
+                    </label>
+                    <textarea name="config_json" rows={4} placeholder='{"colors": {"primary": "#C5...}}' className={`w-full px-4 py-3 border rounded-xl text-xs font-mono ${themeMode === 'dark' ? 'bg-black/80 border-white/10 focus:border-[#C5A059] text-emerald-400' : 'bg-gray-900 border-gray-900 focus:border-[#C5A059] text-emerald-400'} outline-none transition-colors`}></textarea>
+                    <p className={`text-[10px] mt-1 ${themeMode === 'dark' ? 'text-white/40' : 'text-gray-500'}`}>Isi JSON untuk merender MasterTheme dinamis. Kosongkan untuk pakai React component lama dari zip.</p>
                   </div>
                   <div className={`border-2 border-dashed rounded-xl p-6 text-center relative overflow-hidden ${themeMode === 'dark' ? 'border-white/20 bg-white/5' : 'border-gray-200 bg-gray-50'}`}>
                     <input type="file" name="zipFile" accept=".zip" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
                     <UploadIcon className="w-8 h-8 mx-auto mb-2 text-[#C5A059]" />
-                    <p className={`text-xs font-medium mb-1 ${themeMode === 'dark' ? 'text-white' : 'text-gray-900'}`}>Upload File ZIP Tema</p>
+                    <p className={`text-xs font-medium mb-1 ${themeMode === 'dark' ? 'text-white' : 'text-gray-900'}`}>Upload File ZIP Tema (Abaikan jika pakai JSON)</p>
                   </div>
                 </div>
                 
@@ -805,14 +1015,15 @@ export default function Admin() {
                 formData.append('name', editingTheme.name);
                 formData.append('category', editingTheme.category);
                 formData.append('price', String(editingTheme.price));
-                if (editingTheme.file) {
-                  formData.append('thumbnailFile', editingTheme.file);
-                } else {
-                  formData.append('thumbnail', editingTheme.thumbnail);
+                if (editingTheme.config_json) {
+                   formData.append('config_json', typeof editingTheme.config_json === 'string' ? editingTheme.config_json : JSON.stringify(editingTheme.config_json));
                 }
+                
+                formData.append('keep_images', JSON.stringify(existingGallery));
+                galleryFiles.forEach(file => formData.append('images', file));
 
-                const res = await fetch(`/api/admin/themes/${editingTheme.id}/update`, {
-                  method: 'POST',
+                const res = await fetch(`/api/admin/themes/${editingTheme.id}`, {
+                  method: 'PUT',
                   body: formData
                 });
                 const result = await res.json();
@@ -826,10 +1037,13 @@ export default function Admin() {
                       name: editingTheme.name,
                       category: editingTheme.category,
                       price: editingTheme.price,
-                      thumbnail: result.thumbnail || editingTheme.thumbnail
+                      thumbnail: result.thumbnail || editingTheme.thumbnail,
+                      config_json: editingTheme.config_json ? (typeof editingTheme.config_json === 'string' ? JSON.parse(editingTheme.config_json) : editingTheme.config_json) : null
                    }
                 }));
                 setEditingTheme(null);
+                setGalleryFiles([]);
+                setGalleryPreviews([]);
               } catch (err: any) {
                 toast.error(err.message);
               }
@@ -854,11 +1068,47 @@ export default function Admin() {
                   <input required type="number" value={editingTheme.price} onChange={e => setEditingTheme({...editingTheme, price: Number(e.target.value)})} className={`w-full px-4 py-2 rounded-xl border ${themeMode === 'dark' ? 'bg-black/50 border-white/10 text-white' : 'bg-white border-gray-200 text-gray-900'} focus:outline-none focus:border-[#C5A059]`} />
                 </div>
                 <div>
-                  <label className="block text-sm mb-1 text-gray-400">Thumbnail Image (Upload)</label>
-                  {editingTheme.thumbnail && !editingTheme.file && (
-                     <img src={editingTheme.thumbnail} alt="current thumbnail" className="w-full h-32 object-cover object-center rounded-xl mb-2" />
+                  <label className="block text-sm font-medium mb-1 tracking-wide flex justify-between items-center text-gray-400">
+                     <span>Database JSON Config (Opsional)</span>
+                  </label>
+                  <textarea rows={4} value={typeof editingTheme.config_json === 'string' ? editingTheme.config_json : JSON.stringify(editingTheme.config_json, null, 2) || ''} onChange={e => setEditingTheme({...editingTheme, config_json: e.target.value})} className={`w-full px-4 py-2 rounded-xl border text-xs font-mono ${themeMode === 'dark' ? 'bg-black/50 border-white/10 text-emerald-400' : 'bg-gray-900 border-gray-900 text-emerald-400'} focus:outline-none focus:border-[#C5A059]`} placeholder='{"colors": {"primary": "#C5...}}'></textarea>
+                </div>
+                <div>
+                  <label className="block text-sm mb-2 text-gray-400">Upload Gambar Tema (Maks 5 Foto max 2MB)</label>
+                  
+                  {/* Existing gallery previews */}
+                  {existingGallery.length > 0 && (
+                     <div className="grid grid-cols-5 gap-2 mb-3">
+                        {existingGallery.map((url, idx) => (
+                           <div key={`existing-${idx}`} className="relative aspect-square rounded-lg overflow-hidden border border-gray-200">
+                              <img src={url} className="w-full h-full object-cover" alt="Saved" />
+                              <button type="button" onClick={() => removeExistingGallery(idx)} className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 hover:bg-red-500 transition-colors">
+                                 <X size={12} />
+                              </button>
+                           </div>
+                        ))}
+                     </div>
                   )}
-                  <input type="file" accept="image/*" onChange={e => setEditingTheme({...editingTheme, file: e.target.files?.[0]})} className={`w-full px-4 py-2 rounded-xl border ${themeMode === 'dark' ? 'bg-black/50 border-white/10 text-white' : 'bg-white border-gray-200 text-gray-900'} focus:outline-none focus:border-[#C5A059]`} />
+
+                  <div className={`border-2 border-dashed rounded-xl p-4 text-center relative overflow-hidden ${themeMode === 'dark' ? 'border-white/20 bg-white/5' : 'border-gray-200 bg-gray-50'}`}>
+                     <input type="file" multiple accept="image/*" onChange={handleGalleryChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                     <ImageIcon className="w-8 h-8 mx-auto mb-2 text-[#C5A059]" />
+                     <p className={`text-xs font-medium mb-1 ${themeMode === 'dark' ? 'text-white' : 'text-gray-900'}`}>Klik atau Drag untuk tambah foto</p>
+                  </div>
+                  
+                  {/* New gallery previews */}
+                  {galleryPreviews.length > 0 && (
+                     <div className="grid grid-cols-5 gap-2 mt-3">
+                        {galleryPreviews.map((preview, idx) => (
+                           <div key={`new-${idx}`} className="relative aspect-square rounded-lg overflow-hidden border border-gray-200">
+                              <img src={preview} className="w-full h-full object-cover" alt="Preview" />
+                              <button type="button" onClick={() => removeGalleryFile(idx)} className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-1 hover:bg-red-500 transition-colors">
+                                 <X size={12} />
+                              </button>
+                           </div>
+                        ))}
+                     </div>
+                  )}
                 </div>
               </div>
               <div className="flex justify-end gap-3 mt-8">

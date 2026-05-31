@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-import { Star, Quote } from 'lucide-react';
+import { Star, Quote, Search, PenTool, CheckCircle, Zap } from 'lucide-react';
 
 const RECENT_ORDERS = [
   { id: 1, names: "Beni & Deti", theme: "Elegant Minimalist", image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=300" },
@@ -99,26 +99,95 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.9, y: 40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 80, damping: 25, delay: 0.2 }}
-            className="glass-card rounded-[40px] w-full max-w-[360px] h-[520px] relative overflow-hidden shadow-2xl group"
+            className="w-full max-w-[340px] h-[500px] relative group cursor-pointer"
           >
-            {/* Phone Mockup Preview */}
-            <div className={`absolute top-0 left-0 w-full h-full p-4 ${themeMode === 'dark' ? 'bg-[#111]' : 'bg-gray-100'}`}>
-                <div className="w-full h-full border border-black/5 dark:border-white/5 rounded-[24px] overflow-hidden bg-[url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=600')] bg-cover bg-center flex flex-col items-center justify-center text-center p-8">
-                    <div className="absolute inset-0 bg-black/40"></div>
-                    <div className="relative z-10">
-                        <p className="font-serif text-white/80 text-lg italic mb-2 uppercase tracking-widest">The Wedding of</p>
-                        <h2 className="font-serif text-4xl text-white mb-4">Beni & Deti</h2>
-                        <div className="w-12 h-[1px] bg-[#C5A059] mx-auto mb-4"></div>
-                        <p className="text-xs text-white/90 uppercase tracking-widest">
-                           {lang === 'id' ? 'Minggu, 12 Desember 2026' : 'Sunday, Dec 12 2026'}
-                        </p>
+            {RECENT_ORDERS.slice(0, 3).map((order, idx) => {
+              // Fan-out classes for hover
+              // idx 0 (bottom): left rotation max
+              // idx 1 (middle): left rotation mid
+              // idx 2 (top): straight
+              const idleTransforms = [
+                '-rotate-6 -translate-x-4 translate-y-2',
+                '-rotate-3 -translate-x-2 translate-y-1',
+                'rotate-0'
+              ];
+              const hoverTransforms = [
+                'group-hover:-rotate-[30deg] group-hover:-translate-x-28 group-hover:translate-y-10 group-hover:shadow-2xl',
+                'group-hover:-rotate-[15deg] group-hover:-translate-x-14 group-hover:translate-y-4 group-hover:shadow-xl',
+                'group-hover:-translate-y-4 group-hover:scale-105 group-hover:rotate-0 group-hover:shadow-[0_20px_50px_rgba(197,160,89,0.2)]'
+              ];
+              const zIndexes = ['z-10', 'z-20', 'z-30'];
+              
+              return (
+                <div 
+                  key={order.id} 
+                  className={`absolute top-0 left-0 w-full h-full p-3 transition-all duration-700 ease-out origin-bottom-right ${themeMode === 'dark' ? 'bg-[#111] shadow-[0_10px_30px_rgba(0,0,0,0.8)]' : 'bg-white shadow-xl'} rounded-[32px] transform ${idleTransforms[idx]} ${hoverTransforms[idx]} ${zIndexes[idx]}`}
+                >
+                    <div className="w-full h-full border border-black/5 dark:border-white/5 rounded-[24px] overflow-hidden relative flex flex-col items-center justify-center text-center p-8">
+                        <div className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" style={{ backgroundImage: `url(${order.image})` }}></div>
+                        <div className="absolute inset-0 bg-black/40 transition-colors duration-1000 group-hover:bg-black/50"></div>
+                        <div className="relative z-10 transform transition-transform duration-500 group-hover:-translate-y-2">
+                            <p className="font-serif text-white/80 text-sm italic mb-2 uppercase tracking-widest">The Wedding of</p>
+                            <h2 className="font-serif text-3xl text-white mb-4">{order.names}</h2>
+                            <div className="w-12 h-[1px] bg-[#C5A059] mx-auto mb-4 transition-all duration-500 group-hover:w-20"></div>
+                            <p className="text-xs text-white/90 uppercase tracking-widest">{order.theme}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
+              );
+            })}
           </motion.div>
           
-
         </div>
+      </div>
+
+      {/* How it Works Section */}
+      <div className="py-24 bg-white dark:bg-[#0A0A0B] relative z-10 border-t border-black/5 dark:border-white/5">
+         <div className="max-w-7xl mx-auto px-6 lg:px-12">
+            <div className="text-center mb-16">
+               <h2 className="font-serif text-3xl md:text-5xl text-gray-900 dark:text-white mb-6">
+                  {lang === 'id' ? 'Tiga Langkah Mudah' : 'Three Simple Steps'}
+               </h2>
+               <p className="text-gray-500 dark:text-white/60 max-w-2xl mx-auto text-lg leading-relaxed">
+                  {lang === 'id' ? 'Kami mendesain sistem yang sesederhana mungkin agar Anda bisa fokus pada momen spesial, sementara kami menangani administrasinya.' : 'We designed the system to be as simple as possible so you can focus on the special moments, while we handle the administration.'}
+               </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 relative">
+               {/* Arrow connecting steps on desktop */}
+               <div className="hidden md:block absolute top-[60px] left-[20%] right-[20%] h-[2px] bg-gradient-to-r from-transparent via-[#C5A059]/30 to-transparent"></div>
+
+               <div className="bg-gray-50 dark:bg-black/40 p-8 rounded-[32px] border border-black/5 dark:border-white/5 relative flex flex-col items-center text-center group hover:bg-white dark:hover:bg-white/5 hover:border-[#C5A059]/50 transition-all duration-300">
+                  <div className="w-16 h-16 rounded-full bg-white dark:bg-[#111] shadow-xl flex items-center justify-center mb-8 border border-black/5 dark:border-white/10 group-hover:scale-110 group-hover:bg-[#C5A059] group-hover:text-white transition-all text-[#C5A059] z-10">
+                     <Search width={24} height={24} />
+                  </div>
+                  <h3 className="text-xl font-serif text-gray-900 dark:text-white mb-4">{lang === 'id' ? '1. Pilih Tema' : '1. Choose a Theme'}</h3>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm leading-loose">
+                     {lang === 'id' ? 'Temukan desain undangan yang paling mewakili kisah cinta Anda dari koleksi eksklusif kami.' : 'Find the invitation design that best represents your love story from our exclusive collection.'}
+                  </p>
+               </div>
+
+               <div className="bg-gray-50 dark:bg-black/40 p-8 rounded-[32px] border border-black/5 dark:border-white/5 relative flex flex-col items-center text-center group hover:bg-white dark:hover:bg-white/5 hover:border-[#C5A059]/50 transition-all duration-300">
+                  <div className="w-16 h-16 rounded-full bg-white dark:bg-[#111] shadow-xl flex items-center justify-center mb-8 border border-black/5 dark:border-white/10 group-hover:scale-110 group-hover:bg-[#C5A059] group-hover:text-white transition-all text-[#C5A059] z-10">
+                     <PenTool width={24} height={24} />
+                  </div>
+                  <h3 className="text-xl font-serif text-gray-900 dark:text-white mb-4">{lang === 'id' ? '2. Isi Detail Acara' : '2. Fill Event Details'}</h3>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm leading-loose">
+                     {lang === 'id' ? 'Lengkapi informasi acara pernikahan Anda. Tanpa perlu mendaftar akun, prosesnya instan.' : 'Complete your wedding event information. No account registration needed, instant process.'}
+                  </p>
+               </div>
+
+               <div className="bg-gray-50 dark:bg-black/40 p-8 rounded-[32px] border border-black/5 dark:border-white/5 relative flex flex-col items-center text-center group hover:bg-white dark:hover:bg-white/5 hover:border-[#C5A059]/50 transition-all duration-300">
+                  <div className="w-16 h-16 rounded-full bg-white dark:bg-[#111] shadow-xl flex items-center justify-center mb-8 border border-black/5 dark:border-white/10 group-hover:scale-110 group-hover:bg-[#C5A059] group-hover:text-white transition-all text-[#C5A059] z-10">
+                     <Zap width={24} height={24} />
+                  </div>
+                  <h3 className="text-xl font-serif text-gray-900 dark:text-white mb-4">{lang === 'id' ? '3. Aktif & Bagikan' : '3. Active & Share'}</h3>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm leading-loose">
+                     {lang === 'id' ? 'Selesaikan pembayaran otomatis dan tautan undangan Anda siap dibagikan seketika.' : 'Complete automatic payment and your invitation link is ready to share instantly.'}
+                  </p>
+               </div>
+            </div>
+         </div>
       </div>
 
       {/* Recent Orders Section */}
@@ -138,27 +207,41 @@ export default function Home() {
            <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-gray-50 dark:from-[#0A0A0B] to-transparent z-10 pointer-events-none"></div>
            <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-gray-50 dark:from-[#0A0A0B] to-transparent z-10 pointer-events-none"></div>
 
-           <div className="animate-marquee gap-6 shrink-0 w-max pr-6">
+           <div className="animate-marquee gap-6 shrink-0 w-max pr-6 pt-10 pb-10">
               {[...RECENT_ORDERS.slice(0, 5), ...RECENT_ORDERS.slice(0, 5), ...RECENT_ORDERS.slice(0, 5)].map((order, i) => (
-                <div key={`row1-${order.id}-${i}`} className="w-64 h-80 rounded-[24px] relative overflow-hidden group shadow-lg shrink-0 cursor-pointer">
-                   <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style={{ backgroundImage: `url(${order.image})` }}></div>
-                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                   <div className="absolute bottom-0 left-0 w-full p-5 text-left text-white">
-                      <p className="text-xs uppercase tracking-widest text-[#C5A059] mb-1 font-semibold">{order.theme}</p>
-                      <p className="font-serif text-lg">{order.names}</p>
+                <div key={`row1-${order.id}-${i}`} className="w-64 h-80 relative group shrink-0 cursor-pointer z-10 hover:z-50">
+                   {/* Back Cards for Fan Effect */}
+                   <div className="absolute inset-0 rounded-[24px] bg-white dark:bg-zinc-800 shadow-md transition-all duration-500 origin-bottom-left group-hover:-rotate-6 group-hover:-translate-x-6 border border-gray-100 dark:border-white/5 opacity-0 group-hover:opacity-100"></div>
+                   <div className="absolute inset-0 rounded-[24px] bg-white dark:bg-zinc-800 shadow-xl transition-all duration-500 origin-bottom-right group-hover:rotate-6 group-hover:translate-x-6 border border-gray-100 dark:border-white/5 opacity-0 group-hover:opacity-100"></div>
+                   
+                   {/* Main Card */}
+                   <div className="absolute inset-0 rounded-[24px] overflow-hidden shadow-lg transition-transform duration-500 group-hover:-translate-y-4">
+                      <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style={{ backgroundImage: `url(${order.image})` }}></div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                      <div className="absolute bottom-0 left-0 w-full p-5 text-left text-white">
+                         <p className="text-xs uppercase tracking-widest text-[#C5A059] mb-1 font-semibold">{order.theme}</p>
+                         <p className="font-serif text-lg">{order.names}</p>
+                      </div>
                    </div>
                 </div>
               ))}
            </div>
            
-           <div className="animate-marquee-reverse gap-6 shrink-0 w-max pr-6">
+           <div className="animate-marquee-reverse gap-6 shrink-0 w-max pr-6 pt-10 pb-10">
               {[...RECENT_ORDERS.slice(5, 10), ...RECENT_ORDERS.slice(5, 10), ...RECENT_ORDERS.slice(5, 10)].map((order, i) => (
-                <div key={`row2-${order.id}-${i}`} className="w-64 h-80 rounded-[24px] relative overflow-hidden group shadow-lg shrink-0 cursor-pointer">
-                   <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style={{ backgroundImage: `url(${order.image})` }}></div>
-                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                   <div className="absolute bottom-0 left-0 w-full p-5 text-left text-white">
-                      <p className="text-xs uppercase tracking-widest text-[#C5A059] mb-1 font-semibold">{order.theme}</p>
-                      <p className="font-serif text-lg">{order.names}</p>
+                <div key={`row2-${order.id}-${i}`} className="w-64 h-80 relative group shrink-0 cursor-pointer z-10 hover:z-50">
+                   {/* Back Cards for Fan Effect */}
+                   <div className="absolute inset-0 rounded-[24px] bg-white dark:bg-zinc-800 shadow-md transition-all duration-500 origin-bottom-left group-hover:-rotate-6 group-hover:-translate-x-6 border border-gray-100 dark:border-white/5 opacity-0 group-hover:opacity-100"></div>
+                   <div className="absolute inset-0 rounded-[24px] bg-white dark:bg-zinc-800 shadow-xl transition-all duration-500 origin-bottom-right group-hover:rotate-6 group-hover:translate-x-6 border border-gray-100 dark:border-white/5 opacity-0 group-hover:opacity-100"></div>
+                   
+                   {/* Main Card */}
+                   <div className="absolute inset-0 rounded-[24px] overflow-hidden shadow-lg transition-transform duration-500 group-hover:-translate-y-4">
+                      <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style={{ backgroundImage: `url(${order.image})` }}></div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                      <div className="absolute bottom-0 left-0 w-full p-5 text-left text-white">
+                         <p className="text-xs uppercase tracking-widest text-[#C5A059] mb-1 font-semibold">{order.theme}</p>
+                         <p className="font-serif text-lg">{order.names}</p>
+                      </div>
                    </div>
                 </div>
               ))}

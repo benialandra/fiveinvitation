@@ -100,25 +100,42 @@ app.get("/api/themes", async (req, res) => {
 });
 
 // Create Theme Endpoint
-app.post("/api/admin/themes", upload.single('zipFile'), async (req, res) => {
+app.post("/api/admin/themes", upload.fields([{ name: 'zipFile', maxCount: 1 }, { name: 'images', maxCount: 5 }]), async (req: any, res: any) => {
   try {
-    const { id, name, category, price, thumbnail } = req.body;
+    const { id, name, category, price, thumbnail, config_json } = req.body;
     
-    if (supabaseUrl === 'https://mock.supabase.co') {
-       return res.json({ success: true, message: "Simulated theme creation" });
+    if (supabaseUrl === 'https://mock.supabase.co') return res.json({ success: true, message: "Simulated theme creation" });
+    
+    let parsedConfig: any = null;
+    try {
+        if (config_json) parsedConfig = typeof config_json === 'string' ? JSON.parse(config_json) : config_json;
+    } catch {
+       return res.status(400).json({ error: "Invalid JSON format in config_json" });
     }
+
+    let finalThumbnail = thumbnail || 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1000&auto=format&fit=crop';
     
+    // Process uploaded images
+    if (req.files && Array.isArray(req.files['images'])) {
+       const uploadedImages = req.files['images'].map((f: any) => `/uploads/${f.filename}`);
+       if (uploadedImages.length > 0) {
+           finalThumbnail = uploadedImages[0];
+           if (!parsedConfig) parsedConfig = {};
+           parsedConfig.gallery = uploadedImages;
+       }
+    }
+
     const { data, error } = await supabase.from('themes').insert([{
        id: id || `theme-${Date.now()}`,
        name,
        category,
        price: Number(price),
-       thumbnail: thumbnail || 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1000&auto=format&fit=crop',
-       sales: 0
+       thumbnail: finalThumbnail,
+       sales: 0,
+       config_json: parsedConfig
     }]).select().single();
     
     if (error) throw error;
-    
     return res.json({ success: true, theme: data });
   } catch (err: any) {
     console.error("Failed to create theme:", err);
@@ -127,30 +144,50 @@ app.post("/api/admin/themes", upload.single('zipFile'), async (req, res) => {
 });
 
 // Edit Theme Endpoint
-app.put("/api/admin/themes/:id", upload.single('thumbnailFile'), async (req, res) => {
+app.put("/api/admin/themes/:id", upload.fields([{ name: 'thumbnailFile', maxCount: 1 }, { name: 'images', maxCount: 5 }]), async (req: any, res: any) => {
   try {
     const { id } = req.params;
-    const { name, category, price, thumbnail: currentThumbnail } = req.body;
+    const { name, category, price, thumbnail: currentThumbnail, config_json } = req.body;
     
     let finalThumbnail = currentThumbnail || '';
-    if (req.file) {
-      finalThumbnail = `/uploads/${req.file.filename}`;
+    if (req.files && req.files['thumbnailFile']) {
+      finalThumbnail = `/uploads/${req.files['thumbnailFile'][0].filename}`;
     }
+
+    if (supabaseUrl === 'https://mock.supabase.co') return res.json({ success: true, thumbnail: finalThumbnail });
     
-    if (supabaseUrl === 'https://mock.supabase.co') {
-       return res.json({ success: true, thumbnail: finalThumbnail });
+    let parsedConfig: any = undefined;
+    try {
+        if (config_json) parsedConfig = typeof config_json === 'string' ? JSON.parse(config_json) : config_json;
+    } catch {
+       return res.status(400).json({ error: "Invalid JSON format in config_json" });
     }
-    
-    const { error } = await supabase.from('themes').update({
+
+    // Process new gallery images
+    if (req.files && Array.isArray(req.files['images'])) {
+       const newGalleryImages = req.files['images'].map((f: any) => `/uploads/${f.filename}`);
+       if (newGalleryImages.length > 0) {
+           if (!parsedConfig) parsedConfig = {};
+           let currentGallery = Array.isArray(parsedConfig.gallery) ? parsedConfig.gallery : [];
+           // Overwrite or append? The user selects new files. Let's just overwrite for now or combine. We can overwrite to keep things simple if they upload new 5 ones.
+           // Actually if they upload new ones, we'll overwrite the gallery. If they didn't upload any, we keep what's in config_json.
+           parsedConfig.gallery = newGalleryImages;
+           if (!finalThumbnail) finalThumbnail = newGalleryImages[0];
+       }
+    }
+
+    const updatePayload: any = {
        name,
        category,
        price: Number(price),
        thumbnail: finalThumbnail
-    }).eq('id', id);
+    };
+    if (parsedConfig !== undefined) updatePayload.config_json = parsedConfig;
+
+    const { data: dbData, error } = await supabase.from('themes').update(updatePayload).eq('id', id).select().single();
     
     if (error) throw error;
-    
-    return res.json({ success: true, thumbnail: finalThumbnail });
+    return res.json({ success: true, thumbnail: finalThumbnail, theme: dbData });
   } catch (err: any) {
     console.error("Failed to update theme:", err);
     return res.status(500).json({ error: err.message });
@@ -199,8 +236,11 @@ app.put("/api/orders/:orderCode", upload.fields([{ name: 'cover_image' }, { name
 
     let updateData: any = {
       groom_name, bride_name, groom_parents, bride_parents, 
-      akad_date, resepsi_date, location_name, maps_link, story, music_url, slug
+      location_name, maps_link, story, music_url, slug
     };
+
+    updateData.akad_date = akad_date || null;
+    updateData.resepsi_date = resepsi_date || null;
 
     if (req.files) {
       const files = req.files as { [fieldname: string]: Express.Multer.File[] };
@@ -225,12 +265,12 @@ app.put("/api/orders/:orderCode", upload.fields([{ name: 'cover_image' }, { name
 
     if (error) {
        console.error("Supabase update error:", error);
-       return res.status(500).json({error: "Failed to update order"});
+       return res.status(500).json({error: error.message || "Failed to update order", details: error});
     }
     res.json(data);
-  } catch (err) {
+  } catch (err: any) {
     console.error("Failed to update order:", err);
-    res.status(500).json({error: "Server error"});
+    res.status(500).json({error: err.message || "Server error", details: err});
   }
 });
 
@@ -453,6 +493,12 @@ cron.schedule('0 * * * *', async () => {
 // ==========================================
 
 async function setupServer() {
+  // Catch-all API error handler to prevent HTML responses
+  app.use('/api', (err: any, req: any, res: any, next: any) => {
+    console.error("API Error caught:", err);
+    res.status(err.status || 500).json({ error: err.message || "Internal Server Error" });
+  });
+
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
       server: { middlewareMode: true },

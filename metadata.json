@@ -1,0 +1,6 @@
+{
+  "name": "FiveInvitation - Premium Wedding Invitations",
+  "description": "Platform pembuatan undangan pernikahan digital premium berbasis Midtrans dan Supabase.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

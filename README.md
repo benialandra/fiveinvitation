@@ -9,7 +9,7 @@ FiveInvitation is a full-stack web application designed for creating, customizin
 - **💸 Payment Integration**: Integrated with Midtrans for handling online payments.
 - **✍️ Invitation Customization**: After purchase, users can easily edit couple's names, parents' names, event dates, locations, maps, personal stories, and background music.
 - **📸 Photo Uploads**: Personalize the invitation with custom cover and hero images.
-- **🔗 Custom URL Slugs**: Create a unique and memorable link for each invitation (e.g., `domain.com/beni-salsa`).
+- **🔗 Custom URL Slugs**: Create a unique and memorable link for each invitation (e.g., `domain.com/your-name`).
 - **📖 Digital Guest Book**: Guests can leave their wishes and messages directly on the invitation page in real-time.
 - **✅ RSVP Management**: Guests can confirm their attendance, and the couple can track the responses.
 - **🔒 Order Tracking**: Users can check the status of their order using a unique code.

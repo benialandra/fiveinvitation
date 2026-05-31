@@ -41,6 +41,9 @@ const upload = multer({
   })
 });
 
+// Serve uploads directory specifically
+app.use('/uploads', express.static(uploadsDir));
+
 // Initialize Supabase Server Client
 const rawSupabaseUrl = process.env.VITE_SUPABASE_URL || 'https://mock.supabase.co';
 const supabaseUrl = rawSupabaseUrl.replace(/^["']|["']$/g, '');
@@ -130,23 +133,36 @@ app.get("/api/orders/:orderCode", async (req, res) => {
 });
 
 // Update single order
-app.put("/api/orders/:orderCode", async (req, res) => {
+app.put("/api/orders/:orderCode", upload.fields([{ name: 'cover_image' }, { name: 'hero_image' }]), async (req, res) => {
   try {
-    if (supabaseUrl === 'https://mock.supabase.co') {
-      return res.json({ status: "success", data: req.body });
-    }
     const orderCode = req.params.orderCode;
     const { 
       groom_name, bride_name, groom_parents, bride_parents, 
       akad_date, resepsi_date, location_name, maps_link, story, music_url, slug 
     } = req.body;
 
+    let updateData: any = {
+      groom_name, bride_name, groom_parents, bride_parents, 
+      akad_date, resepsi_date, location_name, maps_link, story, music_url, slug
+    };
+
+    if (req.files) {
+      const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+      if (files['cover_image']?.[0]) {
+        updateData.cover_image = `/uploads/${files['cover_image'][0].filename}`;
+      }
+      if (files['hero_image']?.[0]) {
+        updateData.hero_image = `/uploads/${files['hero_image'][0].filename}`;
+      }
+    }
+
+    if (supabaseUrl === 'https://mock.supabase.co') {
+      return res.json({ status: "success", data: updateData });
+    }
+
     const { data, error } = await supabase
       .from('orders')
-      .update({
-        groom_name, bride_name, groom_parents, bride_parents, 
-        akad_date, resepsi_date, location_name, maps_link, story, music_url, slug
-      })
+      .update(updateData)
       .eq('unique_code', orderCode)
       .select()
       .single();

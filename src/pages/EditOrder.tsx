@@ -22,8 +22,13 @@ export default function EditOrder() {
     maps_link: '',
     story: '',
     music_url: '',
-    slug: ''
+    slug: '',
+    cover_image: '',
+    hero_image: ''
   });
+  
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [heroFile, setHeroFile] = useState<File | null>(null);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -42,7 +47,9 @@ export default function EditOrder() {
             maps_link: data.maps_link || '',
             story: data.story || '',
             music_url: data.music_url || '',
-            slug: data.slug || ''
+            slug: data.slug || '',
+            cover_image: data.cover_image || '',
+            hero_image: data.hero_image || ''
           });
         } else {
           alert('Pesanan tidak ditemukan.');
@@ -62,20 +69,32 @@ export default function EditOrder() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'cover' | 'hero') => {
+    if (e.target.files && e.target.files.length > 0) {
+      if (type === 'cover') setCoverFile(e.target.files[0]);
+      if (type === 'hero') setHeroFile(e.target.files[0]);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
     try {
+      const dataToSubmit = new FormData();
+      Object.keys(formData).forEach((key) => {
+        const val = (formData as any)[key];
+        if (key === 'akad_date' || key === 'resepsi_date') {
+          dataToSubmit.append(key, val ? new Date(val).toISOString() : '');
+        } else {
+           dataToSubmit.append(key, val);
+        }
+      });
+      if (coverFile) dataToSubmit.append('cover_image', coverFile);
+      if (heroFile) dataToSubmit.append('hero_image', heroFile);
+
       const response = await fetch(`/api/orders/${orderCode}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          akad_date: formData.akad_date ? new Date(formData.akad_date).toISOString() : null,
-          resepsi_date: formData.resepsi_date ? new Date(formData.resepsi_date).toISOString() : null,
-        }),
+        body: dataToSubmit
       });
 
       if (response.ok) {
@@ -234,9 +253,27 @@ export default function EditOrder() {
           </div>
         </div>
 
-        {/* Tambahan */}
+        {/* Tambahan & Wallpaper */}
         <div className={`p-6 md:p-8 rounded-2xl ${themeMode === 'dark' ? 'bg-white/5 ring-1 ring-white/10' : 'bg-white shadow-sm ring-1 ring-gray-100'}`}>
-          <h2 className="text-xl font-serif text-gray-900 dark:text-white mb-6 border-b border-gray-100 dark:border-white/10 pb-4">Tambahan</h2>
+          <h2 className="text-xl font-serif text-gray-900 dark:text-white mb-6 border-b border-gray-100 dark:border-white/10 pb-4">Foto & Wallpaper Tema</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div>
+              <label className={labelClass}>Foto Sampul Undangan (Awal Masuk / Cover)</label>
+              {formData.cover_image && !coverFile && (
+                <img src={formData.cover_image} className="w-full h-32 object-cover rounded-xl mb-3 border border-gray-200 dark:border-white/10" alt="Cover" />
+              )}
+              <input type="file" accept="image/*" onChange={e => handleFileChange(e, 'cover')} className={`${inputClass} !py-2`} />
+            </div>
+            <div>
+              <label className={labelClass}>Wallpaper Tema (Background Hero Section)</label>
+              {formData.hero_image && !heroFile && (
+                <img src={formData.hero_image} className="w-full h-32 object-cover rounded-xl mb-3 border border-gray-200 dark:border-white/10" alt="Wallpaper" />
+              )}
+              <input type="file" accept="image/*" onChange={e => handleFileChange(e, 'hero')} className={`${inputClass} !py-2`} />
+            </div>
+          </div>
+
+          <h2 className="text-xl font-serif text-gray-900 dark:text-white mb-6 border-b border-gray-100 dark:border-white/10 pb-4">Cerita & Musik</h2>
           <div className="grid grid-cols-1 gap-6">
             <div>
               <label className={labelClass}>Kisah Cinta (Opsional)</label>

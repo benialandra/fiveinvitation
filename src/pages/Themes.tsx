@@ -8,15 +8,38 @@ export default function Themes() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<ThemeCategory | 'All'>('All');
   const [visibleCount, setVisibleCount] = useState(12);
-  const { lang } = useOutletContext<{ lang: 'en' | 'id', themeMode: string }>();
+  const { lang, themeMode } = useOutletContext<{ lang: 'en' | 'id', themeMode: string }>();
+
+  const [dbThemes, setDbThemes] = useState<any[]>([]);
+
+  React.useEffect(() => {
+     fetch('/api/themes')
+       .then(res => res.json())
+       .then(data => {
+          if (Array.isArray(data) && data.length > 0) {
+             setDbThemes(data);
+          }
+       })
+       .catch(err => console.error("Failed to fetch themes", err));
+  }, []);
+
+  const uploadedThemes = useMemo(() => {
+    try {
+      const stored = localStorage.getItem('uploadedThemes');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  }, []);
 
   const filteredThemes = useMemo(() => {
-    return THEME_REGISTRY.filter(theme => {
+    const baseThemes = dbThemes.length > 0 ? dbThemes : [...THEME_REGISTRY, ...uploadedThemes];
+    return baseThemes.filter(theme => {
       const matchSearch = theme.name.toLowerCase().includes(search.toLowerCase());
       const matchCategory = category === 'All' || theme.category === category;
       return matchSearch && matchCategory;
     });
-  }, [search, category]);
+  }, [search, category, uploadedThemes, dbThemes]);
 
   const loadMore = () => {
     setVisibleCount(prev => prev + 4);

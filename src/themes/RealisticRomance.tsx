@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import toast from 'react-hot-toast';
 
 export default function RealisticRomance({ data, guestName }: { data?: any, guestName?: string }) {
   const groom = data?.groom_name || 'Romeo';
@@ -117,12 +118,12 @@ export default function RealisticRomance({ data, guestName }: { data?: any, gues
             transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
             className="fixed inset-0 z-50 bg-[#FCFBF8] flex flex-col items-center justify-center p-8 text-center"
           >
-            <div className="absolute inset-0 opacity-30">
+            <div className="absolute inset-0 opacity-70">
               <img src={coverImg} className="w-full h-full object-cover" alt="Cover background" />
-              <div className="absolute inset-0 bg-white/60 backdrop-blur-sm" />
+              <div className="absolute inset-0 bg-white/30 backdrop-blur-[2px]" />
             </div>
             
-            <div className="relative z-10 max-w-md w-full bg-white/80 backdrop-blur-md p-10 rounded-t-full border border-[#E8E1D5] shadow-2xl">
+            <div className="relative z-10 max-w-md w-full bg-white/90 backdrop-blur-md p-10 rounded-t-full border border-[#E8E1D5] shadow-2xl">
               <span className="text-sm tracking-[0.3em] uppercase text-[#C5A059] block mb-6 font-sans">The Wedding Of</span>
               <h1 className="text-4xl md:text-5xl font-light mb-6 text-[#4A4A4A]">{groom} & {bride}</h1>
               <div className="w-12 h-px bg-[#C5A059] mx-auto mb-8" />
@@ -145,8 +146,8 @@ export default function RealisticRomance({ data, guestName }: { data?: any, gues
         
         {/* Hero Section */}
         <section className="relative h-screen flex items-center justify-center overflow-hidden">
-          <motion.div style={{ y: yHeroBg, backgroundImage: `url('${heroImg}')` }} className="absolute inset-0 bg-cover bg-center opacity-80">
-            <div className="absolute inset-0 bg-gradient-to-b from-[#FCFBF8]/30 via-transparent to-[#FCFBF8]" />
+          <motion.div style={{ y: yHeroBg, backgroundImage: `url('${heroImg}')` }} className="absolute inset-0 bg-cover bg-center opacity-100">
+            <div className="absolute inset-0 bg-gradient-to-b from-[#FCFBF8]/40 via-transparent to-[#FCFBF8]" />
           </motion.div>
           
           <motion.div 
@@ -311,7 +312,7 @@ export default function RealisticRomance({ data, guestName }: { data?: any, gues
               <button 
                 onClick={() => {
                   navigator.clipboard.writeText(bankAccount1);
-                  alert('Nomor rekening disalin!');
+                  toast.success('Nomor rekening disalin!');
                 }}
                 className="flex items-center justify-center gap-2 w-full py-3 bg-white border border-[#C5A059] text-[#C5A059] rounded-xl font-sans hover:bg-[#FCFBF8] transition-colors"
               >

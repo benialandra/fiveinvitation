@@ -4,6 +4,7 @@ import { THEME_REGISTRY } from '../themes/registry';
 import { generateOrderCode } from '../lib/utils';
 import { ChevronRight, ArrowLeft, Loader2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import toast from 'react-hot-toast';
 
 // Helper hook
 const useScript = (url: string) => {
@@ -19,9 +20,21 @@ const useScript = (url: string) => {
 
 export default function Order() {
   const { themeId } = useParams();
-  const theme = THEME_REGISTRY.find(t => t.id === themeId);
+  const [theme, setTheme] = useState(THEME_REGISTRY.find(t => t.id === themeId));
   const navigate = useNavigate();
   
+  React.useEffect(() => {
+     fetch('/api/themes')
+       .then(res => res.json())
+       .then(data => {
+          if (Array.isArray(data) && data.length > 0) {
+             const dbTheme = data.find(t => t.id === themeId);
+             if (dbTheme) setTheme(dbTheme);
+          }
+       })
+       .catch(err => console.error(err));
+  }, [themeId]);
+
   // Midtrans snap script sandbox
   useScript('https://app.sandbox.midtrans.com/snap/snap.js');
 
@@ -72,12 +85,14 @@ export default function Order() {
       const payload = await res.json();
       
       if (!res.ok) {
+        toast.error(payload.error || "Gagal memproses pesanan.");
         setErrorMessage(payload.error || "Gagal memproses pesanan. Silakan periksa kembali data Anda.");
         setLoading(false);
         return;
       }
       
       const { token } = payload;
+      toast.success('Pesanan berhasil dibuat! Menunggu pembayaran...');
       
       // 2. We now rely completely on the backend to store data into Google Sheets
       // instead of using Supabase here.
@@ -101,10 +116,12 @@ export default function Order() {
           }
         });
       } else {
+        toast.error("Gagal memuat sistem pembayaran");
         setErrorMessage("Midtrans script not loaded");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      toast.error(err.message || "Terjadi kesalahan. Pastikan backend berjalan.");
       setErrorMessage("Terjadi kesalahan. Pastikan backend berjalan.");
     } finally {
       setLoading(false);

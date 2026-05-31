@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useOutletContext, useNavigate } from 'react-router-dom';
+import { useParams, Link, useOutletContext, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { CheckCircle2, Clock, Eye, AlertCircle, Search, ArrowRight, Loader2, RefreshCw } from 'lucide-react';
 import { THEME_REGISTRY } from '../themes/registry';
+import toast from 'react-hot-toast';
 
 export default function Track() {
   const { orderCode } = useParams();
@@ -10,6 +11,19 @@ export default function Track() {
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const { themeMode } = useOutletContext<{ lang: 'en' | 'id', themeMode: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    const status = searchParams.get('status');
+    if (status === 'success') toast.success('Pembayaran berhasil!');
+    if (status === 'error') toast.error('Pembayaran gagal atau dibatalkan.');
+    
+    // Clean up to prevent duplicate toasts on refresh
+    if (status) {
+      searchParams.delete('status');
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   const fetchOrder = async () => {
     setLoading(true);

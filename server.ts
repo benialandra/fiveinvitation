@@ -64,8 +64,70 @@ const snap = new midtransClient.Snap({
 // API ROUTES
 // ==========================================
 
+// Seed Themes Endpoint (Initial manual seeding to Supabase)
+app.post("/api/admin/themes/seed", async (req, res) => {
+  try {
+    if (supabaseUrl === 'https://mock.supabase.co') {
+      return res.status(400).json({ error: "Connect to real Supabase to seed" });
+    }
+    const { themes } = req.body;
+    if (!themes || !Array.isArray(themes)) {
+      return res.status(400).json({ error: "Invalid themes payload" });
+    }
+    const { error } = await supabase.from('themes').upsert(themes, { onConflict: 'id' });
+    if (error) throw error;
+    res.json({ success: true, message: "Themes seeded successfully" });
+  } catch (err: any) {
+    console.error("Failed to seed themes:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Fetch all Themes Endpoint
+app.get("/api/themes", async (req, res) => {
+  try {
+    if (supabaseUrl === 'https://mock.supabase.co') return res.json([]);
+    const { data, error } = await supabase.from('themes').select('*').order('created_at', { ascending: false });
+    if (error) {
+       console.error("Supabase fetch error:", error);
+       return res.json([]);
+    }
+    res.json(data || []);
+  } catch (err) {
+    console.error("Failed to fetch themes:", err);
+    res.json([]);
+  }
+});
+
+// Create Theme Endpoint
+app.post("/api/admin/themes", upload.single('zipFile'), async (req, res) => {
+  try {
+    const { id, name, category, price, thumbnail } = req.body;
+    
+    if (supabaseUrl === 'https://mock.supabase.co') {
+       return res.json({ success: true, message: "Simulated theme creation" });
+    }
+    
+    const { data, error } = await supabase.from('themes').insert([{
+       id: id || `theme-${Date.now()}`,
+       name,
+       category,
+       price: Number(price),
+       thumbnail: thumbnail || 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1000&auto=format&fit=crop',
+       sales: 0
+    }]).select().single();
+    
+    if (error) throw error;
+    
+    return res.json({ success: true, theme: data });
+  } catch (err: any) {
+    console.error("Failed to create theme:", err);
+    return res.status(500).json({ error: err.message });
+  }
+});
+
 // Edit Theme Endpoint
-app.post("/api/admin/themes/:id/update", upload.single('thumbnailFile'), async (req, res) => {
+app.put("/api/admin/themes/:id", upload.single('thumbnailFile'), async (req, res) => {
   try {
     const { id } = req.params;
     const { name, category, price, thumbnail: currentThumbnail } = req.body;
@@ -75,24 +137,18 @@ app.post("/api/admin/themes/:id/update", upload.single('thumbnailFile'), async (
       finalThumbnail = `/uploads/${req.file.filename}`;
     }
     
-    const registryPath = path.join(process.cwd(), 'src', 'themes', 'registry.tsx');
-    if (!fs.existsSync(registryPath)) {
-      return res.status(500).json({ error: 'Registry not found' });
+    if (supabaseUrl === 'https://mock.supabase.co') {
+       return res.json({ success: true, thumbnail: finalThumbnail });
     }
     
-    let content = fs.readFileSync(registryPath, 'utf8');
+    const { error } = await supabase.from('themes').update({
+       name,
+       category,
+       price: Number(price),
+       thumbnail: finalThumbnail
+    }).eq('id', id);
     
-    const regex = new RegExp(`(id:\\s*['"]${id}['"],\\s*name:\\s*['"])([^'"]*)(['"],\\s*category:\\s*['"])([^'"]*)(['"],\\s*price:\\s*)(\\d+)(,\\s*thumbnail:\\s*['"])([^'"]*)(['"])`, 'g');
-    
-    if (!regex.test(content)) {
-      regex.lastIndex = 0;
-      return res.status(400).json({ error: 'Failed to match theme format strictly in registry.tsx. Expected exact order: id, name, category, price, thumbnail.' });
-    }
-    
-    regex.lastIndex = 0;
-    content = content.replace(regex, `$1${name}$3${category}$5${price}$7${finalThumbnail}$9`);
-    
-    fs.writeFileSync(registryPath, content);
+    if (error) throw error;
     
     return res.json({ success: true, thumbnail: finalThumbnail });
   } catch (err: any) {

@@ -58,6 +58,19 @@ CREATE TABLE public.rsvp (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
 );
 
+-- 4. Themes Table
+-- Menyimpan katalog tema
+CREATE TABLE public.themes (
+    id VARCHAR(100) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    category VARCHAR(50) NOT NULL,
+    price INTEGER NOT NULL,
+    thumbnail TEXT,
+    sales INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
+
 -- ==========================================
 -- ROW LEVEL SECURITY (RLS) POLICIES
 -- ==========================================
@@ -66,6 +79,13 @@ CREATE TABLE public.rsvp (
 ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.guest_books ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.rsvp ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.themes ENABLE ROW LEVEL SECURITY;
+
+-- Themes RLS
+CREATE POLICY "Enable insertions for everyone" ON public.themes FOR INSERT WITH CHECK (true);
+CREATE POLICY "Enable updates for everyone" ON public.themes FOR UPDATE USING (true);
+CREATE POLICY "Enable select for everyone" ON public.themes FOR SELECT USING (true);
+CREATE POLICY "Enable deletions for everyone" ON public.themes FOR DELETE USING (true);
 
 -- Orders RLS (Public read for tracking/published, Public insert for new orders)
 CREATE POLICY "Enable insertions for everyone" ON public.orders FOR INSERT WITH CHECK (true);

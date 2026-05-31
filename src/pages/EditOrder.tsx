@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
 import { Loader2, Save, ArrowLeft, MapPin, X } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function EditOrder() {
   const { orderCode } = useParams();
@@ -52,7 +53,7 @@ export default function EditOrder() {
             hero_image: data.hero_image || ''
           });
         } else {
-          alert('Pesanan tidak ditemukan.');
+          toast.error('Pesanan tidak ditemukan.');
           navigate('/');
         }
       } catch (err) {
@@ -82,6 +83,8 @@ export default function EditOrder() {
     try {
       const dataToSubmit = new FormData();
       Object.keys(formData).forEach((key) => {
+        if (key === 'cover_image' || key === 'hero_image') return; // Skip image string values
+
         const val = (formData as any)[key];
         if (key === 'akad_date' || key === 'resepsi_date') {
           dataToSubmit.append(key, val ? new Date(val).toISOString() : '');
@@ -98,14 +101,14 @@ export default function EditOrder() {
       });
 
       if (response.ok) {
-        alert('Data berhasil disimpan!');
+        toast.success('Data berhasil disimpan!');
         navigate(`/track/${orderCode}`);
       } else {
-        alert('Gagal menyimpan data.');
+        toast.error('Gagal menyimpan data.');
       }
     } catch (err) {
       console.error(err);
-      alert('Terjadi kesalahan.');
+      toast.error('Terjadi kesalahan.');
     } finally {
       setSaving(false);
     }
@@ -123,12 +126,12 @@ export default function EditOrder() {
           setShowMapModal(false);
         },
         (error) => {
-          alert('Gagal mendapatkan lokasi. Pastikan izin lokasi diberikan.');
+          toast.error('Gagal mendapatkan lokasi. Pastikan izin lokasi diberikan.');
           setLocLoading(false);
         }
       );
     } else {
-      alert('Browser Anda tidak mendukung geolokasi.');
+      toast.error('Browser Anda tidak mendukung geolokasi.');
       setLocLoading(false);
     }
   };

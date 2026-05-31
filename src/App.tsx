@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import Home from './pages/Home';
 import Themes from './pages/Themes';
 import Order from './pages/Order';
@@ -15,6 +16,7 @@ import Socials from './pages/Socials';
 export default function App() {
   return (
     <BrowserRouter>
+      <Toaster position="top-center" />
       <Routes>
         {/* Core public app with layout */}
         <Route element={<Layout />}>

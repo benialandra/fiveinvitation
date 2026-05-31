@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { LayoutDashboard, ShoppingBag, Palette, LogOut, CheckCircle2, Clock, Database, Menu, Moon, Sun, Info, Settings, Loader2, Home as HomeIcon, Search, ChevronLeft, ChevronRight, ArrowUpDown, X, Upload as UploadIcon, Image as ImageIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { THEME_REGISTRY } from '../themes/registry';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -16,8 +17,9 @@ const data = [
 
 export default function Admin() {
   const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => sessionStorage.getItem('adminAuth') === 'true');
   const [password, setPassword] = useState('');
+  const [themeOverrides, setThemeOverrides] = useState<Record<string, any>>({});
   
   const [activeTab, setActiveTab] = useState<'dashboard' | 'orders' | 'themes' | 'settings'>('dashboard');
   const [editingTheme, setEditingTheme] = useState<any>(null);
@@ -39,6 +41,18 @@ export default function Admin() {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [themeMode, setThemeMode] = useState<'dark' | 'light'>('dark');
+  const [uploadedThemes, setUploadedThemes] = useState<any[]>(() => {
+    try {
+      const stored = localStorage.getItem('uploadedThemes');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [dbThemes, setDbThemes] = useState<any[]>([]);
+  const [loadingThemes, setLoadingThemes] = useState(false);
+  const [isSeeding, setIsSeeding] = useState(false);
 
   const bgClass = themeMode === 'dark' ? 'bg-[#0A0A0B] text-[#E5E5E5]' : 'bg-[#F4F4F5] text-gray-900';
   const cardClass = themeMode === 'dark' ? 'glass-card border-white/5' : 'bg-white border-gray-200 shadow-xl shadow-black/5 border';
@@ -65,6 +79,51 @@ export default function Admin() {
          });
     }
   }, [activeTab, isAuthenticated]);
+
+  useEffect(() => {
+    if ((activeTab === 'themes' || activeTab === 'dashboard') && isAuthenticated) {
+       setLoadingThemes(true);
+       fetch('/api/themes')
+         .then(res => res.json())
+         .then(data => {
+            if (Array.isArray(data) && data.length > 0) {
+               setDbThemes(data);
+            }
+            setLoadingThemes(false);
+         })
+         .catch(err => {
+            console.error("Failed to load themes", err);
+            setLoadingThemes(false);
+         });
+    }
+  }, [activeTab, isAuthenticated]);
+
+  const handleSeedThemes = async () => {
+      setIsSeeding(true);
+      try {
+         const themesToSeed = THEME_REGISTRY.map(t => ({
+             id: t.id,
+             name: t.name,
+             category: t.category,
+             price: t.price,
+             thumbnail: t.thumbnail,
+             sales: 0
+         }));
+         const res = await fetch('/api/admin/themes/seed', {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify({ themes: themesToSeed })
+         });
+         const data = await res.json();
+         if (!res.ok) throw new Error(data.error || 'Failed to seed');
+         toast.success('Semua data tema berhasil dimasukkan ke database Supabase!');
+         setDbThemes(themesToSeed);
+      } catch (err: any) {
+         toast.error(err.message);
+      } finally {
+         setIsSeeding(false);
+      }
+  };
 
   // Process Orders
   const filteredOrders = useMemo(() => {
@@ -102,14 +161,19 @@ export default function Admin() {
     return filteredOrders.slice(startIndex, startIndex + orderPageSize);
   }, [filteredOrders, orderPage, orderPageSize]);
 
-  // Process Themes (Simulate sales data if missing, using index for now)
+  // Process Themes (Use dbThemes if available)
   const processedThemes = useMemo(() => {
-    return THEME_REGISTRY.map((t, idx) => ({
-      ...t,
-      // Simulate sales based on string length and index for consistent dummy data
-      sales: t.id.length * 10 + (50 - idx * 5) 
-    }));
-  }, []);
+    let baseThemes = dbThemes.length > 0 ? dbThemes : [...THEME_REGISTRY, ...uploadedThemes];
+    return baseThemes.map((t, idx) => {
+      const override = themeOverrides[t.id] || {};
+      return {
+        ...t,
+        ...override,
+        // Simulate sales based on string length and index for consistent dummy data
+        sales: t.sales || (t.id.length * 10 + (50 - idx * 5))
+      };
+    });
+  }, [dbThemes, THEME_REGISTRY, uploadedThemes, themeOverrides]);
 
   const filteredThemes = useMemo(() => {
     let result = [...processedThemes];
@@ -142,9 +206,10 @@ export default function Admin() {
     e.preventDefault();
     const adminPass = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
     if (password === adminPass) {
+      sessionStorage.setItem('adminAuth', 'true');
       setIsAuthenticated(true);
     } else {
-      alert('Password salah.');
+      toast.error('Password salah.');
     }
   };
 
@@ -201,7 +266,10 @@ export default function Admin() {
             <button onClick={() => navigate('/')} className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-colors text-sm uppercase tracking-widest font-medium border ${themeMode === 'dark' ? 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10' : 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10'}`}>
                <HomeIcon className="w-4 h-4" /> Go to Main Page
             </button>
-            <button onClick={() => setIsAuthenticated(false)} className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm uppercase tracking-widest font-medium text-red-500 hover:bg-red-500/10 rounded-xl transition-colors">
+            <button onClick={() => {
+               sessionStorage.removeItem('adminAuth');
+               setIsAuthenticated(false);
+            }} className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm uppercase tracking-widest font-medium text-red-500 hover:bg-red-500/10 rounded-xl transition-colors">
                <LogOut className="w-4 h-4" /> Log Out
             </button>
           </div>
@@ -531,6 +599,13 @@ export default function Admin() {
                        Terlaris
                      </button>
                    </div>
+                   <button 
+                     onClick={handleSeedThemes} 
+                     disabled={isSeeding}
+                     className={`px-6 py-2.5 h-[42px] border text-xs uppercase tracking-widest rounded-xl transition-colors flex items-center gap-2 ${themeMode === 'dark' ? 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10' : 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10'} ${isSeeding ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                     {isSeeding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Database className="w-4 h-4" />}
+                     Seed DB
+                   </button>
                    <button onClick={() => setIsUploadModalOpen(true)} className={`px-6 py-2.5 h-[42px] border text-xs uppercase tracking-widest rounded-xl transition-colors ${themeMode === 'dark' ? 'border-white/20 hover:bg-white/10 text-white' : 'border-gray-200 hover:bg-gray-100 text-gray-900'}`}>
                      Upload
                    </button>
@@ -618,33 +693,98 @@ export default function Admin() {
             <div className="mb-6">
               <h3 className={`text-xl font-serif mb-1 ${themeMode === 'dark' ? 'text-white' : 'text-gray-900'}`}>Upload Master Tema Baru</h3>
               <p className="text-sm text-gray-500 dark:text-white/60">
-                Fitur ini dalam pengembangan. Untuk saat ini, penambahan tema baru harus melalui integrasi registry secara manual di source code.
+                Fitur ini disimulasikan. Tema akan ditambahkan ke state lokal secara dinamis.
               </p>
             </div>
             
-            <div className={`border-2 border-dashed rounded-xl p-8 mb-6 text-center ${themeMode === 'dark' ? 'border-white/20 bg-white/5' : 'border-gray-200 bg-gray-50'}`}>
-              <UploadIcon className="w-10 h-10 mx-auto mb-3 text-[#C5A059]" />
-              <p className={`text-sm font-medium mb-1 ${themeMode === 'dark' ? 'text-white' : 'text-gray-900'}`}>Klik untuk upload atau drag and drop</p>
-              <p className="text-xs text-gray-500 dark:text-white/50">ZIP file containing theme template (Max. 50MB)</p>
-            </div>
-            
-            <div className="flex justify-end gap-3">
-              <button 
-                onClick={() => setIsUploadModalOpen(false)}
-                className={`px-4 py-2 text-sm font-medium rounded-xl transition-colors ${themeMode === 'dark' ? 'hover:bg-white/10 text-white' : 'hover:bg-gray-100 text-gray-700'}`}
-              >
-                Batal
-              </button>
-              <button 
-                onClick={() => {
-                  alert('Fitur Upload Module Tema masih dalam tahap pengembangan.');
-                  setIsUploadModalOpen(false);
-                }}
-                className="px-6 py-2 bg-[#C5A059] hover:bg-[#b08d4a] text-white text-sm font-medium rounded-xl transition-colors shadow-lg shadow-[#C5A059]/25"
-              >
-                Simpan & Upload
-              </button>
-            </div>
+            <form onSubmit={async (e) => {
+               e.preventDefault();
+               const form = e.currentTarget;
+               const fd = new FormData(form);
+               
+               const loadingToast = toast.loading('Mengupload tema...');
+               try {
+                 const res = await fetch('/api/admin/themes', {
+                   method: 'POST',
+                   body: fd // send form data including the file
+                 });
+                 const result = await res.json();
+                 
+                 if (!res.ok) {
+                   throw new Error(result.error || 'Failed to upload theme');
+                 }
+                 
+                 toast.success('Upload Tema berhasil!', { id: loadingToast });
+                 
+                 // if using real db themes, add it
+                 if (result.theme) {
+                   setDbThemes(prev => [result.theme, ...prev]);
+                 } else {
+                   // mock flow fallback
+                   const newTheme = {
+                      id: `mock-${Date.now()}`,
+                      name: fd.get('name') as string,
+                      category: fd.get('category') as string,
+                      price: Number(fd.get('price')),
+                      thumbnail: (fd.get('thumbnail') as string) || 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1000&auto=format&fit=crop',
+                      sales: 0
+                   };
+                   const newArr = [newTheme, ...uploadedThemes];
+                   setUploadedThemes(newArr);
+                   localStorage.setItem('uploadedThemes', JSON.stringify(newArr));
+                 }
+                 
+                 setIsUploadModalOpen(false);
+               } catch (err: any) {
+                 toast.error(err.message || 'Terjadi kesalahan saat upload', { id: loadingToast });
+               }
+            }}>
+                <div className="space-y-4 mb-6 text-left">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Nama Tema</label>
+                    <input name="name" required className={`w-full px-4 py-2 border rounded-xl text-sm ${themeMode === 'dark' ? 'bg-white/5 border-white/10 focus:border-[#C5A059] text-white' : 'bg-gray-50 border-gray-200 focus:border-[#C5A059] text-gray-900'} outline-none transition-colors`} />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Kategori</label>
+                      <select name="category" required className={`w-full px-4 py-2 border rounded-xl text-sm ${themeMode === 'dark' ? 'bg-[#1a1a1a] border-white/10 focus:border-[#C5A059] text-white' : 'bg-gray-50 border-gray-200 focus:border-[#C5A059] text-gray-900'} outline-none transition-colors`}>
+                        <option value="Premium">Premium</option>
+                        <option value="Minimalist">Minimalist</option>
+                        <option value="Elegant">Elegant</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Harga (Rp)</label>
+                      <input name="price" type="number" required defaultValue="150000" className={`w-full px-4 py-2 border rounded-xl text-sm ${themeMode === 'dark' ? 'bg-white/5 border-white/10 focus:border-[#C5A059] text-white' : 'bg-gray-50 border-gray-200 focus:border-[#C5A059] text-gray-900'} outline-none transition-colors`} />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">URL Gambar Cover (Opsional)</label>
+                    <input name="thumbnail" className={`w-full px-4 py-2 border rounded-xl text-sm ${themeMode === 'dark' ? 'bg-white/5 border-white/10 focus:border-[#C5A059] text-white' : 'bg-gray-50 border-gray-200 focus:border-[#C5A059] text-gray-900'} outline-none transition-colors`} />
+                  </div>
+                  <div className={`border-2 border-dashed rounded-xl p-6 text-center relative overflow-hidden ${themeMode === 'dark' ? 'border-white/20 bg-white/5' : 'border-gray-200 bg-gray-50'}`}>
+                    <input type="file" name="zipFile" accept=".zip" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                    <UploadIcon className="w-8 h-8 mx-auto mb-2 text-[#C5A059]" />
+                    <p className={`text-xs font-medium mb-1 ${themeMode === 'dark' ? 'text-white' : 'text-gray-900'}`}>Upload File ZIP Tema</p>
+                  </div>
+                </div>
+                
+                <div className="flex justify-end gap-3">
+                  <button 
+                    type="button"
+                    onClick={() => setIsUploadModalOpen(false)}
+                    className={`px-4 py-2 text-sm font-medium rounded-xl transition-colors ${themeMode === 'dark' ? 'hover:bg-white/10 text-white' : 'hover:bg-gray-100 text-gray-700'}`}
+                  >
+                    Batal
+                  </button>
+                  <button 
+                    type="submit"
+                    className="px-6 py-2 bg-[#C5A059] hover:bg-[#b08d4a] text-white text-sm font-medium rounded-xl transition-colors shadow-lg shadow-[#C5A059]/25"
+                  >
+                    Simpan & Upload
+                  </button>
+                </div>
+            </form>
           </div>
         </div>
       )}
@@ -675,15 +815,23 @@ export default function Admin() {
                   method: 'POST',
                   body: formData
                 });
+                const result = await res.json();
                 if (!res.ok) {
-                  const errorRes = await res.json();
-                  throw new Error(errorRes.error || 'Failed to update theme');
+                  throw new Error(result.error || 'Failed to update theme');
                 }
-                alert('Tema berhasil diupdate!');
+                toast.success('Tema berhasil diupdate!');
+                setThemeOverrides(prev => ({
+                   ...prev,
+                   [editingTheme.id]: {
+                      name: editingTheme.name,
+                      category: editingTheme.category,
+                      price: editingTheme.price,
+                      thumbnail: result.thumbnail || editingTheme.thumbnail
+                   }
+                }));
                 setEditingTheme(null);
-                window.location.reload(); // Refresh to see changes
               } catch (err: any) {
-                alert(err.message);
+                toast.error(err.message);
               }
             }}>
               <div className="space-y-4">

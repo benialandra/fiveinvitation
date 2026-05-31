@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import toast from 'react-hot-toast';
 
 export default function DarkPremium({ data, guestName }: { data?: any, guestName?: string }) {
   const groom = data?.groom_name || 'Kevin';
@@ -7,6 +8,7 @@ export default function DarkPremium({ data, guestName }: { data?: any, guestName
   const displayGuest = guestName || 'Our Respected Guest';
 
   const mapImg = data?.map_image || "https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=2000&auto=format&fit=crop";
+  const heroImg = data?.hero_image; // Allow custom hero image or keep dark theme default
   const bankName1 = data?.bank_name_1 || "BCA";
   const bankAccount1 = data?.bank_account_1 || "1234567890";
   const bankAccountName1 = data?.bank_account_name_1 || groom;
@@ -17,7 +19,11 @@ export default function DarkPremium({ data, guestName }: { data?: any, guestName
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200 font-sans tracking-tight overflow-x-hidden selection:bg-indigo-500/30">
       <motion.div style={{ opacity: opacityMain }} className="h-screen w-full flex flex-col justify-between p-8 md:p-16 relative">
-        <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-indigo-900/10 to-transparent pointer-events-none" />
+        {heroImg ? (
+           <div className="absolute inset-0 bg-cover bg-center opacity-60" style={{ backgroundImage: `url('${heroImg}')` }} />
+        ) : (
+           <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-indigo-900/10 to-transparent pointer-events-none" />
+        )}
         
         <header className="flex justify-between items-center text-sm font-medium uppercase tracking-widest text-slate-500 z-10 w-full">
           <motion.span initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>{groom} & {bride}</motion.span>
@@ -184,7 +190,7 @@ export default function DarkPremium({ data, guestName }: { data?: any, guestName
           <button 
              onClick={() => {
                 navigator.clipboard.writeText(bankAccount1);
-                alert('Account number copied to clipboard!');
+                toast.success('Account number copied to clipboard!');
              }}
              className="w-full py-4 bg-slate-800 text-white font-medium rounded-xl hover:bg-indigo-500 transition-colors uppercase tracking-widest text-xs"
           >

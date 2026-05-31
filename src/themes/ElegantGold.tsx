@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import toast from 'react-hot-toast';
 
 // Example elegant gold theme
 export default function ElegantGold({ data, guestName }: { data?: any, guestName?: string }) {
@@ -19,7 +20,7 @@ export default function ElegantGold({ data, guestName }: { data?: any, guestName
 
   return (
     <div className="min-h-screen bg-black text-rose-50 font-serif overflow-x-hidden relative">
-      <motion.div style={{ y, backgroundImage: `url('${heroImg}')` }} className="absolute inset-0 opacity-20 bg-cover bg-center" />
+      <motion.div style={{ y, backgroundImage: `url('${heroImg}')` }} className="absolute inset-0 opacity-50 bg-cover bg-center" />
       
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
         <motion.div 
@@ -156,7 +157,7 @@ export default function ElegantGold({ data, guestName }: { data?: any, guestName
             <button 
               onClick={() => {
                 navigator.clipboard.writeText(bankAccount1);
-                alert('Nomor rekening disalin!');
+                toast.success('Nomor rekening disalin!');
               }}
               className="border border-amber-500/50 text-amber-400 px-8 py-3 rounded-full font-sans tracking-widest text-sm hover:bg-amber-950/30 transition-colors"
             >

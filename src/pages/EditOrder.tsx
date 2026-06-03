@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
 import { Loader2, Save, ArrowLeft, MapPin, X } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { supabase } from '../lib/supabase';
 
 export default function EditOrder() {
   const { orderCode } = useParams();
@@ -92,8 +93,33 @@ export default function EditOrder() {
            dataToSubmit.append(key, val);
         }
       });
-      if (coverFile) dataToSubmit.append('cover_image', coverFile);
-      if (heroFile) dataToSubmit.append('hero_image', heroFile);
+      
+      let finalCoverImage = formData.cover_image;
+      if (coverFile) {
+        const coverName = `${Date.now()}_${coverFile.name.replace(/[^a-zA-Z0-9.\-_]/g, '')}`;
+        const { error } = await supabase.storage.from('fiveinvitation-bucket').upload(`uploads/${coverName}`, coverFile, {
+            cacheControl: '3600',
+            upsert: false
+        });
+        if (error) throw error;
+        const { data } = supabase.storage.from('fiveinvitation-bucket').getPublicUrl(`uploads/${coverName}`);
+        finalCoverImage = data.publicUrl;
+      }
+      
+      let finalHeroImage = formData.hero_image;
+      if (heroFile) {
+        const heroName = `${Date.now()}_${heroFile.name.replace(/[^a-zA-Z0-9.\-_]/g, '')}`;
+        const { error } = await supabase.storage.from('fiveinvitation-bucket').upload(`uploads/${heroName}`, heroFile, {
+            cacheControl: '3600',
+            upsert: false
+        });
+        if (error) throw error;
+        const { data } = supabase.storage.from('fiveinvitation-bucket').getPublicUrl(`uploads/${heroName}`);
+        finalHeroImage = data.publicUrl;
+      }
+
+      if (finalCoverImage) dataToSubmit.append('cover_image', finalCoverImage);
+      if (finalHeroImage) dataToSubmit.append('hero_image', finalHeroImage);
 
       const response = await fetch(`/api/orders/${orderCode}`, {
         method: 'PUT',
@@ -179,20 +205,22 @@ export default function EditOrder() {
           <h2 className="text-xl font-serif text-gray-900 dark:text-white mb-6 border-b border-gray-100 dark:border-white/10 pb-4">{lang === 'id' ? 'URL Undangan' : 'Invitation URL'}</h2>
           <div className="grid grid-cols-1 gap-6">
             <div>
-              <label className={labelClass}>{lang === 'id' ? 'Slug Undangan (URL)' : 'Invitation Slug (URL)'}</label>
-              <div className="flex items-center">
-                <span className="px-4 py-3 rounded-l-xl border-y border-l bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-white/50 border-gray-200 dark:border-white/20">
-                  yoursite.com/invitation/
-                </span>
-                <input
-                  type="text"
-                  name="slug"
-                  value={formData.slug}
-                  disabled
-                  className={`${inputClass} rounded-l-none border-l-0 opacity-70 cursor-not-allowed`}
-                />
+              <label className={labelClass}>{lang === 'id' ? 'Slug Undangan (URL Akhir)' : 'Invitation Slug (URL End)'}</label>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center">
+                  <span className="px-4 py-3 rounded-l-xl border-y border-l bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-white/50 border-gray-200 dark:border-white/20">
+                    yoursite.com/invitation/
+                  </span>
+                  <input
+                    type="text"
+                    name="slug"
+                    value={formData.slug}
+                    disabled
+                    className={`${inputClass} rounded-l-none border-l-0 opacity-70 cursor-not-allowed`}
+                  />
+                </div>
+                <p className="text-xs text-amber-600 dark:text-amber-500">{lang === 'id' ? '* URL ini telah otomatis dibuat secara permanen saat pesanan dan tidak dapat diubah lagi.' : '* This URL was auto-generated permanently during order and cannot be changed.'}</p>
               </div>
-              <p className="mt-2 text-xs text-gray-500 dark:text-white/40">{lang === 'id' ? 'URL ini otomatis dibuat dan tidak dapat diubah lagi.' : 'This URL is auto-generated and cannot be changed.'}</p>
             </div>
           </div>
         </div>
@@ -284,7 +312,8 @@ export default function EditOrder() {
               <textarea name="story" value={formData.story} onChange={handleChange} className={`${inputClass} min-h-[120px]`} placeholder={lang === 'id' ? "Ceritakan singkat perjalanan cinta Anda..." : "Tell your love story briefly..."} />
             </div>
             <div>
-              <label className={labelClass}>{lang === 'id' ? 'Pilih Musik Latar (Mockup)' : 'Background Music (Mockup)'}</label>
+              <label className={labelClass}>{lang === 'id' ? 'Pilih Musik Latar' : 'Background Music'}</label>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{lang === 'id' ? 'Musik yang akan diputar otomatis ketika undangan dibuka' : 'Music that auto-plays when invitation is opened'}</p>
               <select name="music_url" value={formData.music_url} onChange={(e) => setFormData(prev => ({...prev, music_url: e.target.value}))} className={`${inputClass} cursor-pointer appearance-none`}>
                 <option value="">{lang === 'id' ? '-- Tidak Memakai Musik --' : '-- No Music --'}</option>
                 <option value="romantic_1.mp3">A Thousand Years - Instrumental</option>

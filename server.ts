@@ -99,6 +99,21 @@ app.get("/api/themes", async (req, res) => {
   }
 });
 
+// Fetch single theme endpoint
+app.get("/api/themes/:id", async (req, res) => {
+  try {
+    if (supabaseUrl === 'https://mock.supabase.co') return res.status(404).json({error: "Mock database"});
+    const { data, error } = await supabase.from('themes').select('*').eq('id', req.params.id).single();
+    if (error) {
+       return res.status(404).json({error: "Theme not found", details: error.message});
+    }
+    res.json(data);
+  } catch (err: any) {
+    console.error("Failed to fetch single theme:", err);
+    res.status(500).json({error: err.message});
+  }
+});
+
 // Create Theme Endpoint
 app.post("/api/admin/themes", upload.fields([{ name: 'zipFile', maxCount: 1 }, { name: 'images', maxCount: 5 }]), async (req: any, res: any) => {
   try {
@@ -144,6 +159,67 @@ app.post("/api/admin/themes", upload.fields([{ name: 'zipFile', maxCount: 1 }, {
 });
 
 // Edit Theme Endpoint
+app.post("/api/admin/themes/upload-component", upload.single('componentFile'), async (req: any, res: any) => {
+  try {
+    const { id, name, category, price, componentName, thumbnail } = req.body;
+    
+    if (!req.file) return res.status(400).json({ error: "Missing componentFile" });
+    if (!componentName) return res.status(400).json({ error: "Missing componentName" });
+
+    // Save TSX file to src/themes
+    const tsxSourcePath = req.file.path;
+    const destPath = path.join(process.cwd(), 'src', 'themes', `${componentName}.tsx`);
+    fs.copyFileSync(tsxSourcePath, destPath);
+    
+    // Read registry.tsx
+    const registryPath = path.join(process.cwd(), 'src', 'themes', 'registry.tsx');
+    let registryContent = fs.readFileSync(registryPath, 'utf8');
+    
+    // Inject import if not exists
+    const importStatement = `import ${componentName} from './${componentName}';`;
+    if (!registryContent.includes(importStatement)) {
+       // Insert after the last import statement
+       const importRegex = /import.*?;(\r?\n)/g;
+       let lastMatch;
+       let match;
+       while ((match = importRegex.exec(registryContent)) !== null) {
+          lastMatch = match;
+       }
+       if (lastMatch) {
+          const insertPos = lastMatch.index + lastMatch[0].length;
+          registryContent = registryContent.slice(0, insertPos) + importStatement + '\n' + registryContent.slice(insertPos);
+       } else {
+          registryContent = importStatement + '\n' + registryContent;
+       }
+    }
+
+    // Inject to THEME_REGISTRY array
+    const newThemeObj = `
+  {
+    id: '${id}',
+    name: '${name}',
+    category: '${category}',
+    price: ${Number(price)},
+    thumbnail: '${thumbnail || ''}',
+    component: ${componentName}
+  },`;
+
+    const registryArrayRegex = /export const THEME_REGISTRY: ThemeMeta\[\] = \[\s*/;
+    if (registryArrayRegex.test(registryContent)) {
+       registryContent = registryContent.replace(registryArrayRegex, `export const THEME_REGISTRY: ThemeMeta[] = [${newThemeObj}`);
+    } else {
+       return res.status(500).json({ error: "Could not find THEME_REGISTRY array in registry.tsx" });
+    }
+
+    fs.writeFileSync(registryPath, registryContent, 'utf8');
+
+    return res.json({ success: true, message: "Component uploaded and registered successfully." });
+  } catch (err: any) {
+    console.error("Failed to upload theme component:", err);
+    return res.status(500).json({ error: err.message });
+  }
+});
+
 app.put("/api/admin/themes/:id", upload.fields([{ name: 'thumbnailFile', maxCount: 1 }, { name: 'images', maxCount: 5 }]), async (req: any, res: any) => {
   try {
     const { id } = req.params;
@@ -184,10 +260,12 @@ app.put("/api/admin/themes/:id", upload.fields([{ name: 'thumbnailFile', maxCoun
     };
     if (parsedConfig !== undefined) updatePayload.config_json = parsedConfig;
 
-    const { data: dbData, error } = await supabase.from('themes').update(updatePayload).eq('id', id).select().single();
+    const { data: dbData, error } = await supabase.from('themes').update(updatePayload).eq('id', id).select();
     
     if (error) throw error;
-    return res.json({ success: true, thumbnail: finalThumbnail, theme: dbData });
+    
+    const returnedTheme = dbData && dbData.length > 0 ? dbData[0] : { id, ...updatePayload };
+    return res.json({ success: true, thumbnail: finalThumbnail, theme: returnedTheme });
   } catch (err: any) {
     console.error("Failed to update theme:", err);
     return res.status(500).json({ error: err.message });
@@ -231,12 +309,12 @@ app.put("/api/orders/:orderCode", upload.fields([{ name: 'cover_image' }, { name
     const orderCode = req.params.orderCode;
     const { 
       groom_name, bride_name, groom_parents, bride_parents, 
-      akad_date, resepsi_date, location_name, maps_link, story, music_url, slug 
+      akad_date, resepsi_date, location_name, maps_link, story, music_url, slug, cover_image, hero_image 
     } = req.body;
 
     let updateData: any = {
       groom_name, bride_name, groom_parents, bride_parents, 
-      location_name, maps_link, story, music_url, slug
+      location_name, maps_link, story, music_url, slug, cover_image, hero_image
     };
 
     updateData.akad_date = akad_date || null;

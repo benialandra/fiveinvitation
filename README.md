@@ -1,118 +1,121 @@
-# FiveInvitation - Digital Wedding Invitation Platform
+# FiveInvitation - Premium Wedding Invitations
 
-FiveInvitation is a full-stack web application designed for creating, customizing, and sharing beautiful digital wedding invitations. It features a theme marketplace, a seamless ordering process with payment gateway integration, and a user-friendly editor for personalizing every detail of the invitation.
+Platform pembuatan undangan pernikahan digital modern dan interaktif, dirancang secara khusus bagi para calon pengantin untuk merayakan momen spesial mereka dengan elegan, cepat, dan mudah diakses dari perangkat apapun.
 
-## ✨ Features
+FiveInvitation diciptakan menggunakan konsep Full-Stack Web Application modern, menyediakan tidak hanya antarmuka bagi pembeli tetapi juga **Dashboard Admin** yang kaya fitur, sistem **Pembayaran Otomatis** via Midtrans, serta integrasi **Supabase** untuk Database & Storage.
 
-- **🖼️ Theme Marketplace**: Browse and select from a variety of professionally designed invitation themes.
-- **💳 Seamless Ordering**: A simple and secure checkout process to purchase and initiate an invitation.
-- **💸 Payment Integration**: Integrated with Midtrans for handling online payments.
-- **✍️ Invitation Customization**: After purchase, users can easily edit couple's names, parents' names, event dates, locations, maps, personal stories, and background music.
-- **📸 Photo Uploads**: Personalize the invitation with custom cover and hero images.
-- **🔗 Custom URL Slugs**: Create a unique and memorable link for each invitation (e.g., `domain.com/your-name`).
-- **📖 Digital Guest Book**: Guests can leave their wishes and messages directly on the invitation page in real-time.
-- **✅ RSVP Management**: Guests can confirm their attendance, and the couple can track the responses.
-- **🔒 Order Tracking**: Users can check the status of their order using a unique code.
-- **⚙️ Admin Panel**: A dedicated interface for administrators to manage themes, including adding and editing theme details.
-- **📧 Email Notifications**: Automated email notifications for successful payments and payment reminders for pending orders.
+## ✨ Fitur Utama
 
-## 🚀 Tech Stack
+### 🛍️ Client / Customer Facing
+- **Pilihan Tema Elegan:** Beragam pilihan tema undangan dengan variasi desain elegan (Dark Premium, Floral Blossom, dll).
+- **Preview Tema Interaktif:** Pengguna bisa melihat demonya secara real-time sebelum memilih.
+- **Form Pemesanan Lengkap:** Dukungan pengisian langsung data mempelai, event (akad & resepsi), dan galeri foto.
+- **Pembayaran Terotomatisasi:** Terintegrasi langsung dengan payment gateway **Midtrans** untuk dukungan berbagai metode pembayaran (GoPay, VA, Kartu Kredit, dll).
+- **Pelacakan Pesanan:** Tracking status pesanan dengan menginputkan "Nomor Order".
 
-- **Frontend**:
-  - **Framework**: React (with Vite)
-  - **Language**: TypeScript
-  - **Styling**: Tailwind CSS
-  - **Routing**: React Router
-  - **UI/Animation**: Framer Motion, Lucide Icons
+### ⚙️ Admin Dashboard
+- **Statistik & Laporan:** Dashboard dengan visualisasi grafik (menggunakan `recharts`) untuk melihat performa penjualan (sales analytics).
+- **Manajemen Tema (CMS):** Create, update, atau sesuaikan tema secara dinamis.
+- **Manajemen Order:** Melihat order masuk, mengubah data order klien, dan preview hasil pesanan klien.
+- **Sistem Penyimpanan (Storage):** Mendukung unggahan ke **Bucket Storage (Supabase)** lengkap dengan fallback storage lokal `/uploads`.
 
-- **Backend**:
-  - **Runtime**: Node.js with Express
-  - **Database**: Supabase (PostgreSQL)
-  - **Payment Gateway**: Midtrans
-  - **File Uploads**: Multer
-  - **Scheduled Jobs**: node-cron
-  - **Email**: Nodemailer
+---
 
-- **Deployment**:
-  - Ready for deployment on platforms like Render, Railway, or Vercel.
+## 🛠️ Tech Stack & Architecture
 
-## 🏁 Getting Started
+- **Frontend:** React 19, React Router, Vite, Tailwind CSS, Framer Motion, Recharts.
+- **Backend:** Node.js, Express (with Vite Middleware untuk Development mode), TypeScript.
+- **Database:** Supabase (PostgreSQL), Supabase Storage.
+- **Payment Gateway:** Midtrans Client SDK.
+- **Peralatan Tambahan:** Multer (File Upload), Node-Cron (Penjadwalan), Nodemailer (Pengiriman Email).
+- **Build System:** Esbuild (Transpile Tipe ESM ke CommonJS untuk Backend), Vite Build (Front-End Static).
 
-Follow these instructions to get a local copy up and running for development and testing purposes.
+---
 
-### Prerequisites
+## 🚀 Cara Menjalankan Project (Local Development)
 
-- Node.js (v18 or later)
-- npm or yarn
-- A Supabase account
-- A Midtrans account (Sandbox)
+### 1. Kebutuhan Sistem
+Pastikan Anda telah menginstal lingkungan berikut:
+- **Node.js** versi 18 atau ke atas
+- Akun **Supabase** (Database + Storage)
+- Akun **Midtrans** (Sandbox/Production Mode)
 
-### 1. Clone the Repository
+### 2. Instalasi Variabel Lingkungan (.env)
+Buatlah file `.env` (atau Anda bisa merujuk ke file `.env.example` yang ada) di root direktori project:
 
-```bash
-git clone https://github.com/your-username/fiveinvitation.git
-cd fiveinvitation
+```env
+# SERVER INFO
+PORT=3000
+
+# SUPABASE 
+SUPABASE_URL=https://[PROJECT-ID].supabase.co
+SUPABASE_ANON_KEY=[ANON-KEY]
+SUPABASE_SERVICE_ROLE_KEY=[ROLE-KEY]
+
+# MIDTRANS (Payment Gateway)
+MIDTRANS_SERVER_KEY=[SERVER-KEY-ANDA]
+MIDTRANS_CLIENT_KEY=[CLIENT-KEY-ANDA]
+
+# EMAIL (Opsional - Nodemailer)
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_app_password
 ```
 
-### 2. Install Dependencies
+### 3. Setup Database (Supabase)
+Jalankan file `supabase_schema.sql` di SQL Editor pada proyek Supabase Anda. Ini akan secara otomatis membuat tabel:
+- `orders` (Data relasi order/pesanan)
+- `themes` (Data master untuk menampung seluruh tema digital)
+
+Jangan lupa untuk mengkonfigurasi policy pada storage bucket Anda. 
+Misalnya, membuat bucket bernama `fiveinvitation-bucket` dan menyetel permission menjadi format publik.
+
+### 4. Instalasi Dependency
+Buka terminal Anda dan instal seluruh dependency proyek:
 
 ```bash
 npm install
 ```
 
-### 3. Set Up Environment Variables
-
-Create a `.env` file in the root of the project by copying the example file:
-
-```bash
-cp .env.example .env
-```
-
-Now, fill in the required environment variables in the `.env` file. Refer to `DEPLOYMENT.md` for detailed instructions on where to find these keys.
-
-```env
-# Supabase Configuration
-VITE_SUPABASE_URL="YOUR_SUPABASE_URL"
-VITE_SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY"
-
-# Midtrans Configuration
-VITE_MIDTRANS_CLIENT_KEY="YOUR_MIDTRANS_CLIENT_KEY"
-MIDTRANS_SERVER_KEY="YOUR_MIDTRANS_SERVER_KEY"
-MIDTRANS_IS_PRODUCTION=false
-
-# Optional: SMTP for Email Notifications
-SMTP_HOST="YOUR_SMTP_HOST"
-SMTP_PORT=587
-SMTP_USER="YOUR_SMTP_USER"
-SMTP_PASS="YOUR_SMTP_PASSWORD"
-SMTP_SECURE=false
-```
-
-### 4. Set Up the Database
-
-1.  Log in to your Supabase account and create a new project.
-2.  Navigate to the **SQL Editor**.
-3.  Copy the entire content of the `supabase_schema.sql` file from the project root.
-4.  Paste the SQL into the editor and run it to create the necessary tables (`orders`, `themes`, `guest_books`, `rsvp`) and security policies.
-5.  **Enable Realtime**: Go to `Database` -> `Replication` and enable realtime for the `guest_books` table.
-
-### 5. Run the Development Server
-
-Once the installation and configuration are complete, you can start the development server:
+### 5. Jalankan Development Server
 
 ```bash
 npm run dev
 ```
 
-The application will be available at `http://localhost:3000`.
+Secara default, aplikasi akan berjalan secara Full-Stack pada port `3000`. Akses `http://localhost:3000` melalui browser web Anda. 
 
-## 📦 Available Scripts
+## 📦 Tahapan Deployment (Production)
 
-- `npm run dev`: Starts the development server with Vite and the Express backend.
-- `npm run build`: Compiles the frontend and backend for production.
-- `npm run start`: Runs the production-ready server from the `dist` folder.
-- `npm run lint`: Lints the project using the TypeScript compiler.
+Proyek ini telah dikonfigurasi untuk environment cloud-native menggunakan pendekatan single output bundle:
 
-## 🚢 Deployment
+1. Eksekusi perintah build:
+   ```bash
+   npm run build
+   ```
+   *Perintah ini akan menggunakan vite untuk membuat frontend static file di folder `/dist`, lalu esbuild akan memaketkan `server.ts` menjadi `dist/server.cjs`.*
 
-For detailed deployment instructions, including setting up webhooks and environment variables on a live server, please refer to the [**DEPLOYMENT.md**](./DEPLOYMENT.md) file.
+2. Menjalankan versi production lokal atau di Cloud (Vercel/Railway/Render):
+   ```bash
+   npm run start
+   ```
+
+## 📄 Struktur Proyek
+```
+/
+├── public/                 # Static assets & default uploads storage proxy
+├── src/                    
+│   ├── components/         # Komponen React yang dapat digunakan ulang
+│   ├── lib/                # Library & Konfigurasi klien (Supabase, clsx, dll)
+│   ├── pages/              # Halaman Aplikasi Utama (Home, Admin, Themes, Order)
+│   ├── themes/             # Konfigurasi Template/Tema dan Tampilan Tema Actual
+│   ├── App.tsx             # Main React Router Component
+│   ├── main.tsx            # Titik awal masuk Frontend
+│   └── index.css           # Konfigurasi Global CSS (Tailwind)
+├── server.ts               # Titik awal Backend (API Routes Express & Vite Proxy)
+└── package.json            # Konfigurasi npm
+```
+
+## 🤝 Lisensi
+Dibuat untuk kebutuhan pribadi/komersil oleh tim kreator FiveInvitation.

@@ -3,6 +3,7 @@ import imageCompression from 'browser-image-compression';
 import { LayoutDashboard, ShoppingBag, Palette, LogOut, CheckCircle2, Clock, Database, Menu, Moon, Sun, Info, Settings, Loader2, Home as HomeIcon, Search, ChevronLeft, ChevronRight, ArrowUpDown, X, Upload as UploadIcon, Image as ImageIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { supabase } from '../lib/supabase';
 import { THEME_REGISTRY } from '../themes/registry';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -87,6 +88,7 @@ export default function Admin() {
   const [themePage, setThemePage] = useState(1);
   const [themeSortBy, setThemeSortBy] = useState<'detail' | 'bestseller'>('detail');
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [isUploadTsxModalOpen, setIsUploadTsxModalOpen] = useState(false);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [themeMode, setThemeMode] = useState<'dark' | 'light'>('dark');
@@ -215,7 +217,14 @@ export default function Admin() {
     const baseThemes = (() => {
       const map = new Map();
       [...THEME_REGISTRY, ...uploadedThemes].forEach(t => map.set(t.id, t));
-      dbThemes.forEach(t => map.set(t.id, t));
+      dbThemes.forEach(dbT => {
+        const existing = map.get(dbT.id) || {};
+        map.set(dbT.id, { 
+           ...existing, 
+           ...dbT, 
+           thumbnail: dbT.thumbnail || existing.thumbnail 
+        });
+      });
       return Array.from(map.values());
     })();
     return baseThemes.map((t, idx) => {
@@ -451,6 +460,21 @@ export default function Admin() {
 );`}
                               </code>
                             </pre>
+                            <li className="mt-4">Penting! Jika Anda menggunakan <code className="font-bold">anon</code> key, Anda harus mematikan (Disable) Row Level Security (RLS) di tabel <b>themes</b> dan <b>orders</b>. Atau jalankan query berikut untuk memberikan Full Access:</li>
+                            <pre className={`p-4 rounded-xl mt-3 overflow-x-auto border ${borderDimClass} ${themeMode === 'dark' ? 'bg-[#050505]' : 'bg-white'}`}>
+                              <code className="text-xs font-mono text-emerald-600 dark:text-emerald-400">
+{`-- Berikan Akses Publik Penuh ke tabel Themes (Jika tidak menggunakan Service Key)
+ALTER TABLE themes ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public Full Access on Themes" ON public.themes;
+CREATE POLICY "Public Full Access on Themes" ON public.themes FOR ALL TO public USING (true) WITH CHECK (true);
+
+-- Dan ke tabel Orders
+ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public Full Access on Orders" ON public.orders;
+CREATE POLICY "Public Full Access on Orders" ON public.orders FOR ALL TO public USING (true) WITH CHECK (true);
+`}
+                              </code>
+                            </pre>
                          </ol>
                       </div>
                   </div>
@@ -483,19 +507,19 @@ export default function Admin() {
                             <UploadIcon className="w-6 h-6" />
                          </div>
                          <div>
-                           <h3 className="text-xl font-serif">3. Konfigurasi Upload Gambar (NodeJS/Local vs Supabase)</h3>
+                           <h3 className="text-xl font-serif">3. Konfigurasi Upload Gambar (Supabase Storage)</h3>
                            <p className={`text-xs ${themeMode === 'dark' ? 'text-white/60' : 'text-gray-500'}`}>Penyimpanan Media Assets</p>
                          </div>
                       </div>
                       
                       <div className="relative z-10 w-full">
                          <div className={`space-y-4 text-sm leading-relaxed ${textDimClass}`}>
-                            <p>Saat ini karena ini berjalan di environment Node.js server kita (Docker/Container), kita menyimpan gambar secara lokal di direktori <code>public/uploads</code> agar pengguna bisa langung melihat gambar masuk.</p>
-                            <p>Namun untuk skala <b>Production</b>, gambar seharusnya diunggah ke Storage (S3 / Supabase). Caranya:</p>
+                            <p>Sistem ini sekarang langsung terhubung dengan <b>Supabase Storage</b> ("fiveinvitation-bucket") milik Anda untuk environment <b>Production</b>.</p>
+                            <p>Hal ini berarti pengunggahan foto/gambar secara otomatis menjadi aman dan permanen:</p>
                             <ol className="list-decimal list-inside space-y-2 ml-4">
-                               <li>Buat bucket di menu <b>Storage</b> Supabase bernama <code>wedding-assets</code>. Setting menjadi "Public".</li>
-                               <li>Berikan akses (Policies) untuk <code>INSERT</code> dan <code>SELECT</code> pada "anon" users agar gambar bisa diakses dari web.</li>
-                               <li>Saat membuat produk baru, frontend harus diubah untuk me-upload file lagsung ke Supabase Storage, lalu URL link public-nya yg disimpan pada tabel Database <b>themes</b>.</li>
+                               <li>Bucket Storage bernama <code>fiveinvitation-bucket</code> akan diakses dari client aplikasi.</li>
+                               <li>Ketika klien pesanan Anda upload foto pre-wedding, gambar di-upload ke Supabase Storage, dan URL-nya disimpan di database.</li>
+                               <li>Ketika admin menambahkan Tema Master beserta asset galeri foto, web ini akan me-uploadnya ke Supabase Storage lalu men-generate link public-nya.</li>
                             </ol>
                             
                             <hr className={`my-4 border-${borderDimClass}`} />
@@ -722,13 +746,16 @@ export default function Admin() {
                    <button 
                      onClick={handleSeedThemes} 
                      disabled={isSeeding}
-                     className={`px-6 py-2.5 h-[42px] border text-xs uppercase tracking-widest rounded-xl transition-colors flex items-center gap-2 ${themeMode === 'dark' ? 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10' : 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10'} ${isSeeding ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                     {isSeeding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Database className="w-4 h-4" />}
-                     Seed DB
+                     className={`px-4 py-2 h-[42px] border text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-xl transition-colors flex items-center gap-2 ${themeMode === 'dark' ? 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10' : 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10'} ${isSeeding ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                     {isSeeding ? <Loader2 size={14} className="animate-spin" /> : <Database size={14} />}
+                     <span className="hidden sm:inline">Seed DB</span>
                    </button>
-                   <button onClick={() => setShowDocs(!showDocs)} className={`px-5 py-2.5 h-[42px] border text-xs uppercase tracking-widest rounded-xl transition-colors flex items-center gap-2 ${themeMode === 'dark' ? 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10' : 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10'}`}><Info className="w-4 h-4" /> Panduan</button>
-                   <button onClick={() => setIsUploadModalOpen(true)} className={`px-6 py-2.5 h-[42px] border text-xs uppercase tracking-widest rounded-xl transition-colors ${themeMode === 'dark' ? 'border-white/20 hover:bg-white/10 text-white' : 'border-gray-200 hover:bg-gray-100 text-gray-900'}`}>
-                     Upload
+                   <button onClick={() => setShowDocs(!showDocs)} className={`px-4 py-2 h-[42px] border text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-xl transition-colors flex items-center gap-2 ${themeMode === 'dark' ? 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10' : 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10'}`}><Info size={14} /> <span className="hidden sm:inline">Panduan</span></button>
+                   <button onClick={() => setIsUploadTsxModalOpen(true)} className={`px-4 py-2 flex items-center justify-center gap-2 h-[42px] border text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-xl transition-colors ${themeMode === 'dark' ? 'border-sky-500/30 text-sky-400 hover:bg-sky-500/10' : 'border-sky-200 text-sky-600 hover:bg-sky-50'}`}>
+                     <UploadIcon size={14} /> TSX
+                   </button>
+                   <button onClick={() => setIsUploadModalOpen(true)} className={`px-4 py-2 flex items-center justify-center gap-2 h-[42px] border text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-xl transition-colors ${themeMode === 'dark' ? 'border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10' : 'border-emerald-200 text-emerald-600 hover:bg-emerald-50'}`}>
+                     <Database size={14} /> Data JSON
                    </button>
                  </div>
                </div>
@@ -867,6 +894,108 @@ export default function Admin() {
          </div>
         </div>
      </div>
+      {isUploadTsxModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className={`w-full max-w-lg p-6 rounded-2xl shadow-xl relative ${themeMode === 'dark' ? 'bg-[#111] border border-white/10' : 'bg-white'}`}>
+            <button 
+              onClick={() => setIsUploadTsxModalOpen(false)}
+              className="absolute top-4 right-4 p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-gray-500 dark:text-white/50"
+            >
+              <X size={20} />
+            </button>
+            <div className="mb-6">
+              <h3 className={`text-xl font-serif mb-1 ${themeMode === 'dark' ? 'text-white' : 'text-gray-900'}`}>Upload Component TSX</h3>
+              <p className="text-sm text-gray-500 dark:text-white/60">
+                Fitur Developer: Upload desain komponen tema berbasis React (.tsx) yang akan disuntikkan ke registry. Hanya berjalan dengan sempurna jika diakses di Localhost Development Mode.
+              </p>
+            </div>
+            
+            <form onSubmit={async (e) => {
+               e.preventDefault();
+               const form = e.currentTarget;
+               const fd = new FormData(form);
+               
+               const loadingToast = toast.loading('Mengupload TSX Component...');
+               try {
+                 const res = await fetch('/api/admin/themes/upload-component', {
+                   method: 'POST',
+                   body: fd
+                 });
+                 const result = await res.json();
+                 
+                 if (!res.ok) {
+                   throw new Error(result.error || 'Gagal mengupload component TSX');
+                 }
+                 
+                 toast.success('Upload Component berhasil! Silakan restart server dev.', { id: loadingToast, duration: 4000 });
+                 setIsUploadTsxModalOpen(false);
+               } catch (err: any) {
+                 if (err.message === 'Failed to fetch') {
+                    toast.error('Koneksi terputus.', { id: loadingToast });
+                 } else {
+                    toast.error(err.message, { id: loadingToast });
+                 }
+               }
+            }}>
+                <div className="space-y-4 mb-6 text-left">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">ID Tema (Unik)</label>
+                    <input name="id" required placeholder="contoh: autumn-leaves" className={`w-full px-4 py-2 border rounded-xl text-sm ${themeMode === 'dark' ? 'bg-white/5 border-white/10 focus:border-sky-500 text-white' : 'bg-gray-50 border-gray-200 focus:border-sky-500 text-gray-900'} outline-none transition-colors`} />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Nama Tema</label>
+                    <input name="name" required placeholder="Autumn Leaves" className={`w-full px-4 py-2 border rounded-xl text-sm ${themeMode === 'dark' ? 'bg-white/5 border-white/10 focus:border-sky-500 text-white' : 'bg-gray-50 border-gray-200 focus:border-sky-500 text-gray-900'} outline-none transition-colors`} />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Nama Fungsi Component (PascalCase)</label>
+                    <input name="componentName" required placeholder="AutumnLeaves" className={`w-full px-4 py-2 border rounded-xl text-sm ${themeMode === 'dark' ? 'bg-white/5 border-white/10 focus:border-sky-500 text-white' : 'bg-gray-50 border-gray-200 focus:border-sky-500 text-gray-900'} outline-none transition-colors`} />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Kategori</label>
+                      <select name="category" required className={`w-full px-4 py-2 border rounded-xl text-sm ${themeMode === 'dark' ? 'bg-black/50 border-white/10 text-white focus:border-sky-500' : 'bg-gray-50 border-gray-200 focus:border-sky-500 text-gray-900'} outline-none transition-colors`}>
+                        <option value="Elegant">Elegant</option>
+                        <option value="Dark">Dark</option>
+                        <option value="Minimalist">Minimalist</option>
+                        <option value="Islamic">Islamic</option>
+                        <option value="Floral">Floral</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Harga (Rp)</label>
+                      <input name="price" type="number" required defaultValue="150000" className={`w-full px-4 py-2 border rounded-xl text-sm ${themeMode === 'dark' ? 'bg-white/5 border-white/10 focus:border-sky-500 text-white' : 'bg-gray-50 border-gray-200 focus:border-sky-500 text-gray-900'} outline-none transition-colors`} />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">URL Thumbnail (Opsional)</label>
+                    <input name="thumbnail" type="text" placeholder="https://unsplash.com/..." className={`w-full px-4 py-2 border rounded-xl text-sm ${themeMode === 'dark' ? 'bg-white/5 border-white/10 focus:border-sky-500 text-white' : 'bg-gray-50 border-gray-200 focus:border-sky-500 text-gray-900'} outline-none transition-colors`} />
+                  </div>
+                  <div className={`border-2 border-dashed rounded-xl p-6 text-center relative overflow-hidden ${themeMode === 'dark' ? 'border-sky-500/30 bg-sky-500/5' : 'border-sky-200 bg-sky-50'}`}>
+                    <input type="file" name="componentFile" required accept=".tsx,.ts" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                    <UploadIcon className="w-8 h-8 mx-auto mb-2 text-sky-500" />
+                    <p className={`text-xs font-medium mb-1 ${themeMode === 'dark' ? 'text-white' : 'text-gray-900'}`}>Upload File TSX Tema Anda</p>
+                  </div>
+                </div>
+                
+                <div className="flex justify-end gap-3">
+                  <button 
+                    type="button"
+                    onClick={() => setIsUploadTsxModalOpen(false)}
+                    className={`px-4 py-2 text-sm font-medium rounded-xl transition-colors ${themeMode === 'dark' ? 'hover:bg-white/10 text-white' : 'hover:bg-gray-100 text-gray-700'}`}
+                  >
+                    Batal
+                  </button>
+                  <button 
+                    type="submit"
+                    className="px-6 py-2 bg-sky-500 hover:bg-sky-600 text-white text-sm font-medium rounded-xl transition-colors shadow-lg shadow-sky-500/25"
+                  >
+                    Simpan & Daftarkan TSX
+                  </button>
+                </div>
+            </form>
+          </div>
+        </div>
+      )}
       {isUploadModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className={`w-full max-w-lg p-6 rounded-2xl shadow-xl relative ${themeMode === 'dark' ? 'bg-[#111] border border-white/10' : 'bg-white'}`}>
@@ -888,11 +1017,39 @@ export default function Admin() {
                const form = e.currentTarget;
                const fd = new FormData(form);
                
-               const loadingToast = toast.loading('Mengupload tema...');
+               const loadingToast = toast.loading('Mengupload gambar ke Supabase...');
                try {
+                 // Upload images to Supabase first
+                 let uploadedUrls: string[] = [];
+                 for (const file of galleryFiles) {
+                    const fileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.\-_]/g, '')}`;
+                    const { error } = await supabase.storage.from('fiveinvitation-bucket').upload(`uploads/${fileName}`, file, { cacheControl: '3600', upsert: false });
+                    if (error) throw error;
+                    const { data } = supabase.storage.from('fiveinvitation-bucket').getPublicUrl(`uploads/${fileName}`);
+                    uploadedUrls.push(data.publicUrl);
+                 }
+
+                 // Merge to config_json
+                 let currentConfig = fd.get('config_json') as string;
+                 let parsedConfig: any = {};
+                 if (currentConfig) {
+                    try { parsedConfig = JSON.parse(currentConfig); } catch (e) {}
+                 }
+                 if (uploadedUrls.length > 0) {
+                    parsedConfig.gallery = uploadedUrls;
+                 }
+                 
+                 const configString = JSON.stringify(parsedConfig);
+                 fd.set('config_json', configString);
+                 if (uploadedUrls.length > 0) {
+                   fd.set('thumbnail', uploadedUrls[0]);
+                 }
+                 
+                 toast.loading('Menyimpan tema...', { id: loadingToast });
+                 
                  const res = await fetch('/api/admin/themes', {
                    method: 'POST',
-                   body: fd // send form data including the file
+                   body: fd
                  });
                  const result = await res.json();
                  
@@ -901,6 +1058,8 @@ export default function Admin() {
                  }
                  
                  toast.success('Upload Tema berhasil!', { id: loadingToast });
+                 setGalleryFiles([]);
+                 setGalleryPreviews([]);
                  
                  // if using real db themes, add it
                  if (result.theme) {
@@ -912,8 +1071,9 @@ export default function Admin() {
                       name: fd.get('name') as string,
                       category: fd.get('category') as string,
                       price: Number(fd.get('price')),
-                      thumbnail: (fd.get('thumbnail') as string) || 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1000&auto=format&fit=crop',
-                      sales: 0
+                      thumbnail: uploadedUrls[0] || 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1000&auto=format&fit=crop',
+                      sales: 0,
+                      config_json: parsedConfig
                    };
                    const newArr = [newTheme, ...uploadedThemes];
                    setUploadedThemes(newArr);
@@ -922,7 +1082,11 @@ export default function Admin() {
                  
                  setIsUploadModalOpen(false);
                } catch (err: any) {
-                 toast.error(err.message || 'Terjadi kesalahan saat upload', { id: loadingToast });
+                 if (err.message === 'Failed to fetch') {
+                    toast.error('Koneksi terputus. Pastikan AdBlocker/Brave Shields dimatikan, dan server tidak sedang restart.', { id: loadingToast, duration: 6000 });
+                 } else {
+                    toast.error(err.message || 'Terjadi kesalahan saat upload', { id: loadingToast });
+                 }
                }
             }}>
                 <div className="space-y-4 mb-6 text-left">
@@ -1010,42 +1174,64 @@ export default function Admin() {
             <h3 className="text-xl font-serif mb-6">Edit Tema</h3>
             <form onSubmit={async (e) => {
               e.preventDefault();
-              try {
-                const formData = new FormData();
-                formData.append('name', editingTheme.name);
-                formData.append('category', editingTheme.category);
-                formData.append('price', String(editingTheme.price));
-                if (editingTheme.config_json) {
-                   formData.append('config_json', typeof editingTheme.config_json === 'string' ? editingTheme.config_json : JSON.stringify(editingTheme.config_json));
-                }
-                
-                formData.append('keep_images', JSON.stringify(existingGallery));
-                galleryFiles.forEach(file => formData.append('images', file));
+                const loadingToast = toast.loading('Mengupload ke Supabase...');
+                try {
+                 // Upload new images to Supabase
+                 let newUploadedUrls: string[] = [];
+                 for (const file of galleryFiles) {
+                    const fileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.\-_]/g, '')}`;
+                    const { error } = await supabase.storage.from('fiveinvitation-bucket').upload(`uploads/${fileName}`, file, { cacheControl: '3600', upsert: false });
+                    if (error) throw error;
+                    const { data } = supabase.storage.from('fiveinvitation-bucket').getPublicUrl(`uploads/${fileName}`);
+                    newUploadedUrls.push(data.publicUrl);
+                 }
 
-                const res = await fetch(`/api/admin/themes/${editingTheme.id}`, {
-                  method: 'PUT',
-                  body: formData
-                });
-                const result = await res.json();
-                if (!res.ok) {
-                  throw new Error(result.error || 'Failed to update theme');
-                }
-                toast.success('Tema berhasil diupdate!');
-                setThemeOverrides(prev => ({
-                   ...prev,
-                   [editingTheme.id]: {
-                      name: editingTheme.name,
-                      category: editingTheme.category,
-                      price: editingTheme.price,
-                      thumbnail: result.thumbnail || editingTheme.thumbnail,
-                      config_json: editingTheme.config_json ? (typeof editingTheme.config_json === 'string' ? JSON.parse(editingTheme.config_json) : editingTheme.config_json) : null
-                   }
-                }));
-                setEditingTheme(null);
-                setGalleryFiles([]);
-                setGalleryPreviews([]);
+                 let parsedConfig = typeof editingTheme.config_json === 'string' ? JSON.parse(editingTheme.config_json) : (editingTheme.config_json || {});
+                 const combinedGallery = [...existingGallery, ...newUploadedUrls];
+                 if (combinedGallery.length > 0) {
+                    parsedConfig.gallery = combinedGallery;
+                 }
+
+                 const formData = new FormData();
+                 formData.append('name', editingTheme.name);
+                 formData.append('category', editingTheme.category);
+                 formData.append('price', String(editingTheme.price));
+                 formData.append('config_json', JSON.stringify(parsedConfig));
+               formData.append('thumbnail', combinedGallery.length > 0 ? combinedGallery[0] : (editingTheme.thumbnail || ''));
+                 
+                 // Pass keep_images to backend just in case
+                 formData.append('keep_images', JSON.stringify(existingGallery));
+                 
+                 toast.loading('Menyimpan perubahan...', { id: loadingToast });
+
+                 const res = await fetch(`/api/admin/themes/${editingTheme.id}`, {
+                   method: 'PUT',
+                   body: formData
+                 });
+                 const result = await res.json();
+                 if (!res.ok) {
+                   throw new Error(result.error || 'Failed to update theme');
+                 }
+                 toast.success('Tema berhasil diupdate!', { id: loadingToast });
+                 setThemeOverrides(prev => ({
+                    ...prev,
+                    [editingTheme.id]: {
+                       name: editingTheme.name,
+                       category: editingTheme.category,
+                       price: editingTheme.price,
+                       thumbnail: result.thumbnail || editingTheme.thumbnail || combinedGallery[0],
+                       config_json: parsedConfig
+                    }
+                 }));
+                 setEditingTheme(null);
+                 setGalleryFiles([]);
+                 setGalleryPreviews([]);
               } catch (err: any) {
-                toast.error(err.message);
+                if (err.message === 'Failed to fetch') {
+                  toast.error('Koneksi terputus. Pastikan AdBlocker/Brave Shields dimatikan, dan server tidak sedang restart.', { id: loadingToast, duration: 6000 });
+                } else {
+                  toast.error(err.message, { id: loadingToast });
+                }
               }
             }}>
               <div className="space-y-4">

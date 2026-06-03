@@ -119,12 +119,12 @@ export default function Order() {
       } else {
         toast.error(lang === 'id' ? "Gagal memuat sistem pembayaran" : "Failed to load payment system");
         setErrorMessage(lang === 'id' ? "Gagal memuat sistem pembayaran" : "Payment system not loaded");
+        setLoading(false);
       }
     } catch (err: any) {
       console.error(err);
       toast.error(err.message || (lang === 'id' ? "Terjadi kesalahan. Pastikan backend berjalan." : "An error occurred."));
       setErrorMessage(lang === 'id' ? "Terjadi kesalahan. Pastikan backend berjalan." : "An error occurred.");
-    } finally {
       setLoading(false);
     }
   };
@@ -214,49 +214,13 @@ export default function Order() {
               </div>
             </div>
 
-            <div className="space-y-4 pt-4 border-t border-black/5 dark:border-white/5">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">3. {lang === 'id' ? 'Upload Foto Pre-Wedding' : 'Upload Pre-Wedding Photos'}</h2>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{lang === 'id' ? 'Pilih hingga 5 foto pre-wedding. Maksimal 2MB per foto.' : 'Choose up to 5 photos. Max 2MB per photo.'}</p>
-              
-              <div className="flex items-center gap-4">
-                <input 
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-[#C5A059]/10 file:text-[#C5A059] hover:file:bg-[#C5A059]/20 transition-colors file:cursor-pointer"
-                  onChange={(e) => {
-                    const files = e.target.files;
-                    if (files) {
-                      const maxFiles = 5;
-                      const maxSize = 2 * 1024 * 1024; // 2MB
-                      
-                      if (files.length > maxFiles) {
-                        setErrorMessage(lang === 'id' ? "Maksimal 5 foto yang diizinkan." : "Max 5 photos allowed.");
-                        e.target.value = '';
-                        return;
-                      }
-
-                      for (let i = 0; i < files.length; i++) {
-                        if (files[i].size > maxSize) {
-                          setErrorMessage(lang === 'id' ? `Menolak foto "${files[i].name}" karena melebihi 2MB.` : `Rejected photo "${files[i].name}" as it exceeds 2MB.`);
-                          e.target.value = '';
-                          return;
-                        }
-                      }
-                      
-                      setErrorMessage(''); // clear error if valid
-                    }
-                  }}
-                />
-              </div>
-            </div>
-
             {/* URL Auto-generated, no longer an input field here */}
             <div className="space-y-2 pt-4 border-t border-black/5 dark:border-white/5">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">4. {lang === 'id' ? 'URL Undangan Anda' : 'Your Invitation URL'}</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">3. {lang === 'id' ? 'URL Undangan Anda' : 'Your Invitation URL'}</h2>
+              <p className="text-sm text-gray-500 mb-2">{lang === 'id' ? 'Ini akan menjadi link/url unik untuk undangan Anda yang bisa dibagikan' : 'This will be your unique invitation link to share'}</p>
               <div className="flex items-center">
                 <span className="h-11 px-4 bg-gray-100 dark:bg-black/50 border border-gray-300 dark:border-white/10 rounded-lg flex items-center text-sm text-gray-500 whitespace-nowrap w-full">
-                  fiveinvitation.com/invitation/{(formData.groom_name || formData.bride_name) ? `${formData.groom_name.toLowerCase()}-${formData.bride_name.toLowerCase()}`.replace(/\s+/g, '-') : (lang === 'id' ? 'nama-pasangan' : 'couple-name')}
+                  yoursite.com/invitation/{(formData.groom_name || formData.bride_name) ? `${formData.groom_name.toLowerCase()}-${formData.bride_name.toLowerCase()}`.replace(/\s+/g, '-') : (lang === 'id' ? 'nama-pasangan' : 'couple-name')}
                 </span>
               </div>
             </div>

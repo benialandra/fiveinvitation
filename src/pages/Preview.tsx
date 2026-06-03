@@ -18,7 +18,7 @@ export default function Preview() {
          if (data) {
              // Merge with registry component if it exists
              const registryTheme = THEME_REGISTRY.find(t => t.id === themeId);
-             setTheme({ ...registryTheme, ...data });
+             setTheme({ ...registryTheme, ...data, thumbnail: data.thumbnail || registryTheme?.thumbnail });
          }
        } catch (err) {
          console.error(err);
@@ -43,6 +43,9 @@ export default function Preview() {
     );
   }
 
+  const parsedConfig = typeof theme?.config_json === 'string' ? JSON.parse(theme.config_json) : (theme?.config_json || {});
+  const customGallery = parsedConfig.gallery || [];
+
   // We should pass sample data to the theme
   const sampleProps = {
     groom: "Beni",
@@ -53,7 +56,20 @@ export default function Preview() {
     data: {
       groom_name: "Beni",
       bride_name: "Salsa",
-      akad_date: "2026-12-12T09:00:00Z"
+      groom_parents: "Bpk. Budi & Ibu Ani",
+      bride_parents: "Bpk. Surya & Ibu Tari",
+      akad_date: "2026-12-12T09:00:00Z",
+      resepsi_date: "2026-12-12T11:00:00Z",
+      location_name: "Grand Ballroom Hotel Mulia, Jl. Asia Afrika, Senayan, Jakarta",
+      maps_link: "https://maps.google.com",
+      story: "Kami bertemu di bangku kuliah, menjalin persahabatan, hingga akhirnya memutuskan untuk hidup bersama dalam ikatan suci.",
+      cover_image: theme?.thumbnail || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200",
+      hero_image: (customGallery.length > 0 ? customGallery[0] : null) || theme?.thumbnail || "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=1200",
+      gallery_1: customGallery[0] || null,
+      gallery_2: customGallery[1] || null,
+      gallery_3: customGallery[2] || null,
+      gallery_4: customGallery[3] || null,
+      gallery_5: customGallery[4] || null,
     }
   };
 

@@ -36,7 +36,14 @@ export default function Themes() {
     const baseThemes = (() => {
       const map = new Map();
       [...THEME_REGISTRY, ...uploadedThemes].forEach(t => map.set(t.id, t));
-      dbThemes.forEach(t => map.set(t.id, t));
+      dbThemes.forEach(dbT => {
+        const existing = map.get(dbT.id) || {};
+        map.set(dbT.id, { 
+           ...existing, 
+           ...dbT, 
+           thumbnail: dbT.thumbnail || existing.thumbnail 
+        });
+      });
       return Array.from(map.values());
     })();
     return baseThemes.filter(theme => {
@@ -139,22 +146,21 @@ export default function Themes() {
                   </div>
 
                   <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100 dark:border-white/5">
-                    <span className="font-bold text-[#C5A059] whitespace-nowrap">
+                    <span className="font-bold text-[#C5A059] whitespace-nowrap text-[13px] sm:text-sm">
                       Rp {theme.price.toLocaleString('id-ID')}
                     </span>
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex items-center gap-1.5 shrink-0">
                       <Link 
                         to={`/preview/${theme.id}`}
                         target="_blank"
                         rel="noopener"
-                        className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
-                        title="Live Preview"
+                        className="px-2 sm:px-3 h-8 sm:h-9 flex items-center justify-center rounded-lg border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors text-[9px] sm:text-[10px] font-bold uppercase tracking-wider"
                       >
-                        <ExternalLink size={16} />
+                        Preview
                       </Link>
                       <Link 
                         to={`/order/${theme.id}`}
-                        className="px-5 py-2 bg-gray-900 dark:bg-white text-white dark:text-black rounded-full text-xs font-bold uppercase tracking-wider hover:bg-[#C5A059] dark:hover:bg-gray-200 transition-colors"
+                        className="px-3 sm:px-4 h-8 sm:h-9 flex items-center justify-center bg-gray-900 dark:bg-white text-white dark:text-black rounded-lg text-[9px] sm:text-[10px] font-bold uppercase tracking-wider hover:bg-[#C5A059] dark:hover:bg-gray-200 transition-colors whitespace-nowrap"
                       >
                         {lang === 'id' ? 'Pesan' : 'Order'}
                       </Link>

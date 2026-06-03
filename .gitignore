@@ -6,4 +6,4 @@ coverage/
 *.log
 .env*
 !.env.example
-supabase_schema.sql
+/.supabase_schema.sql

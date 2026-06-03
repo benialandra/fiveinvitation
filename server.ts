@@ -404,7 +404,9 @@ app.post("/api/order/create", async (req, res) => {
       console.log("No MIDTRANS_SERVER_KEY, returning debug token.");
     } else {
         const appUrl = process.env.VITE_APP_URL || "http://localhost:3000";
-        const parameter = {
+        const isLocalhost = appUrl.includes('localhost') || appUrl.includes('127.0.0.1');
+        
+        const parameter: any = {
           transaction_details: {
             order_id: order_id,
             gross_amount: Math.round(gross_amount),
@@ -415,13 +417,17 @@ app.post("/api/order/create", async (req, res) => {
           customer_details: {
             first_name: first_name || "Guest",
             email: email || "guest@example.com",
-          },
-          callbacks: {
+          }
+        };
+
+        if (!isLocalhost) {
+          parameter.callbacks = {
             finish: `${appUrl}/track`,
             error: `${appUrl}/track`,
             pending: `${appUrl}/track`
-          }
-        };
+          };
+        }
+
         const transaction = await snap.createTransaction(parameter);
         token = transaction.token;
         redirect_url = transaction.redirect_url;

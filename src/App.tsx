@@ -1,7 +1,16 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useSearchParams } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Home from './pages/Home';
+
+function TrackRedirect() {
+  const [searchParams] = useSearchParams();
+  const orderId = searchParams.get('order_id');
+  if (orderId) {
+    return <Navigate to={`/track/${orderId}?${searchParams.toString()}`} replace />;
+  }
+  return <Navigate to="/" replace />;
+}
 import Themes from './pages/Themes';
 import Order from './pages/Order';
 import Track from './pages/Track';
@@ -61,6 +70,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/themes" element={<Themes />} />
           <Route path="/order/:themeId" element={<Order />} />
+          <Route path="/track" element={<TrackRedirect />} />
           <Route path="/track/:orderCode" element={<Track />} />
           <Route path="/edit-order/:orderCode" element={<EditOrder />} />
           <Route path="/socials" element={<Socials />} />

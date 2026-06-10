@@ -3,6 +3,8 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import toast from 'react-hot-toast';
 import { format, parseISO } from 'date-fns';
 import { id as localeId, enUS as localeEn } from 'date-fns/locale';
+import SmoothScrollLayout from '../components/Interactive/SmoothScrollLayout';
+import AudioController from '../components/Interactive/AudioController';
 
 export default function OceanBreeze({ data, guestName, lang = 'id' }: { data?: any, guestName?: string, lang?: 'id'|'en' }) {
   const groom = data?.groom_name || 'Jason';
@@ -13,8 +15,6 @@ export default function OceanBreeze({ data, guestName, lang = 'id' }: { data?: a
 
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isOpened, setIsOpened] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
   
   const [comments, setComments] = useState([
     { id: 1, name: 'Tia & Friends', message: 'Happy wedding guys! Can\'t wait to party at the beach!' }
@@ -54,20 +54,6 @@ export default function OceanBreeze({ data, guestName, lang = 'id' }: { data?: a
 
   const handleOpen = () => {
     setIsOpened(true);
-    if (audioRef.current) {
-      audioRef.current.play().then(() => setIsPlaying(true)).catch(() => console.log("Audio block"));
-    }
-  };
-
-  const toggleAudio = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
   };
 
   const handleAddComment = (e: React.FormEvent) => {
@@ -80,25 +66,9 @@ export default function OceanBreeze({ data, guestName, lang = 'id' }: { data?: a
   };
 
   return (
-    <div className="relative bg-[#f0f9f9] text-[#1e4b5f] font-sans overflow-x-hidden min-h-screen selection:bg-[#208496] selection:text-white">
-      <audio ref={audioRef} loop src={data?.music_url || "https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3"} />
-
-      <AnimatePresence>
-        {isOpened && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="fixed bottom-6 right-6 z-50 w-12 h-12 bg-white text-[#208496] rounded-full shadow-lg flex items-center justify-center border-2 border-[#208496]/20"
-            onClick={toggleAudio}
-          >
-            {isPlaying ? (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-            ) : (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            )}
-          </motion.button>
-        )}
-      </AnimatePresence>
+    <SmoothScrollLayout>
+      <div className="relative bg-[#f0f9f9] text-[#1e4b5f] font-sans overflow-x-hidden min-h-screen selection:bg-[#208496] selection:text-white">
+        {isOpened && <AudioController src={data?.music_url || "https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3"} />}
 
       <AnimatePresence>
         {!isOpened && (
@@ -373,5 +343,6 @@ export default function OceanBreeze({ data, guestName, lang = 'id' }: { data?: a
         </footer>
       </main>
     </div>
+    </SmoothScrollLayout>
   );
 }

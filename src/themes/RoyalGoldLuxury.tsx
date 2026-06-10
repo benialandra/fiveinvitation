@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { format, parseISO } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
+import SmoothScrollLayout from '../components/Interactive/SmoothScrollLayout';
+import AudioController from '../components/Interactive/AudioController';
 
 // Elegant Gold SVG Ornaments
 const TopOrnament = () => (
@@ -142,20 +144,6 @@ export default function RoyalGoldLuxury({ data, guestName }: { data?: any, guest
 
   const handleOpen = () => {
     setIsOpened(true);
-    if (audioRef.current) {
-      audioRef.current.play().then(() => setIsPlaying(true)).catch(() => console.log("Audio play blocked"));
-    }
-  };
-
-  const toggleAudio = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
   };
 
   const handleAddComment = (e: React.FormEvent) => {
@@ -179,32 +167,13 @@ export default function RoyalGoldLuxury({ data, guestName }: { data?: any, guest
   // Shared fade-up animation variants
   const fadeUpVariant = {
     hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0, transition: { duration: 1, ease: [0.25, 0.1, 0.25, 1] } }
+    visible: { opacity: 1, y: 0, transition: { duration: 1 } }
   };
 
   return (
-    <div className="relative bg-[#FCFAF5] text-[#3A3327] font-serif overflow-x-hidden min-h-screen selection:bg-[#D4AF37] selection:text-white">
-      
-      {/* Background Audio */}
-      <audio ref={audioRef} loop src={data?.music_url || "https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3"} />
-
-      {/* Floating Audio Toggle */}
-      <AnimatePresence>
-        {isOpened && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="fixed bottom-6 right-6 z-50 w-12 h-12 bg-[#FCFAF5] text-[#D4AF37] rounded-full shadow-[0_0_20px_rgba(212,175,55,0.3)] flex items-center justify-center border border-[#D4AF37]/50"
-            onClick={toggleAudio}
-          >
-            {isPlaying ? (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-            ) : (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            )}
-          </motion.button>
-        )}
-      </AnimatePresence>
+    <SmoothScrollLayout>
+      <div className="relative bg-[#FCFAF5] text-[#3A3327] font-serif overflow-x-hidden min-h-screen selection:bg-[#D4AF37] selection:text-white">
+        {isOpened && <AudioController src={data?.music_url || "https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3"} />}
 
       {/* Background Particles globally running */}
       {isOpened && <GoldParticles />}
@@ -429,7 +398,7 @@ export default function RoyalGoldLuxury({ data, guestName }: { data?: any, guest
                 <p className="font-sans text-xs text-[#3A3327]/60 leading-relaxed">Jl. Kebayoran Baru No. 1, Jakarta Selatan</p>
               </motion.div>
               
-              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, delay: 0.2 }} variants={fadeUpVariant} className="bg-white border border-[#D4AF37]/30 p-10 text-center shadow-[0_10px_30px_rgba(0,0,0,0.03)] relative">
+              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.2 }} variants={fadeUpVariant} className="bg-white border border-[#D4AF37]/30 p-10 text-center shadow-[0_10px_30px_rgba(0,0,0,0.03)] relative">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-[#FCFAF5] border border-[#D4AF37]/30 rounded-full flex items-center justify-center text-[#D4AF37]">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M2.5 12a9.5 9.5 0 0 1 12.5-9.5V12z"/><path d="M12 2.5a9.5 9.5 0 0 1 9.5 12.5H12z"/><path d="M14 12v9.5A9.5 9.5 0 0 1 12 21.5v-9.5z"/></svg>
                 </div>
@@ -597,5 +566,6 @@ export default function RoyalGoldLuxury({ data, guestName }: { data?: any, guest
         </footer>
       </main>
     </div>
+    </SmoothScrollLayout>
   );
 }

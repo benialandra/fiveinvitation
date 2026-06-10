@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
+import SmoothScrollLayout from '../components/Interactive/SmoothScrollLayout';
+import AudioController from '../components/Interactive/AudioController';
 
 export default function GlassmorphismElegance({ data, guestName }: { data?: any, guestName?: string }) {
   const groom = data?.groom_name || 'Alvaro';
@@ -10,9 +12,6 @@ export default function GlassmorphismElegance({ data, guestName }: { data?: any,
 
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isOpened, setIsOpened] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
-  
   const [comments, setComments] = useState([
     { id: 1, name: 'Tante Sarah', message: 'Happy wedding! Semoga lancar sampai hari H ya.' },
     { id: 2, name: 'Reza & Partner', message: 'Selamat ya bro! Akhirnya melepas masa lajang.' }
@@ -58,20 +57,6 @@ export default function GlassmorphismElegance({ data, guestName }: { data?: any,
 
   const handleOpen = () => {
     setIsOpened(true);
-    if (audioRef.current) {
-      audioRef.current.play().then(() => setIsPlaying(true)).catch(() => console.log("Audio play blocked"));
-    }
-  };
-
-  const toggleAudio = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
   };
 
   const handleAddComment = (e: React.FormEvent) => {
@@ -84,29 +69,9 @@ export default function GlassmorphismElegance({ data, guestName }: { data?: any,
   };
 
   return (
-    <div className="relative bg-slate-900 text-slate-100 font-sans overflow-x-hidden min-h-screen selection:bg-purple-500/40">
-      <audio 
-        ref={audioRef} 
-        loop 
-        src={data?.music_url || "https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3"} 
-      />
-
-      <AnimatePresence>
-        {isOpened && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="fixed bottom-6 right-6 z-50 w-12 h-12 bg-white/10 backdrop-blur-md rounded-full shadow-[0_8px_32px_0_rgba(31,38,135,0.37)] flex items-center justify-center border border-white/20 text-white"
-            onClick={toggleAudio}
-          >
-            {isPlaying ? (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-            ) : (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            )}
-          </motion.button>
-        )}
-      </AnimatePresence>
+    <SmoothScrollLayout>
+      <div className="relative bg-slate-900 text-slate-100 font-sans overflow-x-hidden min-h-screen selection:bg-purple-500/40">
+        {isOpened && <AudioController src={data?.music_url || "https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3"} />}
 
       {/* Floating Animated Background Orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
@@ -417,5 +382,6 @@ export default function GlassmorphismElegance({ data, guestName }: { data?: any,
         </footer>
       </main>
     </div>
+    </SmoothScrollLayout>
   );
 }

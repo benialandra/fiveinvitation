@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { format, parseISO } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
+import SmoothScrollLayout from '../components/Interactive/SmoothScrollLayout';
+import AudioController from '../components/Interactive/AudioController';
 
 export default function RusticVintage({ data, guestName }: { data?: any, guestName?: string }) {
   const groom = data?.groom_name || 'William';
@@ -13,9 +15,6 @@ export default function RusticVintage({ data, guestName }: { data?: any, guestNa
 
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isOpened, setIsOpened] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
-  
   const [comments, setComments] = useState([
     { id: 1, name: 'Bude Marni', message: 'Selamat berbahagia anakku, semoga rukun selalu.' },
     { id: 2, name: 'Keluarga Pak RT', message: 'Turut berbahagia atas pernikahan kalian.' }
@@ -56,20 +55,6 @@ export default function RusticVintage({ data, guestName }: { data?: any, guestNa
 
   const handleOpen = () => {
     setIsOpened(true);
-    if (audioRef.current) {
-      audioRef.current.play().then(() => setIsPlaying(true)).catch(() => console.log("Audio block"));
-    }
-  };
-
-  const toggleAudio = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
   };
 
   const handleAddComment = (e: React.FormEvent) => {
@@ -82,25 +67,9 @@ export default function RusticVintage({ data, guestName }: { data?: any, guestNa
   };
 
   return (
-    <div className="relative bg-[#f8f5f0] text-[#5c4a3d] font-serif overflow-x-hidden min-h-screen selection:bg-[#8b7355] selection:text-white">
-      <audio ref={audioRef} loop src={data?.music_url || "https://assets.mixkit.co/music/preview/mixkit-acoustic-guitar-wedding-145.mp3"} />
-
-      <AnimatePresence>
-        {isOpened && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="fixed bottom-6 right-6 z-50 w-12 h-12 bg-[#8b7355] text-[#f8f5f0] rounded-full shadow-xl flex items-center justify-center border-2 border-[#d4c3b3]"
-            onClick={toggleAudio}
-          >
-            {isPlaying ? (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-            ) : (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            )}
-          </motion.button>
-        )}
-      </AnimatePresence>
+    <SmoothScrollLayout>
+      <div className="relative bg-[#f8f5f0] text-[#5c4a3d] font-serif overflow-x-hidden min-h-screen selection:bg-[#8b7355] selection:text-white">
+        {isOpened && <AudioController src={data?.music_url || "https://assets.mixkit.co/music/preview/mixkit-acoustic-guitar-wedding-145.mp3"} />}
 
       <AnimatePresence>
         {!isOpened && (
@@ -395,11 +364,11 @@ export default function RusticVintage({ data, guestName }: { data?: any, guestNa
             </div>
           </div>
         </section>
-        
         <footer className="py-12 text-center bg-[#5c4a3d] text-[#e6dfd5] font-sans text-xs tracking-widest uppercase">
           <p>© 2026 {groom} & {bride}. Created with FiveInvitation.</p>
         </footer>
       </main>
     </div>
+    </SmoothScrollLayout>
   );
 }

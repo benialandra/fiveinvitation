@@ -5,6 +5,7 @@ import { CheckCircle2, Clock, Eye, AlertCircle, Search, ArrowRight, Loader2, Ref
 import { THEME_REGISTRY } from '../themes/registry';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
+import RippleButton from '../components/RippleButton';
 
 export default function Track() {
   const { orderCode } = useParams();
@@ -94,7 +95,7 @@ export default function Track() {
                 }
               }}
             />
-            <button 
+            <RippleButton 
               className="absolute right-2 top-2 bottom-2 w-10 bg-[#C5A059] text-white rounded-xl flex items-center justify-center hover:bg-[#b08d4a] transition-colors"
               onClick={(e) => {
                  const val = (e.currentTarget.previousElementSibling as HTMLInputElement).value.trim();
@@ -102,7 +103,7 @@ export default function Track() {
               }}
             >
                <ArrowRight size={18} />
-            </button>
+            </RippleButton>
           </div>
         </div>
       </div>
@@ -198,14 +199,14 @@ export default function Track() {
               {lang === 'id' ? 'Kode Invoice:' : 'Invoice Code:'} <span className="font-mono bg-gray-100 dark:bg-white/10 px-3 py-1 rounded-lg text-gray-900 dark:text-white">{order.unique_code}</span>
             </p>
             
-            <button 
+            <RippleButton 
               onClick={fetchOrder}
               disabled={loading}
               className="mb-10 px-4 py-2 bg-gray-100 dark:bg-white/10 text-gray-700 dark:text-white/80 rounded-full text-sm font-medium flex items-center gap-2 hover:bg-gray-200 dark:hover:bg-white/20 transition-colors"
             >
               <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
               {lang === 'id' ? 'Refresh Status' : 'Refresh Status'}
-            </button>
+            </RippleButton>
           </div>
 
           <motion.div

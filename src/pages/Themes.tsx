@@ -1,8 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { THEME_REGISTRY, ThemeCategory } from '../themes/registry';
-import { Link, useOutletContext } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Eye, ShoppingCart } from 'lucide-react';
+import RippleLink from '../components/RippleLink';
 
 function ThemeSkeleton() {
   return (
@@ -199,20 +200,20 @@ export default function Themes() {
                         Rp {theme.price.toLocaleString('id-ID')}
                       </span>
                       <div className="flex items-center gap-1.5 shrink-0">
-                        <Link 
+                        <RippleLink 
                           to={`/preview/${theme.id}`}
                           target="_blank"
                           rel="noopener"
                           className="px-2 sm:px-3 h-8 sm:h-9 flex items-center justify-center rounded-lg border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors text-[9px] sm:text-[10px] font-bold uppercase tracking-wider"
                         >
                           Preview
-                        </Link>
-                        <Link 
+                        </RippleLink>
+                        <RippleLink 
                           to={`/order/${theme.id}`}
                           className="px-3 sm:px-4 h-8 sm:h-9 flex items-center justify-center bg-gray-900 dark:bg-white text-white dark:text-black rounded-lg text-[9px] sm:text-[10px] font-bold uppercase tracking-wider hover:bg-[#C5A059] dark:hover:bg-gray-200 transition-colors whitespace-nowrap"
                         >
                           {lang === 'id' ? 'Pesan' : 'Order'}
-                        </Link>
+                        </RippleLink>
                       </div>
                     </div>
                   </div>

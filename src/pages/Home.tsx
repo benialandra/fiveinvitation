@@ -27,18 +27,7 @@ function useAnimatedCounter(target: number, duration = 2000) {
 
   return { count, ref };
 }
-
-// Ripple effect hook
-function useRipple() {
-  const [ripples, setRipples] = useState<{x:number;y:number;id:number}[]>([]);
-  const addRipple = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const id = Date.now();
-    setRipples(r => [...r, { x: e.clientX - rect.left, y: e.clientY - rect.top, id }]);
-    setTimeout(() => setRipples(r => r.filter(rp => rp.id !== id)), 600);
-  }, []);
-  return { ripples, addRipple };
-}
+import { useRipple } from '../hooks/useRipple';
 
 const RECENT_ORDERS = [
   { id: 1, names: "Beni & Deti", theme: "Elegant Minimalist", image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=300" },

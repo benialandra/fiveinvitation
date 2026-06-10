@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { format, parseISO } from 'date-fns';
 import { id as localeId, enUS as localeEn } from 'date-fns/locale';
+import SmoothScrollLayout from '../components/Interactive/SmoothScrollLayout';
+import AudioController from '../components/Interactive/AudioController';
 
 interface ThemeProps {
   data?: any;
@@ -24,8 +26,10 @@ export default function MinimalistMonochrome({ data, guestName, lang = 'id' }: T
   const coverImage = data.cover_image || "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=1200&auto=format&fit=crop";
 
   return (
-    <div className="font-sans text-gray-900 bg-white min-h-screen overflow-x-hidden selection:bg-black selection:text-white">
-      {/* Cover Screen */}
+    <SmoothScrollLayout>
+      <div className="font-sans text-gray-900 bg-white min-h-screen overflow-x-hidden selection:bg-black selection:text-white">
+        {isOpen && <AudioController src={data.music_url || "https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3"} />}
+        {/* Cover Screen */}
       <div 
         className={`fixed inset-0 z-50 bg-white flex flex-col items-center justify-center transition-transform duration-1000 ease-in-out ${isOpen ? '-translate-y-full' : 'translate-y-0'}`}
       >
@@ -110,6 +114,7 @@ export default function MinimalistMonochrome({ data, guestName, lang = 'id' }: T
            </div>
         </section>
       </div>
-    </div>
+      </div>
+    </SmoothScrollLayout>
   );
 }

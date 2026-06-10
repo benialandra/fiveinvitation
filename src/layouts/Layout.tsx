@@ -67,18 +67,18 @@ export default function Layout() {
       {themeMode === 'dark' && <div className="absolute inset-0 bg-noise pointer-events-none z-0"></div>}
       <CustomCursor />
       <nav className="fixed top-0 w-full h-20 px-6 md:px-12 flex items-center justify-between border-b border-black/5 dark:border-white/5 z-50 bg-white/80 dark:bg-[#0A0A0B]/80 backdrop-blur-md">
-        <Link to="/" className="flex items-center gap-3">
-          <div className="w-10 h-10 border border-[#C5A059] rotate-45 flex items-center justify-center">
-            <span className="-rotate-45 font-serif text-xl font-bold text-[#C5A059]">E</span>
+        <Link to="/" className="flex items-center gap-3 group">
+          <div className="w-10 h-10 border border-[#C5A059] rotate-45 flex items-center justify-center transition-all duration-500 group-hover:border-[#fcdb92] group-hover:shadow-[0_0_20px_#C5A059] relative">
+            <span className="-rotate-45 font-serif text-2xl font-bold text-[#C5A059] transition-colors duration-500 group-hover:text-[#fcdb92] group-hover:drop-shadow-[0_0_10px_#C5A059]">V</span>
           </div>
-          <span className="hidden md:block font-serif text-2xl tracking-[0.2em] font-light">FIVEINVITATION</span>
+          <span className="hidden md:block font-serif text-2xl tracking-[0.2em] font-light transition-colors duration-500 group-hover:text-[#C5A059]">FIVEINVITATION</span>
         </Link>
         <div className="hidden md:flex gap-8 text-xs uppercase tracking-widest font-medium dark:font-light">
           <Link to="/themes" className="hover:text-[#C5A059] transition-colors">{lang === 'id' ? 'Katalog Tema' : 'Themes'}</Link>
           <Link to="/track/search" className="hover:text-[#C5A059] transition-colors">{lang === 'id' ? 'Lacak Order' : 'Track Order'}</Link>
           <Link to="/socials" className="hover:text-[#C5A059] transition-colors">{lang === 'id' ? 'Sosial Media' : 'Socials'}</Link>
         </div>
-        <div className="flex items-center gap-4 w-[160px] justify-end">
+        <div className="flex items-center gap-2 md:gap-4 w-auto justify-end">
           <button 
              onClick={() => setLang(prev => prev === 'en' ? 'id' : 'en')} 
              className="text-[10px] font-bold uppercase tracking-widest w-12 h-8 rounded-full flex items-center justify-center gap-1.5 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"

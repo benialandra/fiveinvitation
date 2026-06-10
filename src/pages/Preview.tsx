@@ -87,7 +87,7 @@ export default function Preview() {
 
   return (
     <div className="w-full relative min-h-screen bg-gray-100/50 dark:bg-[#0A0A0B] flex flex-col items-center p-4 pt-20">
-      <div className="fixed bottom-6 md:bottom-auto md:top-6 left-6 z-[100]">
+      <div className="fixed bottom-6 left-6 z-[100]">
         <Link 
           to="/themes" 
           className="flex items-center gap-2 px-4 py-2 bg-black/50 hover:bg-black backdrop-blur text-white text-xs uppercase tracking-widest font-semibold rounded-full transition-colors"

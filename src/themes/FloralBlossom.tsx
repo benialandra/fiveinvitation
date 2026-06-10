@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { format, parseISO } from 'date-fns';
 import { id as localeId, enUS as localeEn } from 'date-fns/locale';
+import SmoothScrollLayout from '../components/Interactive/SmoothScrollLayout';
+import AudioController from '../components/Interactive/AudioController';
 
 interface ThemeProps {
   data?: any;
@@ -10,7 +12,6 @@ interface ThemeProps {
 
 export default function FloralBlossom({ data, guestName, lang = 'id' }: ThemeProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   
   // Efek Daun/Bunga jatuh
   const [petals, setPetals] = useState<{ id: number; left: number; delay: number; duration: number }[]>([]);
@@ -28,10 +29,6 @@ export default function FloralBlossom({ data, guestName, lang = 'id' }: ThemePro
 
   const handleOpenInvitation = () => {
     setIsOpen(true);
-    // Memutar musik saat undangan dibuka
-    if (audioRef.current) {
-      audioRef.current.play().catch(err => console.log("Audio play failed:", err));
-    }
   };
 
   if (!data) return <div className="min-h-screen flex items-center justify-center bg-rose-50 text-rose-900">Memuat...</div>;
@@ -48,14 +45,13 @@ export default function FloralBlossom({ data, guestName, lang = 'id' }: ThemePro
   const coverImage = data.cover_image || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop";
 
   return (
-    <div className="font-serif text-rose-950 bg-rose-50 min-h-screen overflow-x-hidden relative selection:bg-rose-900 selection:text-white">
-      
-      {/* Background Music */}
-      {data.music_url && (
-         <audio ref={audioRef} src={data.music_url} loop />
-      )}
+    <SmoothScrollLayout>
+      <div className="font-serif text-rose-950 bg-rose-50 min-h-screen overflow-x-hidden relative selection:bg-rose-900 selection:text-white">
+        
+        {/* Background Music */}
+        {isOpen && <AudioController src={data.music_url || "https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3"} />}
 
-      {/* Efek Bunga Jatuh CSS Khusus (di-inject di dalam theme) */}
+        {/* Efek Bunga Jatuh CSS Khusus (di-inject di dalam theme) */}
       <style>{`
         @keyframes fall {
           0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
@@ -182,7 +178,8 @@ export default function FloralBlossom({ data, guestName, lang = 'id' }: ThemePro
            )}
         </section>
 
+        </div>
       </div>
-    </div>
+    </SmoothScrollLayout>
   );
 }

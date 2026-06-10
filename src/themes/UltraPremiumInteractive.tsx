@@ -7,6 +7,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import toast from 'react-hot-toast';
+import AudioController from '../components/Interactive/AudioController';
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -173,8 +174,10 @@ export default function UltraPremiumInteractive({ data, guestName }: { data?: an
   };
 
   return (
-    <div ref={containerRef} className="relative bg-[#0A0A0A] text-[#F5F5F5] font-serif overflow-hidden min-h-screen selection:bg-[#D4AF37] selection:text-white cursor-none">
+    <div className="relative bg-[#050505] text-white font-sans overflow-x-hidden min-h-screen selection:bg-[#D4AF37] selection:text-black">
       <CustomCursor />
+      
+      {isOpened && <AudioController src={data?.music_url || "https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3"} />}
 
       {/* Cinematic Reveal Cover */}
       <AnimatePresence>
@@ -290,6 +293,22 @@ export default function UltraPremiumInteractive({ data, guestName }: { data?: an
               <div className="relative aspect-[4/3] md:mt-24 group perspective-[1000px]">
                 <div className="w-full h-full relative transition-transform duration-200 ease-out transform-style-3d hover:rotate-y-12 hover:rotate-x-12">
                   <img src={gal2} alt="Gallery 2" className="w-full h-full object-cover filter grayscale hover:grayscale-0 transition-all duration-700" />
+                  <div className="absolute inset-0 border border-[#D4AF37]/50 m-4 pointer-events-none transform translate-z-[50px]" />
+                </div>
+              </div>
+
+              {/* Photo 3 */}
+              <div className="relative aspect-[4/3] md:-mt-12 group perspective-[1000px]">
+                <div className="w-full h-full relative transition-transform duration-200 ease-out transform-style-3d hover:rotate-y-12 hover:rotate-x-12">
+                  <img src={gal3} alt="Gallery 3" className="w-full h-full object-cover filter grayscale hover:grayscale-0 transition-all duration-700" />
+                  <div className="absolute inset-0 border border-[#D4AF37]/50 m-4 pointer-events-none transform translate-z-[50px]" />
+                </div>
+              </div>
+
+              {/* Photo 4 */}
+              <div className="relative aspect-[3/4] md:mt-12 group perspective-[1000px]">
+                <div className="w-full h-full relative transition-transform duration-200 ease-out transform-style-3d hover:rotate-y-12 hover:rotate-x-12">
+                  <img src={gal4} alt="Gallery 4" className="w-full h-full object-cover filter grayscale hover:grayscale-0 transition-all duration-700" />
                   <div className="absolute inset-0 border border-[#D4AF37]/50 m-4 pointer-events-none transform translate-z-[50px]" />
                 </div>
               </div>

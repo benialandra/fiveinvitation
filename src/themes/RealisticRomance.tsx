@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
+import SmoothScrollLayout from '../components/Interactive/SmoothScrollLayout';
+import AudioController from '../components/Interactive/AudioController';
 
 export default function RealisticRomance({ data, guestName }: { data?: any, guestName?: string }) {
   const groom = data?.groom_name || 'Romeo';
@@ -10,7 +12,6 @@ export default function RealisticRomance({ data, guestName }: { data?: any, gues
 
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isOpened, setIsOpened] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
   
   const [comments, setComments] = useState([
     { id: 1, name: 'Keluarga Besar Bpk. Ahmad', message: 'Selamat menempuh hidup baru, semoga menjadi keluarga yang sakinah mawaddah warahmah.' },
@@ -29,7 +30,6 @@ export default function RealisticRomance({ data, guestName }: { data?: any, gues
   const bankAccount1 = data?.bank_account_1 || "1234567890";
   const bankAccountName1 = data?.bank_account_name_1 || groom;
   
-  const audioRef = useRef<HTMLAudioElement>(null);
   const { scrollYProgress } = useScroll();
   const yHeroBg = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
 
@@ -58,20 +58,6 @@ export default function RealisticRomance({ data, guestName }: { data?: any, gues
 
   const handleOpen = () => {
     setIsOpened(true);
-    if (audioRef.current) {
-      audioRef.current.play().then(() => setIsPlaying(true)).catch(() => console.log("Audio play blocked"));
-    }
-  };
-
-  const toggleAudio = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
   };
 
   const handleAddComment = (e: React.FormEvent) => {
@@ -84,31 +70,9 @@ export default function RealisticRomance({ data, guestName }: { data?: any, gues
   };
 
   return (
-    <div className="relative bg-[#FCFBF8] text-[#5A5A5A] font-serif overflow-x-hidden min-h-screen">
-      {/* Background Music */}
-      <audio 
-        ref={audioRef} 
-        loop 
-        src="https://assets.mixkit.co/music/preview/mixkit-romantic-ambient-142.mp3" 
-      />
-
-      {/* Floating Audio Button */}
-      <AnimatePresence>
-        {isOpened && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="fixed bottom-6 right-6 z-50 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center border border-[#E8E1D5] text-[#C5A059]"
-            onClick={toggleAudio}
-          >
-            {isPlaying ? (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-            ) : (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            )}
-          </motion.button>
-        )}
-      </AnimatePresence>
+    <SmoothScrollLayout>
+      <div className="relative bg-[#FCFBF8] text-[#5A5A5A] font-serif overflow-x-hidden min-h-screen">
+        {isOpened && <AudioController src={data?.music_url || "https://assets.mixkit.co/music/preview/mixkit-romantic-ambient-142.mp3"} />}
 
       {/* Cover Overlay */}
       <AnimatePresence>
@@ -398,5 +362,6 @@ export default function RealisticRomance({ data, guestName }: { data?: any, gues
         </footer>
       </main>
     </div>
+  </SmoothScrollLayout>
   );
 }

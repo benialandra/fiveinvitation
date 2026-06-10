@@ -116,12 +116,16 @@ export default function Themes() {
                 key={theme.id}
                 initial="hidden"
                 animate="show"
-                exit={{ opacity: 0, scale: 0.9, y: -20 }}
+                exit={{ opacity: 0, scale: 0.95, filter: 'blur(10px)' }}
                 variants={{
-                  hidden: { opacity: 0, y: 20, scale: 0.95 },
-                  show: { opacity: 1, y: 0, scale: 1 }
+                  hidden: { opacity: 0, y: 30, scale: 0.95, filter: 'blur(10px)' },
+                  show: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }
                 }}
-                transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+                transition={{ 
+                  duration: 0.6, 
+                  ease: [0.22, 1, 0.36, 1],
+                  layout: { type: "tween", duration: 0.6, ease: [0.22, 1, 0.36, 1] }
+                }}
                 className="group bg-white dark:bg-black/40 rounded-2xl border border-black/5 dark:border-white/5 overflow-hidden flex flex-col hover:shadow-xl dark:hover:shadow-[#C5A059]/10 transition-all duration-300"
               >
                 <div className="w-full aspect-[4/5] bg-gray-100 dark:bg-gray-900 overflow-hidden relative">

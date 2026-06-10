@@ -240,6 +240,26 @@ export default function OceanBreeze({ data, guestName, lang = 'id' }: { data?: a
           </div>
         </section>
 
+        {/* Gallery */}
+        <section className="py-24 px-6 relative z-10 bg-white">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+               <h2 className="text-4xl md:text-5xl font-light text-[#1e4b5f] mb-4">Our Memories</h2>
+               <p className="text-[#208496] font-medium tracking-widest uppercase text-sm">Captured by the sea</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <motion.img 
+                initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
+                src={gallery1} className="w-full aspect-[4/5] object-cover rounded-[3rem] shadow-xl border-4 border-white" alt="Gallery 1" 
+              />
+              <motion.img 
+                initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
+                src={gallery2} className="w-full aspect-[4/5] object-cover rounded-[3rem] shadow-xl border-4 border-white md:mt-16" alt="Gallery 2" 
+              />
+            </div>
+          </div>
+        </section>
+
         {/* Wedding Gift */}
         <section className="py-24 px-6 z-10 relative bg-[#f0f9f9]">
           <div className="max-w-md mx-auto text-center">

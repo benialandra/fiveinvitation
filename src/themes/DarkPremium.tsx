@@ -1,11 +1,14 @@
-import React from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
+import SmoothScrollLayout from '../components/Interactive/SmoothScrollLayout';
+import AudioController from '../components/Interactive/AudioController';
 
 export default function DarkPremium({ data, guestName }: { data?: any, guestName?: string }) {
   const groom = data?.groom_name || 'Kevin';
   const bride = data?.bride_name || 'Clara';
   const displayGuest = guestName || 'Our Respected Guest';
+  const [isOpen, setIsOpen] = useState(false);
 
   const mapImg = data?.map_image || "https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=2000&auto=format&fit=crop";
   const heroImg = data?.hero_image; // Allow custom hero image or keep dark theme default
@@ -17,7 +20,38 @@ export default function DarkPremium({ data, guestName }: { data?: any, guestName
   const opacityMain = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-200 font-sans tracking-tight overflow-x-hidden selection:bg-indigo-500/30">
+    <SmoothScrollLayout>
+      <div className="min-h-screen bg-slate-950 text-slate-200 font-sans tracking-tight overflow-x-hidden selection:bg-indigo-500/30">
+        {isOpen && <AudioController src={data?.music_url || "https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3"} />}
+        
+        {/* Cover Overlay */}
+        <AnimatePresence>
+          {!isOpen && (
+            <motion.div 
+              exit={{ opacity: 0, y: '-100%' }}
+              transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
+              className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950"
+            >
+              <div className="absolute inset-0 bg-cover bg-center opacity-40 grayscale" style={{ backgroundImage: `url('${heroImg || mapImg}')` }} />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+              
+              <div className="relative z-10 text-center max-w-lg px-6">
+                <p className="text-indigo-400 font-mono text-xs uppercase tracking-widest mb-6">The Wedding Of</p>
+                <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white mb-8">{groom} & {bride}</h1>
+                <div className="w-12 h-px bg-indigo-500/50 mx-auto mb-8" />
+                <p className="text-slate-400 font-mono text-xs uppercase tracking-widest mb-2">Dear</p>
+                <p className="text-xl font-light text-white mb-12">{displayGuest}</p>
+                
+                <button 
+                  onClick={() => setIsOpen(true)}
+                  className="px-8 py-4 bg-white text-slate-950 font-medium rounded-full uppercase tracking-widest text-xs hover:bg-indigo-500 hover:text-white transition-colors"
+                >
+                  Open Invitation
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       <motion.div style={{ opacity: opacityMain }} className="h-screen w-full flex flex-col justify-between p-8 md:p-16 relative">
         {heroImg ? (
            <div className="absolute inset-0 bg-cover bg-center opacity-60" style={{ backgroundImage: `url('${heroImg}')` }} />
@@ -199,5 +233,6 @@ export default function DarkPremium({ data, guestName }: { data?: any, guestName
         </motion.div>
       </section>
     </div>
+    </SmoothScrollLayout>
   )
 }

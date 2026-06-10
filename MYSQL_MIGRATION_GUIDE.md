@@ -2,9 +2,9 @@
 
 Tentu saja Anda bisa menggunakan MySQL lokal! Berbeda dengan Supabase yang menyediakan client-side SDK untuk mengakses database langsung dari React (browser), **MySQL harus diakses melalui backend server**. 
 
-Karena aplikasi ini sudah menggunakan **Express.js** (`server.ts`), kita memindahkan logika *query* database dari React (`frontend`) ke Express (`backend`).
+Karena aplikasi ini sudah menggunakan **Express.js** (`server.ts`), kita dapat memindahkan logika *query* database dari React (`frontend`) ke Express (`backend`).
 
-Berikut adalah panduan langkah demi langkah menggunakan **Prisma ORM** (Sangat direkomendasikan karena mirip dengan pengalaman menggunakan Supabase-JS).
+Berikut adalah panduan langkah demi langkah menggunakan **Prisma ORM** (Sangat direkomendasikan karena tipe kemiripannya dengan pengalaman menggunakan Supabase-JS).
 
 ---
 
@@ -118,11 +118,11 @@ npx prisma db push
 
 ---
 
-## 3. Update File `src/lib/supabase.ts` → API Client
+## 3. Update File API Client
 
 Hapus penggunaan Supabase Client dan ganti file tersebut untuk melakukan request ke backend HTTP (Express) kita.
 
-**Ubah `src/lib/supabase.ts` (Atau ganti nama menjadi `src/lib/api.ts`):**
+**Ubah `src/lib/supabase.ts` menjadi `src/lib/api.ts`:**
 ```typescript
 // Kini frontend tidak lagi menghubungi DB langsung, melainkan fetch ke backend
 
@@ -165,7 +165,7 @@ app.post("/api/orders", async (req, res) => {
       data: req.body
     });
     res.json({ data: newOrder });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
 });
@@ -177,7 +177,7 @@ app.get("/api/orders/track/:code", async (req, res) => {
       where: { unique_code: req.params.code }
     });
     res.json({ data: order });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
 });
@@ -189,19 +189,21 @@ app.get("/api/orders/slug/:slug", async (req, res) => {
       where: { slug: req.params.slug }
     });
     res.json({ data: order });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
 });
 
 // --- Jangan lupa update Webhook Midtrans Anda ---
 // Pada function webhook midtrans:
+/*
 if (fraudStatus == 'accept') {
    await prisma.orders.update({
       where: { unique_code: orderId },
       data: { status: 'PAID' }
    });
 }
+*/
 ```
 
 ---
@@ -233,5 +235,5 @@ await api.createOrder({
 
 ## Keuntungan Sistem Baru (Backend API + MySQL)
 1. Keamanan lebih baik (Koneksi database 100% tersembunyi dari peramban client, tidak terekspos seperti anon key!).
-2. Mudah dipindahkan ke server VPS atau Hosting yang mensupport MySQL dan Node.JS.
+2. Mudah dipindahkan ke server VPS atau Hosting yang mensupport MySQL dan Node.JS (seperti VPS Hostinger, Niagahoster, dll).
 3. Terpusat di Express backend API `server.ts`.

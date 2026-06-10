@@ -2,7 +2,7 @@
 
 Platform pembuatan undangan pernikahan digital modern dan interaktif, dirancang secara khusus bagi para calon pengantin untuk merayakan momen spesial mereka dengan elegan, cepat, dan mudah diakses dari perangkat apapun.
 
-FiveInvitation diciptakan menggunakan konsep Full-Stack Web Application modern, menyediakan tidak hanya antarmuka bagi pembeli tetapi juga **Dashboard Admin** yang kaya fitur, sistem **Pembayaran Otomatis** via Midtrans, serta integrasi **Supabase** untuk Database & Storage.
+FiveInvitation diciptakan menggunakan konsep Full-Stack Web Application modern, menyediakan tidak hanya antarmuka bagi pembeli tetapi juga **Dashboard Admin** yang kaya fitur, sistem **Pembayaran Otomatis** via Midtrans, serta integrasi Database menggunakan **Supabase**.
 
 ## ✨ Fitur Utama
 
@@ -15,9 +15,9 @@ FiveInvitation diciptakan menggunakan konsep Full-Stack Web Application modern, 
 
 ### ⚙️ Admin Dashboard
 - **Statistik & Laporan:** Dashboard dengan visualisasi grafik (menggunakan `recharts`) untuk melihat performa penjualan (sales analytics).
-- **Manajemen Tema (CMS):** Create, update, atau sesuaikan tema secara dinamis.
+- **Manajemen Tema (CMS):** Create, update, atau sesuaikan tema secara dinamis, termasuk dukungan **Upload File Komponen (.tsx)** langsung dari Dashboard!
 - **Manajemen Order:** Melihat order masuk, mengubah data order klien, dan preview hasil pesanan klien.
-- **Sistem Penyimpanan (Storage):** Mendukung unggahan ke **Bucket Storage (Supabase)** lengkap dengan fallback storage lokal `/uploads`.
+- **Sistem Penyimpanan (Storage):** Secara default menggunakan penyimpanan lokal server (via Multer) pada direktori `public/uploads` yang dikelola secara terpusat.
 
 ---
 
@@ -25,9 +25,9 @@ FiveInvitation diciptakan menggunakan konsep Full-Stack Web Application modern, 
 
 - **Frontend:** React 19, React Router, Vite, Tailwind CSS, Framer Motion, Recharts.
 - **Backend:** Node.js, Express (with Vite Middleware untuk Development mode), TypeScript.
-- **Database:** Supabase (PostgreSQL), Supabase Storage.
+- **Database:** Supabase (PostgreSQL).
 - **Payment Gateway:** Midtrans Client SDK.
-- **Peralatan Tambahan:** Multer (File Upload), Node-Cron (Penjadwalan), Nodemailer (Pengiriman Email).
+- **Peralatan Tambahan:** Multer (File Upload Lokal), Node-Cron (Penjadwalan Pengingat Pembayaran), Nodemailer (Pengiriman Email Notifikasi).
 - **Build System:** Esbuild (Transpile Tipe ESM ke CommonJS untuk Backend), Vite Build (Front-End Static).
 
 ---
@@ -37,7 +37,7 @@ FiveInvitation diciptakan menggunakan konsep Full-Stack Web Application modern, 
 ### 1. Kebutuhan Sistem
 Pastikan Anda telah menginstal lingkungan berikut:
 - **Node.js** versi 18 atau ke atas
-- Akun **Supabase** (Database + Storage)
+- Akun **Supabase** (Database)
 - Akun **Midtrans** (Sandbox/Production Mode)
 
 ### 2. Instalasi Variabel Lingkungan (.env)
@@ -46,30 +46,29 @@ Buatlah file `.env` (atau Anda bisa merujuk ke file `.env.example` yang ada) di 
 ```env
 # SERVER INFO
 PORT=3000
+VITE_APP_URL=http://localhost:3000
 
 # SUPABASE 
-SUPABASE_URL=https://[PROJECT-ID].supabase.co
-SUPABASE_ANON_KEY=[ANON-KEY]
-SUPABASE_SERVICE_ROLE_KEY=[ROLE-KEY]
+VITE_SUPABASE_URL=https://[PROJECT-ID].supabase.co
+VITE_SUPABASE_ANON_KEY=[ANON-KEY]
 
 # MIDTRANS (Payment Gateway)
 MIDTRANS_SERVER_KEY=[SERVER-KEY-ANDA]
-MIDTRANS_CLIENT_KEY=[CLIENT-KEY-ANDA]
+VITE_MIDTRANS_CLIENT_KEY=[CLIENT-KEY-ANDA]
+MIDTRANS_IS_PRODUCTION=false
 
-# EMAIL (Opsional - Nodemailer)
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_app_password
+# EMAIL NOTIFICATION (Nodemailer - Opsional)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=your_email@gmail.com
+SMTP_PASS=your_app_password
 ```
 
 ### 3. Setup Database (Supabase)
 Jalankan file `supabase_schema.sql` di SQL Editor pada proyek Supabase Anda. Ini akan secara otomatis membuat tabel:
 - `orders` (Data relasi order/pesanan)
 - `themes` (Data master untuk menampung seluruh tema digital)
-
-Jangan lupa untuk mengkonfigurasi policy pada storage bucket Anda. 
-Misalnya, membuat bucket bernama `fiveinvitation-bucket` dan menyetel permission menjadi format publik.
 
 ### 4. Instalasi Dependency
 Buka terminal Anda dan instal seluruh dependency proyek:
@@ -100,11 +99,12 @@ Proyek ini telah dikonfigurasi untuk environment cloud-native menggunakan pendek
    ```bash
    npm run start
    ```
+   *(Catatan: karena fitur upload menggunakan disk lokal, pastikan layanan cloud Anda mendukung Persistent Disk (Volume) agar gambar tidak hilang saat instance direstart).*
 
 ## 📄 Struktur Proyek
-```
+```text
 /
-├── public/                 # Static assets & default uploads storage proxy
+├── public/                 # Static assets & direktori uploads lokal (public/uploads)
 ├── src/                    
 │   ├── components/         # Komponen React yang dapat digunakan ulang
 │   ├── lib/                # Library & Konfigurasi klien (Supabase, clsx, dll)
@@ -119,3 +119,4 @@ Proyek ini telah dikonfigurasi untuk environment cloud-native menggunakan pendek
 
 ## 🤝 Lisensi
 Dibuat untuk kebutuhan pribadi/komersil oleh tim kreator FiveInvitation.
+

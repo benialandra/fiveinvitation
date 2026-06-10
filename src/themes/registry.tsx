@@ -5,8 +5,11 @@ import RealisticRomance from './RealisticRomance';
 
 import MinimalistMonochrome from './MinimalistMonochrome';
 import FloralBlossom from './FloralBlossom';
+import GlassmorphismElegance from './GlassmorphismElegance';
+import RusticVintage from './RusticVintage';
+import OceanBreeze from './OceanBreeze';
 
-export type ThemeCategory = 'Elegant' | 'Dark' | 'Minimalist' | 'Islamic' | 'Floral';
+export type ThemeCategory = 'Elegant' | 'Dark' | 'Minimalist' | 'Islamic' | 'Floral' | 'Rustic' | 'Tropical';
 
 export interface ThemeMeta {
   id: string;
@@ -18,6 +21,30 @@ export interface ThemeMeta {
 }
 
 export const THEME_REGISTRY: ThemeMeta[] = [
+  {
+    id: 'glassmorphism-elegance',
+    name: 'Glassmorphism Elegance',
+    category: 'Elegant',
+    price: 399000,
+    thumbnail: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=800&auto=format&fit=crop',
+    component: GlassmorphismElegance
+  },
+  {
+    id: 'rustic-vintage',
+    name: 'Rustic Vintage',
+    category: 'Rustic',
+    price: 299000,
+    thumbnail: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=800&auto=format&fit=crop',
+    component: RusticVintage
+  },
+  {
+    id: 'ocean-breeze',
+    name: 'Ocean Breeze',
+    category: 'Tropical',
+    price: 349000,
+    thumbnail: 'https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=80&w=800&auto=format&fit=crop',
+    component: OceanBreeze
+  },
   {
     id: 'floral-blossom',
     name: 'Floral Blossom',

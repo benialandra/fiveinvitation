@@ -71,7 +71,7 @@ export default function Layout() {
           <div className="w-10 h-10 border border-[#C5A059] rotate-45 flex items-center justify-center">
             <span className="-rotate-45 font-serif text-xl font-bold text-[#C5A059]">E</span>
           </div>
-          <span className="font-serif text-2xl tracking-[0.2em] font-light">FIVEINVITATION</span>
+          <span className="hidden md:block font-serif text-2xl tracking-[0.2em] font-light">FIVEINVITATION</span>
         </Link>
         <div className="hidden md:flex gap-8 text-xs uppercase tracking-widest font-medium dark:font-light">
           <Link to="/themes" className="hover:text-[#C5A059] transition-colors">{lang === 'id' ? 'Katalog Tema' : 'Themes'}</Link>
@@ -91,7 +91,7 @@ export default function Layout() {
           </button>
           <button 
              onClick={toggleTheme} 
-             className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+             className="flex w-10 h-10 rounded-full items-center justify-center hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
           >
             {themeMode === 'light' ? <Moon size={18} /> : <Sun size={18} />}
           </button>

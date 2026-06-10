@@ -8,8 +8,12 @@ import FloralBlossom from './FloralBlossom';
 import GlassmorphismElegance from './GlassmorphismElegance';
 import RusticVintage from './RusticVintage';
 import OceanBreeze from './OceanBreeze';
+import RoyalGoldLuxury from './RoyalGoldLuxury';
+import UltraPremiumInteractive from './UltraPremiumInteractive';
+import JapaneseSakuraGarden from './JapaneseSakuraGarden';
+import CinematicLoveStory from './CinematicLoveStory';
 
-export type ThemeCategory = 'Elegant' | 'Dark' | 'Minimalist' | 'Islamic' | 'Floral' | 'Rustic' | 'Tropical';
+export type ThemeCategory = 'Elegant' | 'Dark' | 'Minimalist' | 'Islamic' | 'Floral' | 'Rustic' | 'Tropical' | 'Premium';
 
 export interface ThemeMeta {
   id: string;
@@ -21,6 +25,38 @@ export interface ThemeMeta {
 }
 
 export const THEME_REGISTRY: ThemeMeta[] = [
+  {
+    id: 'cinematic-love-story',
+    name: 'Cinematic Love Story',
+    category: 'Premium',
+    price: 1500000,
+    thumbnail: 'https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=800&auto=format&fit=crop',
+    component: CinematicLoveStory
+  },
+  {
+    id: 'japanese-sakura-garden',
+    name: 'Japanese Sakura Garden',
+    category: 'Premium',
+    price: 1500000,
+    thumbnail: 'https://images.unsplash.com/photo-1522383225653-ed111181a951?q=80&w=800&auto=format&fit=crop',
+    component: JapaneseSakuraGarden
+  },
+  {
+    id: 'ultra-premium-interactive',
+    name: 'Ultra Premium Interactive',
+    category: 'Premium',
+    price: 1500000,
+    thumbnail: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop',
+    component: UltraPremiumInteractive
+  },
+  {
+    id: 'royal-gold-luxury',
+    name: 'Royal Gold Luxury',
+    category: 'Elegant',
+    price: 450000,
+    thumbnail: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800&auto=format&fit=crop',
+    component: RoyalGoldLuxury
+  },
   {
     id: 'glassmorphism-elegance',
     name: 'Glassmorphism Elegance',

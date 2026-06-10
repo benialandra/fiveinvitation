@@ -44,8 +44,20 @@ export default function Layout() {
     if (saved) {
       setThemeMode(saved);
     } else {
-      setThemeMode('light'); // default light as requested usually or dark
+      const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setThemeMode(isSystemDark ? 'dark' : 'light');
     }
+
+    // Listen to system theme changes
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      if (!localStorage.getItem('app-theme')) {
+        setThemeMode(e.matches ? 'dark' : 'light');
+      }
+    };
+    
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
   useEffect(() => {

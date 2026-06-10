@@ -131,7 +131,7 @@ export default function Order() {
 
   return (
     <div className="w-full min-h-screen bg-transparent py-12">
-      <div className="max-w-3xl mx-auto px-6">
+      <div className="max-w-6xl mx-auto px-6">
         <button onClick={() => navigate(-1)} className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white mb-8 transition-colors">
           <ArrowLeft className="w-4 h-4" /> {lang === 'id' ? 'Kembali' : 'Back'}
         </button>
@@ -145,97 +145,127 @@ export default function Order() {
           </div>
         )}
         
-        <div className="bg-white dark:bg-[#111] rounded-3xl p-8 border border-black/5 dark:border-white/10 shadow-xl shadow-black/5 dark:shadow-[0_0_20px_rgba(255,255,255,0.02)]">
-          <div className="flex items-start justify-between border-b border-black/5 dark:border-white/10 pb-8 mb-8">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{lang === 'id' ? 'Checkout Undangan' : 'Invitation Checkout'}</h1>
-              <p className="text-gray-500 dark:text-gray-400">{lang === 'id' ? 'Tema:' : 'Theme:'} <span className="font-semibold text-black dark:text-white">{theme.name}</span></p>
-            </div>
-            <div className="text-right">
-              <span className="block text-sm text-gray-500 dark:text-gray-400 mb-1">{lang === 'id' ? 'Total Biaya' : 'Total Cost'}</span>
-              <span className="text-2xl font-bold text-rose-600">Rp {theme.price.toLocaleString('id-ID')}</span>
-            </div>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6 flex flex-col">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">1. {lang === 'id' ? 'Data Pemesan & Mempelai' : 'Customer & Couple Data'}</h2>
-            
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{lang === 'id' ? 'Email Pemesan' : 'Customer Email'}</label>
-              <input 
-                type="email" 
-                required
-                placeholder={lang === 'id' ? "Contoh: user@email.com" : "E.g. user@email.com"}
-                className="w-full px-4 h-11 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-black/30 text-gray-900 dark:text-white focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all"
-                value={formData.email}
-                onChange={e => setFormData({...formData, email: e.target.value})}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{lang === 'id' ? 'Nama Panggilan Pria' : 'Groom Nickname'}</label>
-                <input 
-                  type="text" 
-                  required
-                  placeholder={lang === 'id' ? "Contoh: Beni" : "E.g. Beni"}
-                  className="w-full px-4 h-11 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-black/30 text-gray-900 dark:text-white focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all"
-                  value={formData.groom_name}
-                  onChange={e => setFormData({...formData, groom_name: e.target.value})}
-                />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+           {/* Bagian Kiri: Ringkasan Pesanan */}
+           <div className="lg:col-span-5 bg-white dark:bg-[#111] rounded-3xl p-8 border border-black/5 dark:border-white/10 shadow-xl shadow-black/5 dark:shadow-[0_0_20px_rgba(255,255,255,0.02)] sticky top-24">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 border-b border-black/5 dark:border-white/10 pb-4">
+                 {lang === 'id' ? 'Ringkasan Pesanan' : 'Order Summary'}
+              </h2>
+              <div className="aspect-[4/3] rounded-2xl bg-gray-100 dark:bg-black/50 overflow-hidden mb-6 relative group">
+                 {/* Asumsi theme.image ada, atau gunakan placeholder */}
+                 <img src={(theme as any).image || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=800"} alt={theme.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-5">
+                    <div>
+                       <span className="text-xs uppercase tracking-widest text-[#C5A059] mb-1 font-semibold block">{lang === 'id' ? 'Pilihan Anda' : 'Your Choice'}</span>
+                       <span className="text-white font-serif text-2xl">{theme.name}</span>
+                    </div>
+                 </div>
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{lang === 'id' ? 'Nama Panggilan Wanita' : 'Bride Nickname'}</label>
-                <input 
-                  type="text" 
-                  required
-                  placeholder={lang === 'id' ? "Contoh: Salsa" : "E.g. Salsa"}
-                  className="w-full px-4 h-11 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-black/30 text-gray-900 dark:text-white focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all"
-                  value={formData.bride_name}
-                  onChange={e => setFormData({...formData, bride_name: e.target.value})}
-                />
+              <div className="space-y-4">
+                 <div className="flex justify-between text-sm">
+                    <span className="text-gray-500 dark:text-gray-400">{lang === 'id' ? 'Kategori Tema' : 'Theme Category'}</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{(theme as any).category || 'Premium Design'}</span>
+                 </div>
+                 <div className="flex justify-between text-sm">
+                    <span className="text-gray-500 dark:text-gray-400">{lang === 'id' ? 'Masa Aktif' : 'Active Period'}</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{lang === 'id' ? 'Selamanya (Lifetime)' : 'Lifetime'}</span>
+                 </div>
+                 <div className="flex justify-between text-sm">
+                    <span className="text-gray-500 dark:text-gray-400">{lang === 'id' ? 'Revisi Data' : 'Data Revision'}</span>
+                    <span className="font-medium text-green-600 dark:text-green-400">{lang === 'id' ? 'Unlimited' : 'Unlimited'}</span>
+                 </div>
               </div>
-            </div>
+              <div className="mt-6 pt-6 border-t border-black/5 dark:border-white/10 flex justify-between items-end">
+                 <span className="block text-sm font-medium text-gray-500 dark:text-gray-400">{lang === 'id' ? 'Total Biaya' : 'Total Cost'}</span>
+                 <span className="text-3xl font-bold text-rose-600">Rp {theme.price.toLocaleString('id-ID')}</span>
+              </div>
+           </div>
 
-            <div className="space-y-4 pt-4 border-t border-black/5 dark:border-white/5">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">2. {lang === 'id' ? 'Data Acara' : 'Event Data'}</h2>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{lang === 'id' ? 'Tanggal Akad' : 'Matrimony Date'}</label>
-                <div className="relative">
+           {/* Bagian Kanan: Form Data */}
+           <div className="lg:col-span-7 bg-white dark:bg-[#111] rounded-3xl p-8 border border-black/5 dark:border-white/10 shadow-xl shadow-black/5 dark:shadow-[0_0_20px_rgba(255,255,255,0.02)]">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 border-b border-black/5 dark:border-white/10 pb-4">
+                 {lang === 'id' ? 'Informasi & Pembayaran' : 'Information & Payment'}
+              </h1>
+              
+              <form onSubmit={handleSubmit} className="space-y-6 flex flex-col">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">1. {lang === 'id' ? 'Data Pemesan & Mempelai' : 'Customer & Couple Data'}</h2>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{lang === 'id' ? 'Email Pemesan' : 'Customer Email'}</label>
                   <input 
-                    type="datetime-local" 
+                    type="email" 
                     required
-                    min={new Date().toISOString().slice(0, 16)}
-                    className="w-full px-4 h-11 rounded-xl border border-gray-300 dark:border-white/10 bg-white dark:bg-black/30 text-gray-900 dark:text-white focus:border-[#C5A059] focus:ring-2 focus:ring-[#C5A059]/50 outline-none transition-all shadow-sm cursor-pointer appearance-none"
-                    value={formData.akad_date}
-                    onChange={e => setFormData({...formData, akad_date: e.target.value})}
+                    placeholder={lang === 'id' ? "Contoh: user@email.com" : "E.g. user@email.com"}
+                    className="w-full px-4 h-11 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-black/30 text-gray-900 dark:text-white focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all"
+                    value={formData.email}
+                    onChange={e => setFormData({...formData, email: e.target.value})}
                   />
                 </div>
-              </div>
-            </div>
 
-            {/* URL Auto-generated, no longer an input field here */}
-            <div className="space-y-2 pt-4 border-t border-black/5 dark:border-white/5">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">3. {lang === 'id' ? 'URL Undangan Anda' : 'Your Invitation URL'}</h2>
-              <p className="text-sm text-gray-500 mb-2">{lang === 'id' ? 'Ini akan menjadi link/url unik untuk undangan Anda yang bisa dibagikan' : 'This will be your unique invitation link to share'}</p>
-              <div className="flex items-center">
-                <span className="h-11 px-4 bg-gray-100 dark:bg-black/50 border border-gray-300 dark:border-white/10 rounded-lg flex items-center text-sm text-gray-500 whitespace-nowrap w-full">
-                  yoursite.com/invitation/{(formData.groom_name || formData.bride_name) ? `${formData.groom_name.toLowerCase()}-${formData.bride_name.toLowerCase()}`.replace(/\s+/g, '-') : (lang === 'id' ? 'nama-pasangan' : 'couple-name')}
-                </span>
-              </div>
-            </div>
-            
-            <div className="pt-8 flex justify-end">
-              <button 
-                type="submit" 
-                disabled={loading}
-                className="h-12 px-8 bg-black dark:bg-[#C5A059] text-white rounded-full font-medium inline-flex items-center justify-center gap-2 hover:bg-gray-800 dark:hover:bg-[#b08d4a] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (lang === 'id' ? 'Bayar Sekarang' : 'Pay Now')}
-                {!loading && <ChevronRight className="w-5 h-5" />}
-              </button>
-            </div>
-          </form>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{lang === 'id' ? 'Nama Panggilan Pria' : 'Groom Nickname'}</label>
+                    <input 
+                      type="text" 
+                      required
+                      placeholder={lang === 'id' ? "Contoh: Beni" : "E.g. Beni"}
+                      className="w-full px-4 h-11 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-black/30 text-gray-900 dark:text-white focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all"
+                      value={formData.groom_name}
+                      onChange={e => setFormData({...formData, groom_name: e.target.value})}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{lang === 'id' ? 'Nama Panggilan Wanita' : 'Bride Nickname'}</label>
+                    <input 
+                      type="text" 
+                      required
+                      placeholder={lang === 'id' ? "Contoh: Salsa" : "E.g. Salsa"}
+                      className="w-full px-4 h-11 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-black/30 text-gray-900 dark:text-white focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all"
+                      value={formData.bride_name}
+                      onChange={e => setFormData({...formData, bride_name: e.target.value})}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-4 pt-4 border-t border-black/5 dark:border-white/5">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">2. {lang === 'id' ? 'Data Acara' : 'Event Data'}</h2>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{lang === 'id' ? 'Tanggal Akad' : 'Matrimony Date'}</label>
+                    <div className="relative">
+                      <input 
+                        type="datetime-local" 
+                        required
+                        min={new Date().toISOString().slice(0, 16)}
+                        className="w-full px-4 h-11 rounded-xl border border-gray-300 dark:border-white/10 bg-white dark:bg-black/30 text-gray-900 dark:text-white focus:border-[#C5A059] focus:ring-2 focus:ring-[#C5A059]/50 outline-none transition-all shadow-sm cursor-pointer appearance-none"
+                        value={formData.akad_date}
+                        onChange={e => setFormData({...formData, akad_date: e.target.value})}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-2 pt-4 border-t border-black/5 dark:border-white/5">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">3. {lang === 'id' ? 'URL Undangan Anda' : 'Your Invitation URL'}</h2>
+                  <p className="text-sm text-gray-500 mb-2">{lang === 'id' ? 'Ini akan menjadi link/url unik untuk undangan Anda yang bisa dibagikan' : 'This will be your unique invitation link to share'}</p>
+                  <div className="flex items-center">
+                    <span className="h-11 px-4 bg-gray-100 dark:bg-black/50 border border-gray-300 dark:border-white/10 rounded-lg flex items-center text-sm text-gray-500 whitespace-nowrap w-full overflow-hidden text-ellipsis">
+                      yoursite.com/invitation/{(formData.groom_name || formData.bride_name) ? `${formData.groom_name.toLowerCase()}-${formData.bride_name.toLowerCase()}`.replace(/\s+/g, '-') : (lang === 'id' ? 'nama-pasangan' : 'couple-name')}
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="pt-8 flex justify-end border-t border-black/5 dark:border-white/5">
+                  <button 
+                    type="submit" 
+                    disabled={loading}
+                    className="h-12 w-full sm:w-auto px-8 bg-black dark:bg-[#C5A059] text-white rounded-full font-medium inline-flex items-center justify-center gap-2 hover:bg-gray-800 dark:hover:bg-[#b08d4a] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-black/10 dark:shadow-[#C5A059]/20"
+                  >
+                    {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (lang === 'id' ? 'Pilih Metode Pembayaran' : 'Choose Payment Method')}
+                    {!loading && <ChevronRight className="w-5 h-5" />}
+                  </button>
+                </div>
+              </form>
+           </div>
         </div>
       </div>
     </div>

@@ -153,17 +153,31 @@ export default function Track() {
                     <CheckCircle2 className="w-12 h-12" />
                   </motion.div>
                 </div>
-                {/* Confetti burst */}
-                {[...Array(8)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 1, scale: 0, x: 0, y: 0 }}
-                    animate={{ opacity: 0, scale: 1, x: Math.cos((i / 8) * Math.PI * 2) * 60, y: Math.sin((i / 8) * Math.PI * 2) * 60 }}
-                    transition={{ duration: 0.8, delay: 0.3 + i * 0.05 }}
-                    className="absolute top-1/2 left-1/2 w-2 h-2 rounded-full"
-                    style={{ background: ['#C5A059','#22c55e','#3b82f6','#f59e0b','#ec4899','#8b5cf6','#14b8a6','#f97316'][i] }}
-                  />
-                ))}
+                {/* Richer Confetti burst */}
+                {[...Array(30)].map((_, i) => {
+                  const angle = Math.random() * Math.PI * 2;
+                  const distance = 40 + Math.random() * 80;
+                  return (
+                    <motion.div
+                      key={`confetti-${i}`}
+                      initial={{ opacity: 1, scale: 0, x: '-50%', y: '-50%', rotate: 0 }}
+                      animate={{ 
+                        opacity: [1, 1, 0], 
+                        scale: [0, 1.2, 0.8], 
+                        x: `calc(-50% + ${Math.cos(angle) * distance}px)`, 
+                        y: `calc(-50% + ${Math.sin(angle) * distance + 40}px)`,
+                        rotate: Math.random() * 720 - 360 
+                      }}
+                      transition={{ duration: 1.5, delay: 0.2, ease: "easeOut" }}
+                      className="absolute top-1/2 left-1/2 rounded-sm"
+                      style={{ 
+                        width: Math.random() > 0.5 ? '6px' : '8px', 
+                        height: Math.random() > 0.5 ? '6px' : '10px',
+                        background: ['#C5A059','#22c55e','#3b82f6','#f59e0b','#ec4899','#8b5cf6','#14b8a6','#f97316'][Math.floor(Math.random() * 8)] 
+                      }}
+                    />
+                  );
+                })}
               </div>
             ) : (
                <div className="w-24 h-24 bg-amber-500/10 rounded-full flex items-center justify-center text-amber-500 mb-6 border border-amber-500/20 shadow-[0_0_30px_rgba(245,158,11,0.15)] relative">

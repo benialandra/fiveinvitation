@@ -53,6 +53,7 @@ export default function DarkPremium({ data, guestName, lang = 'id' }: ThemeProps
   const gallery1 = data.gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800&auto=format&fit=crop";
   const gallery2 = data.gallery_2 || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop";
   const gallery3 = data.gallery_3 || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=800&auto=format&fit=crop";
+  const mapImg = data.map_image || "https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=800&auto=format&fit=crop";
   
   const bankName1 = data.bank_name_1 || "BCA";
   const bankAccount1 = data.bank_account_1 || "1234567890";

@@ -12,6 +12,7 @@ import RoyalGoldLuxury from './RoyalGoldLuxury';
 import UltraPremiumInteractive from './UltraPremiumInteractive';
 import JapaneseSakuraGarden from './JapaneseSakuraGarden';
 import CinematicLoveStory from './CinematicLoveStory';
+import ScandinavianMinimalist from './ScandinavianMinimalist';
 
 export type ThemeCategory = 'Elegant' | 'Dark' | 'Minimalist' | 'Islamic' | 'Floral' | 'Rustic' | 'Tropical' | 'Premium';
 
@@ -25,6 +26,14 @@ export interface ThemeMeta {
 }
 
 export const THEME_REGISTRY: ThemeMeta[] = [
+  {
+    id: 'scandinavian-minimalist',
+    name: 'Scandinavian Minimalist',
+    category: 'Minimalist',
+    price: 350000,
+    thumbnail: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=800&auto=format&fit=crop',
+    component: ScandinavianMinimalist
+  },
   {
     id: 'cinematic-love-story',
     name: 'Cinematic Love Story',
@@ -78,7 +87,7 @@ export const THEME_REGISTRY: ThemeMeta[] = [
     name: 'Ocean Breeze',
     category: 'Tropical',
     price: 349000,
-    thumbnail: 'https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=80&w=800&auto=format&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop',
     component: OceanBreeze
   },
   {
@@ -126,7 +135,7 @@ export const THEME_REGISTRY: ThemeMeta[] = [
     name: 'Clean Vanilla',
     category: 'Minimalist',
     price: 99000,
-    thumbnail: 'https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=80&w=800&auto=format&fit=crop', // Stock placeholder
+    thumbnail: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop', // Stock placeholder
     component: () => <div className="min-h-screen flex items-center justify-center bg-[#fafafa] text-gray-800">Theme Minimalist (Sample)</div>
   },
   {
@@ -279,7 +288,7 @@ export const THEME_REGISTRY: ThemeMeta[] = [
     name: 'Sample Motif 22',
     category: 'Minimalist',
     price: 100000,
-    thumbnail: 'https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=80&w=300&auto=format&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=300&auto=format&fit=crop',
     component: () => <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-900">Mockup Theme 22 (Sample)</div>
   },
   {
@@ -303,7 +312,7 @@ export const THEME_REGISTRY: ThemeMeta[] = [
     name: 'Sample Motif 25',
     category: 'Floral',
     price: 140000,
-    thumbnail: 'https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=80&w=300&auto=format&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=300&auto=format&fit=crop',
     component: () => <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-900">Mockup Theme 25 (Sample)</div>
   },
   {
@@ -367,7 +376,7 @@ export const THEME_REGISTRY: ThemeMeta[] = [
     name: 'Sample Motif 33',
     category: 'Elegant',
     price: 180000,
-    thumbnail: 'https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=80&w=300&auto=format&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=300&auto=format&fit=crop',
     component: () => <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-900">Mockup Theme 33 (Sample)</div>
   },
   {
@@ -431,7 +440,7 @@ export const THEME_REGISTRY: ThemeMeta[] = [
     name: 'Sample Motif 41',
     category: 'Elegant',
     price: 110000,
-    thumbnail: 'https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=80&w=300&auto=format&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=300&auto=format&fit=crop',
     component: () => <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-900">Mockup Theme 41 (Sample)</div>
   },
   {
@@ -463,7 +472,7 @@ export const THEME_REGISTRY: ThemeMeta[] = [
     name: 'Sample Motif 45',
     category: 'Dark',
     price: 170000,
-    thumbnail: 'https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=80&w=300&auto=format&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=300&auto=format&fit=crop',
     component: () => <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-900">Mockup Theme 45 (Sample)</div>
   },
   {
@@ -599,7 +608,7 @@ export const THEME_REGISTRY: ThemeMeta[] = [
     name: 'Sample Motif 62',
     category: 'Floral',
     price: 100000,
-    thumbnail: 'https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=80&w=300&auto=format&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=300&auto=format&fit=crop',
     component: () => <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-900">Mockup Theme 62 (Sample)</div>
   },
   {
@@ -623,7 +632,7 @@ export const THEME_REGISTRY: ThemeMeta[] = [
     name: 'Sample Motif 65',
     category: 'Minimalist',
     price: 160000,
-    thumbnail: 'https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=80&w=300&auto=format&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=300&auto=format&fit=crop',
     component: () => <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-900">Mockup Theme 65 (Sample)</div>
   },
   {
@@ -631,7 +640,7 @@ export const THEME_REGISTRY: ThemeMeta[] = [
     name: 'Sample Motif 66',
     category: 'Elegant',
     price: 150000,
-    thumbnail: 'https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=80&w=300&auto=format&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=300&auto=format&fit=crop',
     component: () => <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-900">Mockup Theme 66 (Sample)</div>
   },
   {
@@ -663,7 +672,7 @@ export const THEME_REGISTRY: ThemeMeta[] = [
     name: 'Sample Motif 70',
     category: 'Elegant',
     price: 170000,
-    thumbnail: 'https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=80&w=300&auto=format&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=300&auto=format&fit=crop',
     component: () => <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-900">Mockup Theme 70 (Sample)</div>
   },
   {
@@ -895,7 +904,7 @@ export const THEME_REGISTRY: ThemeMeta[] = [
     name: 'Sample Motif 99',
     category: 'Floral',
     price: 150000,
-    thumbnail: 'https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=80&w=300&auto=format&fit=crop',
+    thumbnail: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=300&auto=format&fit=crop',
     component: () => <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-900">Mockup Theme 99 (Sample)</div>
   },
   {

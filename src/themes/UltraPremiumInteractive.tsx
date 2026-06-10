@@ -175,7 +175,6 @@ export default function UltraPremiumInteractive({ data, guestName }: { data?: an
 
   return (
     <div className="relative bg-[#050505] text-white font-sans overflow-x-hidden min-h-screen selection:bg-[#D4AF37] selection:text-black">
-      <CustomCursor />
       
       {isOpened && <AudioController src={data?.music_url || "https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3"} />}
 

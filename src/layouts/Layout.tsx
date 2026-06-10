@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import { Moon, Sun, MessageCircle, X, Mail, ArrowUp } from 'lucide-react';
 import { motion, useScroll, useSpring } from 'framer-motion';
-import CustomCursor from '../components/CustomCursor';
 
 export default function Layout() {
   const [themeMode, setThemeMode] = useState<'light'|'dark'>('light');
@@ -77,7 +76,6 @@ export default function Layout() {
   return (
     <div className="min-h-screen bg-white transition-colors duration-300 dark:bg-[#0A0A0B] text-gray-900 dark:text-[#E5E5E5] flex flex-col font-sans relative overflow-x-hidden">
       {themeMode === 'dark' && <div className="absolute inset-0 bg-noise pointer-events-none z-0"></div>}
-      <CustomCursor />
       <nav className="fixed top-0 w-full h-20 px-6 md:px-12 flex items-center justify-between border-b border-black/5 dark:border-white/5 z-50 bg-white/80 dark:bg-[#0A0A0B]/80 backdrop-blur-md">
         <Link to="/" className="flex items-center gap-3 group relative overflow-hidden p-2">
           <div className="w-10 h-10 border border-[#C5A059] rotate-45 flex items-center justify-center transition-all duration-500 group-hover:border-[#fcdb92] group-hover:shadow-[0_0_20px_#C5A059] relative overflow-hidden bg-transparent shrink-0">

@@ -275,14 +275,28 @@ export default function Order() {
                 </div>
                 
                 <div className="pt-8 flex justify-end border-t border-black/5 dark:border-white/5">
-                  <button 
-                    type="submit" 
+                  <motion.button 
+                    type="submit"
                     disabled={loading}
-                    className="h-12 w-full sm:w-auto px-8 bg-black dark:bg-[#C5A059] text-white rounded-full font-medium inline-flex items-center justify-center gap-2 hover:bg-gray-800 dark:hover:bg-[#b08d4a] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-black/10 dark:shadow-[#C5A059]/20"
+                    animate={{ width: loading ? 56 : 'auto', borderRadius: loading ? '50%' : '9999px' }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                    whileHover={!loading ? { scale: 1.03 } : {}}
+                    whileTap={!loading ? { scale: 0.97 } : {}}
+                    className="h-14 px-8 bg-black dark:bg-[#C5A059] text-white font-medium inline-flex items-center justify-center gap-2 overflow-hidden shadow-xl shadow-black/10 dark:shadow-[#C5A059]/20 disabled:cursor-not-allowed"
                   >
-                    {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (lang === 'id' ? 'Pilih Metode Pembayaran' : 'Choose Payment Method')}
-                    {!loading && <ChevronRight className="w-5 h-5" />}
-                  </button>
+                    <AnimatePresence mode="wait">
+                      {loading ? (
+                        <motion.span key="spinner" initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.5 }} transition={{ duration: 0.15 }}>
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                        </motion.span>
+                      ) : (
+                        <motion.span key="text" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }} className="flex items-center gap-2 whitespace-nowrap">
+                          {lang === 'id' ? 'Pilih Metode Pembayaran' : 'Choose Payment Method'}
+                          <ChevronRight className="w-5 h-5" />
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                  </motion.button>
                 </div>
               </form>
            </div>

@@ -34,11 +34,18 @@ export default function Socials() {
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="text-center mb-20">
           <motion.div 
-             initial={{ opacity: 0, scale: 0.8 }}
-             animate={{ opacity: 1, scale: 1 }}
-             className="w-16 h-16 mx-auto bg-gradient-to-br from-[#C5A059] to-[#b08d4a] rounded-2xl rotate-45 flex items-center justify-center mb-8 shadow-2xl shadow-[#C5A059]/20"
+             initial={{ opacity: 0, scale: 0.8, rotate: 45 }}
+             animate={{ opacity: 1, scale: 1, rotate: 45 }}
+             transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+             className="w-16 h-16 mx-auto bg-gradient-to-br from-[#C5A059] to-[#b08d4a] rounded-2xl flex items-center justify-center mb-8 shadow-2xl shadow-[#C5A059]/20 relative overflow-hidden"
           >
-             <div className="w-8 h-8 border border-white/30 -rotate-45 flex items-center justify-center text-white font-serif font-bold text-xl">V</div>
+             {/* Repeating shimmer sweep */}
+             <motion.div
+               className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -skew-x-12"
+               animate={{ x: ['-150%', '250%'] }}
+               transition={{ duration: 2, repeat: Infinity, repeatDelay: 3, ease: 'easeInOut' }}
+             />
+             <div className="w-8 h-8 border border-white/30 -rotate-45 flex items-center justify-center text-white font-serif font-bold text-xl relative z-10">V</div>
           </motion.div>
           <motion.h1 
             initial={{ opacity: 0, y: -20 }}

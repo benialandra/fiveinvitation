@@ -110,8 +110,29 @@ export default function Track() {
   }
 
   if (loading) return (
-    <div className="p-24 flex justify-center items-center">
-      <Loader2 className="w-10 h-10 animate-spin text-[#C5A059]" />
+    <div className="flex-1 w-full py-12 md:py-24">
+      <div className="max-w-2xl mx-auto px-6">
+        <div className="rounded-[32px] p-8 md:p-12 border border-gray-100 dark:border-white/5 bg-white dark:bg-[#111]/80 shadow-2xl shadow-black/5 animate-pulse">
+          <div className="flex flex-col items-center gap-4 mb-10">
+            <div className="w-24 h-24 rounded-full bg-gray-200 dark:bg-white/10" />
+            <div className="h-7 w-48 bg-gray-200 dark:bg-white/10 rounded-lg" />
+            <div className="h-4 w-36 bg-gray-200 dark:bg-white/10 rounded-lg" />
+            <div className="h-8 w-32 bg-gray-200 dark:bg-white/10 rounded-full" />
+          </div>
+          <div className="space-y-5 border-t border-gray-100 dark:border-white/5 pt-8">
+            {[1,2,3].map(i => (
+              <div key={i} className="flex justify-between items-center">
+                <div className="h-4 w-24 bg-gray-200 dark:bg-white/10 rounded" />
+                <div className="h-4 w-32 bg-gray-200 dark:bg-white/10 rounded" />
+              </div>
+            ))}
+          </div>
+          <div className="mt-10 space-y-4">
+            <div className="h-14 w-full bg-gray-200 dark:bg-white/10 rounded-2xl" />
+            <div className="h-14 w-full bg-gray-200 dark:bg-white/10 rounded-2xl" />
+          </div>
+        </div>
+      </div>
     </div>
   );
   if (!order) return <div className="p-12 text-center text-red-500">{lang === 'id' ? 'Pesanan tidak ditemukan.' : 'Order not found.'}</div>;
@@ -145,8 +166,14 @@ export default function Track() {
                 ))}
               </div>
             ) : (
-               <div className="w-24 h-24 bg-amber-500/10 rounded-full flex items-center justify-center text-amber-500 mb-6 border border-amber-500/20 shadow-[0_0_30px_rgba(245,158,11,0.15)]">
-                 <Clock className="w-12 h-12" />
+               <div className="w-24 h-24 bg-amber-500/10 rounded-full flex items-center justify-center text-amber-500 mb-6 border border-amber-500/20 shadow-[0_0_30px_rgba(245,158,11,0.15)] relative">
+                 <div className="absolute inset-0 border border-amber-500/20 rounded-full animate-ping opacity-30" />
+                 <motion.div
+                   animate={{ rotate: 360 }}
+                   transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+                 >
+                   <Clock className="w-12 h-12" />
+                 </motion.div>
                </div>
             )}
 

@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-import { Star, Quote, Search, PenTool, CheckCircle, Zap } from 'lucide-react';
+import { Star, Quote, Search, PenTool, CheckCircle, Zap, ArrowRight } from 'lucide-react';
 
 const RECENT_ORDERS = [
-  { id: 1, names: "Beni & Deti", theme: "Elegant Minimalist", image: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=300" },
-  { id: 2, names: "Andi & Rina", theme: "Floral Romance", image: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=300" },
-  { id: 3, names: "Dimas & Putri", theme: "Classic Gold", image: "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&q=80&w=300" },
-  { id: 4, names: "Reza & Maya", theme: "Modern Dark", image: "https://images.unsplash.com/photo-1542042161784-26ab9e041e89?auto=format&fit=crop&q=80&w=300" },
-  { id: 5, names: "Budi & Siska", theme: "Rustic Earth", image: "https://images.unsplash.com/photo-1507504031003-b417242a901f?auto=format&fit=crop&q=80&w=300" },
-  { id: 6, names: "Kevin & Laura", theme: "Ocean Blue", image: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=300" },
-  { id: 7, names: "Rizky & Dina", theme: "Vintage Lace", image: "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&q=80&w=300" },
-  { id: 8, names: "Arif & Nisa", theme: "Tropical Vibe", image: "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80&w=300" },
-  { id: 9, names: "Ivan & Bella", theme: "Minimalist White", image: "https://images.unsplash.com/photo-1475721028070-2051152cbcad?auto=format&fit=crop&q=80&w=300" },
-  { id: 10, names: "Fajar & Tari", theme: "Luxury Gold", image: "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&q=80&w=300" },
+  { id: 1, names: "Beni & Deti", theme: "Elegant Minimalist", image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=300" },
+  { id: 2, names: "Andi & Rina", theme: "Floral Romance", image: "https://images.unsplash.com/photo-1478146896981-b80fe463b330?auto=format&fit=crop&q=80&w=300" },
+  { id: 3, names: "Dimas & Putri", theme: "Classic Gold", image: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=300" },
+  { id: 4, names: "Reza & Maya", theme: "Modern Dark", image: "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80&w=300" },
+  { id: 5, names: "Budi & Siska", theme: "Rustic Earth", image: "https://images.unsplash.com/photo-1522383225653-ed111181a951?auto=format&fit=crop&q=80&w=300" },
+  { id: 6, names: "Kevin & Laura", theme: "Ocean Blue", image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&q=80&w=300" },
+  { id: 7, names: "Rizky & Dina", theme: "Vintage Lace", image: "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&q=80&w=300" },
+  { id: 8, names: "Arif & Nisa", theme: "Tropical Vibe", image: "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=300" },
+  { id: 9, names: "Ivan & Bella", theme: "Minimalist White", image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=300" },
+  { id: 10, names: "Fajar & Tari", theme: "Luxury Gold", image: "https://images.unsplash.com/photo-1478146896981-b80fe463b330?auto=format&fit=crop&q=80&w=300" },
 ];
 
 const TESTIMONIALS = [
@@ -27,6 +27,12 @@ export default function Home() {
   const [trackId, setTrackId] = useState('');
   const { lang, themeMode } = useOutletContext<{ lang: 'en' | 'id', themeMode: string }>();
 
+  // Randomize hero orders on every page load
+  const randomHeroOrders = useMemo(() => {
+    const shuffled = [...RECENT_ORDERS].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 3);
+  }, []);
+
   const handleTrackCode = () => {
     if (trackId.trim()) {
       navigate(`/track/${trackId.trim()}`);
@@ -38,7 +44,7 @@ export default function Home() {
       
       {/* Hero Section */}
       <div className="min-h-[calc(100vh-80px)] grid grid-cols-1 lg:grid-cols-12 gap-0 relative">
-        <div className="col-span-1 lg:col-span-7 flex flex-col justify-center px-6 lg:px-12 py-12 lg:py-0 z-10">
+        <div className="col-span-1 lg:col-span-6 flex flex-col justify-center px-6 lg:pl-24 xl:pl-32 lg:pr-8 py-12 lg:py-0 z-10">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -84,9 +90,10 @@ export default function Home() {
             </button>
             <button 
               onClick={() => navigate('/themes')}
-              className="border border-gray-300 dark:border-white/20 px-8 py-4 text-sm font-light uppercase tracking-widest text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors cursor-pointer"
+              className="flex items-center justify-center gap-3 border border-gray-300 dark:border-white/20 px-8 py-4 text-sm font-light uppercase tracking-widest text-gray-900 dark:text-white hover:border-[#C5A059] hover:text-[#C5A059] hover:shadow-[0_0_20px_rgba(197,160,89,0.3)] transition-all duration-300 cursor-pointer group"
             >
               {lang === 'id' ? 'Lihat Demo Tema' : 'View Theme Demos'}
+              <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
             </button>
           </motion.div>
         </div>
@@ -94,34 +101,35 @@ export default function Home() {
         {/* Background Visual Overlay */}
         <div className="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-[#C5A059]/10 to-transparent pointer-events-none hidden lg:block"></div>
         
-        <div className="col-span-1 lg:col-span-5 relative items-center justify-center p-6 lg:p-12 hidden lg:flex">
+        <div className="col-span-1 lg:col-span-6 relative flex items-center justify-center p-6 pb-24 lg:pb-6 lg:pr-24 xl:pr-32 lg:pl-8 mt-8 lg:mt-0">
           <motion.div 
             initial={{ opacity: 0, scale: 0.9, y: 40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 80, damping: 25, delay: 0.2 }}
-            className="w-full max-w-[340px] h-[500px] relative group cursor-pointer"
+            className="w-[300px] h-[450px] sm:w-[360px] sm:h-[520px] lg:w-full lg:max-w-[420px] lg:h-[600px] relative group cursor-pointer"
           >
-            {RECENT_ORDERS.slice(0, 3).map((order, idx) => {
+            {randomHeroOrders.map((order, idx) => {
               // Fan-out classes for hover
-              // idx 0 (bottom): left rotation max
-              // idx 1 (middle): left rotation mid
-              // idx 2 (top): straight
+              // idx 0 (bottom): left opening
+              // idx 1 (middle): straight
+              // idx 2 (top): right opening
               const idleTransforms = [
                 '-rotate-6 -translate-x-4 translate-y-2',
-                '-rotate-3 -translate-x-2 translate-y-1',
-                'rotate-0'
+                'rotate-0 translate-y-0',
+                'rotate-6 translate-x-4 translate-y-2'
               ];
               const hoverTransforms = [
-                'group-hover:-rotate-[30deg] group-hover:-translate-x-28 group-hover:translate-y-10 group-hover:shadow-2xl',
-                'group-hover:-rotate-[15deg] group-hover:-translate-x-14 group-hover:translate-y-4 group-hover:shadow-xl',
-                'group-hover:-translate-y-4 group-hover:scale-105 group-hover:rotate-0 group-hover:shadow-[0_20px_50px_rgba(197,160,89,0.2)]'
+                'group-hover:-rotate-[15deg] group-hover:-translate-x-16 sm:group-hover:-translate-x-24 group-hover:translate-y-4 group-hover:shadow-2xl',
+                'group-hover:-translate-y-4 group-hover:scale-105 group-hover:shadow-[0_20px_50px_rgba(197,160,89,0.2)]',
+                'group-hover:rotate-[15deg] group-hover:translate-x-16 sm:group-hover:translate-x-24 group-hover:translate-y-4 group-hover:shadow-2xl'
               ];
+              const originClass = ['origin-bottom-right', 'origin-bottom', 'origin-bottom-left'];
               const zIndexes = ['z-10', 'z-20', 'z-30'];
               
               return (
                 <div 
                   key={order.id} 
-                  className={`absolute top-0 left-0 w-full h-full p-3 transition-all duration-700 ease-out origin-bottom-right ${themeMode === 'dark' ? 'bg-[#111] shadow-[0_10px_30px_rgba(0,0,0,0.8)]' : 'bg-white shadow-xl'} rounded-[32px] transform ${idleTransforms[idx]} ${hoverTransforms[idx]} ${zIndexes[idx]}`}
+                  className={`absolute top-0 left-0 w-full h-full p-3 transition-all duration-700 ease-out ${originClass[idx]} ${themeMode === 'dark' ? 'bg-[#111] shadow-[0_10px_30px_rgba(0,0,0,0.8)]' : 'bg-white shadow-xl'} rounded-[32px] transform ${idleTransforms[idx]} ${hoverTransforms[idx]} ${zIndexes[idx]} hover:!z-[60]`}
                 >
                     <div className="w-full h-full border border-black/5 dark:border-white/5 rounded-[24px] overflow-hidden relative flex flex-col items-center justify-center text-center p-8">
                         <div className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" style={{ backgroundImage: `url(${order.image})` }}></div>
@@ -202,11 +210,7 @@ export default function Home() {
         </div>
         
         {/* Marquee Container */}
-        <div className="w-full relative py-4 flex flex-col gap-6">
-           {/* Left/Right Fade out */}
-           <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-gray-50 dark:from-[#0A0A0B] to-transparent z-10 pointer-events-none"></div>
-           <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-gray-50 dark:from-[#0A0A0B] to-transparent z-10 pointer-events-none"></div>
-
+        <div className="w-full relative py-4 flex flex-col gap-6 [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)] md:[mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]">
            <div className="animate-marquee gap-6 shrink-0 w-max pr-6 pt-10 pb-10">
               {[...RECENT_ORDERS.slice(0, 5), ...RECENT_ORDERS.slice(0, 5), ...RECENT_ORDERS.slice(0, 5)].map((order, i) => (
                 <div key={`row1-${order.id}-${i}`} className="w-64 h-80 relative group shrink-0 cursor-pointer z-10 hover:z-50">
@@ -260,11 +264,7 @@ export default function Home() {
              </div>
              
              {/* Testimonial Marquee / Sliding */}
-             <div className="w-full overflow-hidden relative pb-10">
-                {/* Left/Right Fade out */}
-                <div className="absolute left-0 top-0 bottom-0 w-12 md:w-32 bg-gradient-to-r from-white dark:from-[#0A0A0B] to-transparent z-10 pointer-events-none"></div>
-                <div className="absolute right-0 top-0 bottom-0 w-12 md:w-32 bg-gradient-to-l from-white dark:from-[#0A0A0B] to-transparent z-10 pointer-events-none"></div>
-
+             <div className="w-full overflow-hidden relative pb-10 [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)] md:[mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
                 <div className="animate-marquee gap-8 shrink-0 w-max pr-8">
                    {[...TESTIMONIALS, ...TESTIMONIALS].map((review, i) => (
                      <div key={`${review.id}-${i}`} className="w-[350px] md:w-[450px] p-8 md:p-10 rounded-[32px] glass-card border border-black/5 dark:border-white/10 shrink-0 whitespace-normal">

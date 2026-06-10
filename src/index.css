@@ -58,6 +58,12 @@
   100% { transform: translateX(-50%); }
 }
 
+@keyframes sweep {
+  0% { transform: translateX(-150%) skewX(-12deg); }
+  50% { transform: translateX(150%) skewX(-12deg); }
+  100% { transform: translateX(150%) skewX(-12deg); }
+}
+
 @keyframes marquee-reverse {
   0% { transform: translateX(-50%); }
   100% { transform: translateX(0%); }

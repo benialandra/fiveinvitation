@@ -67,11 +67,13 @@ export default function Layout() {
       {themeMode === 'dark' && <div className="absolute inset-0 bg-noise pointer-events-none z-0"></div>}
       <CustomCursor />
       <nav className="fixed top-0 w-full h-20 px-6 md:px-12 flex items-center justify-between border-b border-black/5 dark:border-white/5 z-50 bg-white/80 dark:bg-[#0A0A0B]/80 backdrop-blur-md">
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 border border-[#C5A059] rotate-45 flex items-center justify-center transition-all duration-500 group-hover:border-[#fcdb92] group-hover:shadow-[0_0_20px_#C5A059] relative">
-            <span className="-rotate-45 font-serif text-2xl font-bold text-[#C5A059] transition-colors duration-500 group-hover:text-[#fcdb92] group-hover:drop-shadow-[0_0_10px_#C5A059]">V</span>
+        <Link to="/" className="flex items-center gap-3 group relative overflow-hidden p-2">
+          <div className="w-10 h-10 border border-[#C5A059] rotate-45 flex items-center justify-center transition-all duration-500 group-hover:border-[#fcdb92] group-hover:shadow-[0_0_20px_#C5A059] relative overflow-hidden bg-transparent shrink-0">
+            {/* Light sweep effect */}
+            <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/50 to-transparent group-hover:animate-[sweep_1.5s_ease-in-out_infinite] -skew-x-12 z-0" />
+            <span className="-rotate-45 font-serif text-2xl font-bold text-[#C5A059] transition-colors duration-500 group-hover:text-[#fcdb92] group-hover:drop-shadow-[0_0_15px_#C5A059] relative z-10">V</span>
           </div>
-          <span className="hidden md:block font-serif text-2xl tracking-[0.2em] font-light transition-colors duration-500 group-hover:text-[#C5A059]">FIVEINVITATION</span>
+          <span className="hidden lg:block font-serif text-2xl tracking-[0.2em] font-light transition-colors duration-500 group-hover:text-[#fcdb92] group-hover:drop-shadow-[0_0_10px_#C5A059]">FIVEINVITATION</span>
         </Link>
         <div className="hidden md:flex gap-8 text-xs uppercase tracking-widest font-medium dark:font-light">
           <Link to="/themes" className="hover:text-[#C5A059] transition-colors">{lang === 'id' ? 'Katalog Tema' : 'Themes'}</Link>

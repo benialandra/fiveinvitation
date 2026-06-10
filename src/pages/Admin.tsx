@@ -90,8 +90,11 @@ export default function Admin() {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isUploadTsxModalOpen, setIsUploadTsxModalOpen] = useState(false);
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [themeMode, setThemeMode] = useState<'dark' | 'light'>('dark');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024);
+  const [themeMode, setThemeMode] = useState<'dark' | 'light'>(() => {
+    const saved = localStorage.getItem('admin-theme');
+    return (saved as 'dark' | 'light') || 'dark';
+  });
   const [uploadedThemes, setUploadedThemes] = useState<any[]>(() => {
     try {
       const stored = localStorage.getItem('uploadedThemes');
@@ -114,6 +117,28 @@ export default function Admin() {
   const activeTabClass = themeMode === 'dark' ? 'bg-[#C5A059]/10 text-[#C5A059] font-bold border border-[#C5A059]/20' : 'bg-[#C5A059] text-black font-bold border border-[#C5A059]';
   const headingClass = themeMode === 'dark' ? 'text-white' : 'text-gray-900';
   const borderDimClass = themeMode === 'dark' ? 'border-white/5' : 'border-gray-200';
+
+  useEffect(() => {
+    if (themeMode === 'dark') {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('admin-theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('admin-theme', 'light');
+    }
+  }, [themeMode]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        setIsSidebarOpen(false);
+      } else {
+        setIsSidebarOpen(true);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (activeTab === 'orders' && isAuthenticated) {
@@ -266,7 +291,7 @@ export default function Admin() {
     return result;
   }, [processedThemes, themeSearch, themeSortBy]);
 
-  const themePageSize = 6;
+  const themePageSize = 9;
   const paginatedThemes = useMemo(() => {
     const startIndex = (themePage - 1) * themePageSize;
     return filteredThemes.slice(startIndex, startIndex + themePageSize);
@@ -312,36 +337,45 @@ export default function Admin() {
     <>
     <div className={`min-h-screen flex font-sans transition-colors duration-700 ${bgClass}`}>
        {/* Sidebar */}
-       <div className={`${isSidebarOpen ? 'w-72 border-r p-6' : 'w-0 overflow-hidden opacity-0 border-0 p-0'} flex flex-col transition-all duration-500 ease-in-out ${cardClass} rounded-none shadow-none z-20 relative`}>
-          <div className="mb-12 mt-4 px-4 whitespace-nowrap">
-             <h1 className="font-serif text-2xl tracking-[0.2em] font-light">FIVEINVITATION</h1>
-             <p className="text-[10px] uppercase tracking-widest text-[#C5A059] mt-1">Workspace</p>
-          </div>
-          <nav className="flex-1 space-y-2 w-full">
-            <button onClick={() => setActiveTab('dashboard')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors text-sm uppercase tracking-widest ${activeTab === 'dashboard' ? activeTabClass : hoverClass}`}>
-              <LayoutDashboard className="w-4 h-4" /> Dashboard
-            </button>
-            <button onClick={() => setActiveTab('orders')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors text-sm uppercase tracking-widest ${activeTab === 'orders' ? activeTabClass : hoverClass}`}>
-              <ShoppingBag className="w-4 h-4" /> Orders
-            </button>
-            <button onClick={() => setActiveTab('themes')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors text-sm uppercase tracking-widest ${activeTab === 'themes' ? activeTabClass : hoverClass}`}>
-              <Palette className="w-4 h-4" /> Themes
-            </button>
-            <button onClick={() => setActiveTab('settings')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors text-sm uppercase tracking-widest ${activeTab === 'settings' ? activeTabClass : hoverClass}`}>
-              <Settings className="w-4 h-4" /> Settings
-            </button>
-          </nav>
+       <div className={`${isSidebarOpen ? 'w-72 border-r' : 'w-0 border-0'} transition-all duration-500 ease-in-out overflow-hidden shrink-0 ${cardClass} rounded-none shadow-none z-20 relative`}>
+          <div className="w-72 h-full flex flex-col p-6">
+             <div className="mb-12 mt-4 flex flex-col">
+                <div className="flex items-center gap-3">
+                   <div className="w-8 h-8 border border-[#C5A059] rotate-45 flex items-center justify-center shrink-0">
+                      <span className="-rotate-45 font-serif text-xl font-bold text-[#C5A059]">V</span>
+                   </div>
+                   <div className="overflow-hidden">
+                      <h1 className="font-serif text-[13px] tracking-[0.15em] font-bold text-gray-900 dark:text-white truncate">FIVEINVITATION</h1>
+                      <p className="text-[9px] uppercase tracking-widest text-[#C5A059] mt-0.5">Workspace</p>
+                   </div>
+                </div>
+             </div>
+             <nav className="flex-1 space-y-2 w-full">
+               <button onClick={() => setActiveTab('dashboard')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors text-sm uppercase tracking-widest ${activeTab === 'dashboard' ? activeTabClass : hoverClass}`}>
+                 <LayoutDashboard className="w-4 h-4 shrink-0" /> <span className="truncate">Dashboard</span>
+               </button>
+               <button onClick={() => setActiveTab('orders')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors text-sm uppercase tracking-widest ${activeTab === 'orders' ? activeTabClass : hoverClass}`}>
+                 <ShoppingBag className="w-4 h-4 shrink-0" /> <span className="truncate">Orders</span>
+               </button>
+               <button onClick={() => setActiveTab('themes')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors text-sm uppercase tracking-widest ${activeTab === 'themes' ? activeTabClass : hoverClass}`}>
+                 <Palette className="w-4 h-4 shrink-0" /> <span className="truncate">Themes</span>
+               </button>
+               <button onClick={() => setActiveTab('settings')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors text-sm uppercase tracking-widest ${activeTab === 'settings' ? activeTabClass : hoverClass}`}>
+                 <Settings className="w-4 h-4 shrink-0" /> <span className="truncate">Settings</span>
+               </button>
+             </nav>
 
-          <div className="mt-auto space-y-2">
-            <button onClick={() => navigate('/')} className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-colors text-sm uppercase tracking-widest font-medium border ${themeMode === 'dark' ? 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10' : 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10'}`}>
-               <HomeIcon className="w-4 h-4" /> Go to Main Page
-            </button>
-            <button onClick={() => {
-               sessionStorage.removeItem('adminAuth');
-               setIsAuthenticated(false);
-            }} className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm uppercase tracking-widest font-medium text-red-500 hover:bg-red-500/10 rounded-xl transition-colors">
-               <LogOut className="w-4 h-4" /> Log Out
-            </button>
+             <div className="mt-auto space-y-2">
+               <button onClick={() => navigate('/')} className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-colors text-sm uppercase tracking-widest font-medium border ${themeMode === 'dark' ? 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10' : 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10'}`}>
+                  <HomeIcon className="w-4 h-4 shrink-0" /> <span className="truncate">Go to Main Page</span>
+               </button>
+               <button onClick={() => {
+                  sessionStorage.removeItem('adminAuth');
+                  setIsAuthenticated(false);
+               }} className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm uppercase tracking-widest font-medium text-red-500 hover:bg-red-500/10 rounded-xl transition-colors">
+                  <LogOut className="w-4 h-4 shrink-0" /> <span className="truncate">Log Out</span>
+               </button>
+             </div>
           </div>
        </div>
 
@@ -602,7 +636,12 @@ export default function Admin() {
            {activeTab === 'themes' && (
              <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-                 <h2 className={`font-serif text-3xl ${headingClass}`}>Theme Catalog</h2>
+                 <div className="flex items-center gap-3">
+                   <h2 className={`font-serif text-3xl ${headingClass}`}>Theme Catalog</h2>
+                   <span className="px-3 py-1 bg-[#C5A059]/20 text-[#C5A059] text-sm font-bold rounded-full font-sans tracking-widest border border-[#C5A059]/30">
+                     {filteredThemes.length} Tema
+                   </span>
+                 </div>
                  <div className="flex items-center gap-4 flex-wrap">
                    <div className="relative">
                      <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -628,20 +667,38 @@ export default function Admin() {
                        Terlaris
                      </button>
                    </div>
-                   <button 
-                     onClick={handleSeedThemes} 
-                     disabled={isSeeding}
-                     className={`px-4 py-2 h-[42px] border text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-xl transition-colors flex items-center gap-2 ${themeMode === 'dark' ? 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10' : 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10'} ${isSeeding ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                     {isSeeding ? <Loader2 size={14} className="animate-spin" /> : <Database size={14} />}
-                     <span className="hidden sm:inline">Seed DB</span>
-                   </button>
-                   <button onClick={() => setShowDocs(!showDocs)} className={`px-4 py-2 h-[42px] border text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-xl transition-colors flex items-center gap-2 ${themeMode === 'dark' ? 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10' : 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10'}`}><Info size={14} /> <span className="hidden sm:inline">Panduan</span></button>
-                   <button onClick={() => setIsUploadTsxModalOpen(true)} className={`px-4 py-2 flex items-center justify-center gap-2 h-[42px] border text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-xl transition-colors ${themeMode === 'dark' ? 'border-sky-500/30 text-sky-400 hover:bg-sky-500/10' : 'border-sky-200 text-sky-600 hover:bg-sky-50'}`}>
-                     <UploadIcon size={14} /> TSX
-                   </button>
-                   <button onClick={() => setIsUploadModalOpen(true)} className={`px-4 py-2 flex items-center justify-center gap-2 h-[42px] border text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-xl transition-colors ${themeMode === 'dark' ? 'border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10' : 'border-emerald-200 text-emerald-600 hover:bg-emerald-50'}`}>
-                     <Database size={14} /> Data JSON
-                   </button>
+                   <div className="relative group/admin-actions">
+                     <button className={`p-3 rounded-xl border transition-colors flex items-center justify-center ${themeMode === 'dark' ? 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10' : 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10'}`}>
+                        <Settings className="w-5 h-5" />
+                     </button>
+                     <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-xl shadow-2xl opacity-0 invisible group-hover/admin-actions:opacity-100 group-hover/admin-actions:visible transition-all flex flex-col overflow-hidden origin-top-right z-30">
+                        <button 
+                          onClick={handleSeedThemes} 
+                          disabled={isSeeding}
+                          className={`px-4 py-3 text-left text-xs font-bold uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-white/5 border-b border-black/5 dark:border-white/5 text-gray-900 dark:text-white transition-colors flex items-center gap-3 ${isSeeding ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        >
+                          {isSeeding ? <Loader2 size={14} className="animate-spin text-[#C5A059]" /> : <Database size={14} className="text-[#C5A059]" />} Seed DB
+                        </button>
+                        <button 
+                          onClick={() => setShowDocs(!showDocs)} 
+                          className="px-4 py-3 text-left text-xs font-bold uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-white/5 border-b border-black/5 dark:border-white/5 text-gray-900 dark:text-white transition-colors flex items-center gap-3"
+                        >
+                          <Info size={14} className="text-[#C5A059]" /> Panduan
+                        </button>
+                        <button 
+                          onClick={() => setIsUploadTsxModalOpen(true)} 
+                          className="px-4 py-3 text-left text-xs font-bold uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-white/5 border-b border-black/5 dark:border-white/5 text-gray-900 dark:text-white transition-colors flex items-center gap-3"
+                        >
+                          <UploadIcon size={14} className="text-sky-500" /> Upload TSX
+                        </button>
+                        <button 
+                          onClick={() => setIsUploadModalOpen(true)} 
+                          className="px-4 py-3 text-left text-xs font-bold uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-white/5 text-gray-900 dark:text-white transition-colors flex items-center gap-3"
+                        >
+                          <Database size={14} className="text-emerald-500" /> Data JSON
+                        </button>
+                     </div>
+                   </div>
                  </div>
                </div>
                

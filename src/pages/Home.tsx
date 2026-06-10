@@ -90,8 +90,8 @@ export default function Home() {
             className="text-gray-600 dark:text-white/60 text-lg font-light leading-relaxed mb-8 max-w-lg"
           >
             {lang === 'id' 
-              ? 'Platform undangan digital premium berbasis Next.js. Tanpa login, proses instan, pembayaran otomatis via Midtrans. Siap dibagikan dalam hitungan menit.'
-              : 'Premium digital invitation platform. No login required, instant processing, automated payment via Midtrans. Ready to share in minutes.'}
+              ? 'Platform undangan digital premium. Buat undangan eksklusif dengan mudah, proses instan, dan siap dibagikan dalam hitungan menit.'
+              : 'Premium digital invitation platform. Create exclusive invitations easily, instant processing, and ready to share in minutes.'}
           </motion.p>
           
           <motion.div 

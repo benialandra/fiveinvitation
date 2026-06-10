@@ -408,8 +408,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 lg:px-12 mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-white/40">
            <p>&copy; {new Date().getFullYear()} FiveInvitation. All rights reserved.</p>
            <div className="flex gap-4">
-              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+              <button onClick={() => navigate('/privacy')} className="hover:text-white transition-colors">{lang === 'id' ? 'Kebijakan Privasi' : 'Privacy Policy'}</button>
+              <button onClick={() => navigate('/terms')} className="hover:text-white transition-colors">{lang === 'id' ? 'Syarat & Ketentuan' : 'Terms of Service'}</button>
            </div>
         </div>
       </footer>

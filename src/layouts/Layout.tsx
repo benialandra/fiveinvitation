@@ -151,8 +151,8 @@ export default function Layout() {
                             <span className="w-6 h-6 rounded-full bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 flex items-center justify-center text-xs text-gray-900 dark:text-white font-medium">2</span>
                          </div>
                          <div>
-                            <p className="text-sm font-semibold text-gray-900 dark:text-white">{lang === 'id' ? 'Pembayaran (Midtrans)' : 'Payment (Midtrans)'}</p>
-                            <p className="text-xs text-gray-500 dark:text-white/50">{lang === 'id' ? 'Bayar menggunakan Virtual Account, E-Wallet, / QRIS.' : 'Pay using Virtual Account, E-Wallet, / QRIS.'}</p>
+                            <p className="text-sm font-semibold text-gray-900 dark:text-white">{lang === 'id' ? 'Pembayaran Instan' : 'Instant Payment'}</p>
+                            <p className="text-xs text-gray-500 dark:text-white/50">{lang === 'id' ? 'Selesaikan pembayaran dengan aman melalui berbagai metode yang tersedia.' : 'Complete your payment securely through various available methods.'}</p>
                          </div>
                       </div>
                       <div className="flex gap-4">

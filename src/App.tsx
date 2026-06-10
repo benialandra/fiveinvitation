@@ -21,6 +21,8 @@ import Admin from './pages/Admin';
 import Layout from './layouts/Layout';
 
 import Socials from './pages/Socials';
+import Terms from './pages/Terms';
+import Privacy from './pages/Privacy';
 
 export default function App() {
   React.useEffect(() => {
@@ -74,6 +76,8 @@ export default function App() {
           <Route path="/track/:orderCode" element={<Track />} />
           <Route path="/edit-order/:orderCode" element={<EditOrder />} />
           <Route path="/socials" element={<Socials />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
         </Route>
         
         {/* Render invitation and preview independently without the main navigation layout */}

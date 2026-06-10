@@ -291,8 +291,8 @@ export default function Home() {
                      <span className="text-sm text-gray-500 dark:text-white/50">{lang === 'id' ? 'Tema Premium' : 'Premium Themes'}</span>
                   </div>
                </div>
-            </div>
-            <div className="relative group cursor-pointer" onClick={handleChangeAboutImage}>
+           </motion.div>
+           <div className="relative group cursor-pointer" onClick={handleChangeAboutImage}>
                <div className="absolute inset-0 bg-[#C5A059]/10 transform translate-x-4 translate-y-4 rounded-[32px] -z-10 transition-transform duration-300 group-hover:translate-x-6 group-hover:translate-y-6"></div>
                <img src={ABOUT_IMAGES[aboutImgIndex]} alt="Wedding Couple" className="rounded-[32px] w-full h-[500px] object-cover shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]" />
                
@@ -308,14 +308,20 @@ export default function Home() {
 
       {/* Recent Orders Section */}
       <div className="py-20 lg:py-24 bg-gray-50 dark:bg-black/20 border-t border-black/5 dark:border-white/5 relative z-10 overflow-hidden">
-        <div className="px-6 lg:px-12 mb-12 text-center max-w-2xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="px-6 lg:px-12 mb-12 text-center max-w-2xl mx-auto"
+        >
           <h2 className="font-serif text-3xl md:text-4xl text-gray-900 dark:text-white mb-4">
              {lang === 'id' ? 'Telah Dipercaya Ribuan Pasangan' : 'Trusted by Thousands of Couples'}
           </h2>
           <p className="text-gray-500 dark:text-white/60">
              {lang === 'id' ? 'Bergabunglah dengan mereka yang telah membagikan momen bahagia dengan cara yang elegan.' : 'Join those who have shared their happy moments in an elegant way.'}
           </p>
-        </div>
+        </motion.div>
         
         {/* Marquee Container */}
         <div className="w-full relative py-4 flex flex-col gap-6 [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)] md:[mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]">
@@ -364,12 +370,18 @@ export default function Home() {
       {/* Testimonials Section */}
       <div className="py-24 px-6 lg:px-12 relative z-10">
          <div className="max-w-7xl mx-auto">
-             <div className="flex flex-col items-center mb-16">
+             <motion.div
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               transition={{ duration: 0.7 }}
+               className="flex flex-col items-center mb-16"
+             >
                  <Quote className="text-[#C5A059] w-12 h-12 mb-6 opacity-50" />
                  <h2 className="font-serif text-3xl md:text-4xl text-gray-900 dark:text-white mb-4 text-center">
                     {lang === 'id' ? 'Apa Kata Mereka?' : 'What They Say?'}
                  </h2>
-             </div>
+             </motion.div>
              
              {/* Testimonial Marquee / Sliding */}
              <div className="w-full overflow-hidden relative pb-10 [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)] md:[mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
@@ -400,7 +412,13 @@ export default function Home() {
       {/* Contact & Footer Section */}
       <footer className="bg-[#0A0A0B] text-white py-16 border-t border-white/10">
         <div className="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-4 gap-12">
-           <div className="col-span-1 md:col-span-2">
+           <motion.div
+             initial={{ opacity: 0, y: 20 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true }}
+             transition={{ duration: 0.7 }}
+             className="col-span-1 md:col-span-2"
+           >
               <div className="flex items-center gap-3 mb-6">
                  <div className="w-8 h-8 border border-[#C5A059] rotate-45 flex items-center justify-center">
                     <span className="-rotate-45 font-serif text-xl font-bold text-[#C5A059]">V</span>

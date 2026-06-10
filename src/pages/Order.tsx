@@ -5,8 +5,36 @@ import { generateOrderCode } from '../lib/utils';
 import { ChevronRight, ArrowLeft, Loader2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import toast from 'react-hot-toast';
+import { motion, AnimatePresence } from 'framer-motion';
 
-// Helper hook
+// Floating label input component
+function FloatingInput({ id, label, type = 'text', required = false, value, onChange, placeholder = ' ', min }: {
+  id: string; label: string; type?: string; required?: boolean; value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; placeholder?: string; min?: string;
+}) {
+  return (
+    <div className="relative group">
+      <input
+        id={id}
+        type={type}
+        required={required}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        min={min}
+        className="peer w-full px-4 pt-6 pb-2 h-14 rounded-xl border border-gray-300 dark:border-white/10 bg-white dark:bg-black/30 text-gray-900 dark:text-white focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all placeholder-transparent"
+      />
+      <label
+        htmlFor={id}
+        className="absolute left-4 top-2 text-[10px] font-semibold uppercase tracking-widest text-[#C5A059] transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:tracking-normal peer-placeholder-shown:text-gray-400 peer-placeholder-shown:uppercase-none peer-focus:top-2 peer-focus:text-[10px] peer-focus:font-semibold peer-focus:uppercase peer-focus:tracking-widest peer-focus:text-[#C5A059]"
+      >
+        {label}
+      </label>
+    </div>
+  );
+}
+
+
 const useScript = (url: string) => {
   React.useEffect(() => {
     const script = document.createElement('script');
@@ -136,14 +164,21 @@ export default function Order() {
           <ArrowLeft className="w-4 h-4" /> {lang === 'id' ? 'Kembali' : 'Back'}
         </button>
 
-        {errorMessage && (
-          <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 flex items-start gap-3 text-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-            </svg>
-            <p>{errorMessage}</p>
-          </div>
-        )}
+        <AnimatePresence>
+          {errorMessage && (
+            <motion.div
+              initial={{ opacity: 0, y: -10, height: 0 }}
+              animate={{ opacity: 1, y: 0, height: 'auto' }}
+              exit={{ opacity: 0, y: -10, height: 0 }}
+              className="mb-6 p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 flex items-start gap-3 text-sm overflow-hidden"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              <p>{errorMessage}</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
            {/* Bagian Kiri: Ringkasan Pesanan */}
@@ -190,58 +225,43 @@ export default function Order() {
               <form onSubmit={handleSubmit} className="space-y-6 flex flex-col">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">1. {lang === 'id' ? 'Data Pemesan & Mempelai' : 'Customer & Couple Data'}</h2>
                 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{lang === 'id' ? 'Email Pemesan' : 'Customer Email'}</label>
-                  <input 
-                    type="email" 
-                    required
-                    placeholder={lang === 'id' ? "Contoh: user@email.com" : "E.g. user@email.com"}
-                    className="w-full px-4 h-11 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-black/30 text-gray-900 dark:text-white focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all"
-                    value={formData.email}
-                    onChange={e => setFormData({...formData, email: e.target.value})}
-                  />
-                </div>
+                <FloatingInput
+                  id="email"
+                  label={lang === 'id' ? 'Email Pemesan' : 'Customer Email'}
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={e => setFormData({...formData, email: e.target.value})}
+                />
 
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{lang === 'id' ? 'Nama Panggilan Pria' : 'Groom Nickname'}</label>
-                    <input 
-                      type="text" 
-                      required
-                      placeholder={lang === 'id' ? "Contoh: Beni" : "E.g. Beni"}
-                      className="w-full px-4 h-11 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-black/30 text-gray-900 dark:text-white focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all"
-                      value={formData.groom_name}
-                      onChange={e => setFormData({...formData, groom_name: e.target.value})}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{lang === 'id' ? 'Nama Panggilan Wanita' : 'Bride Nickname'}</label>
-                    <input 
-                      type="text" 
-                      required
-                      placeholder={lang === 'id' ? "Contoh: Salsa" : "E.g. Salsa"}
-                      className="w-full px-4 h-11 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-black/30 text-gray-900 dark:text-white focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] outline-none transition-all"
-                      value={formData.bride_name}
-                      onChange={e => setFormData({...formData, bride_name: e.target.value})}
-                    />
-                  </div>
+                  <FloatingInput
+                    id="groom"
+                    label={lang === 'id' ? 'Nama Panggilan Pria' : 'Groom Nickname'}
+                    required
+                    value={formData.groom_name}
+                    onChange={e => setFormData({...formData, groom_name: e.target.value})}
+                  />
+                  <FloatingInput
+                    id="bride"
+                    label={lang === 'id' ? 'Nama Panggilan Wanita' : 'Bride Nickname'}
+                    required
+                    value={formData.bride_name}
+                    onChange={e => setFormData({...formData, bride_name: e.target.value})}
+                  />
                 </div>
 
                 <div className="space-y-4 pt-4 border-t border-black/5 dark:border-white/5">
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">2. {lang === 'id' ? 'Data Acara' : 'Event Data'}</h2>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{lang === 'id' ? 'Tanggal Akad' : 'Matrimony Date'}</label>
-                    <div className="relative">
-                      <input 
-                        type="datetime-local" 
-                        required
-                        min={new Date().toISOString().slice(0, 16)}
-                        className="w-full px-4 h-11 rounded-xl border border-gray-300 dark:border-white/10 bg-white dark:bg-black/30 text-gray-900 dark:text-white focus:border-[#C5A059] focus:ring-2 focus:ring-[#C5A059]/50 outline-none transition-all shadow-sm cursor-pointer appearance-none"
-                        value={formData.akad_date}
-                        onChange={e => setFormData({...formData, akad_date: e.target.value})}
-                      />
-                    </div>
-                  </div>
+                  <FloatingInput
+                    id="akad_date"
+                    label={lang === 'id' ? 'Tanggal Akad' : 'Matrimony Date'}
+                    type="datetime-local"
+                    required
+                    min={new Date().toISOString().slice(0, 16)}
+                    value={formData.akad_date}
+                    onChange={e => setFormData({...formData, akad_date: e.target.value})}
+                  />
                 </div>
 
                 <div className="space-y-2 pt-4 border-t border-black/5 dark:border-white/5">

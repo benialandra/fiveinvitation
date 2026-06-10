@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useOutletContext, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { CheckCircle2, Clock, Eye, AlertCircle, Search, ArrowRight, Loader2, RefreshCw } from 'lucide-react';
+import { CheckCircle2, Clock, Eye, AlertCircle, Search, ArrowRight, Loader2, RefreshCw, PartyPopper } from 'lucide-react';
 import { THEME_REGISTRY } from '../themes/registry';
 import toast from 'react-hot-toast';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Track() {
   const { orderCode } = useParams();
@@ -124,9 +125,24 @@ export default function Track() {
           
           <div className="flex flex-col items-center text-center">
             {order.status === 'PAID' ? (
-              <div className="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center text-green-500 mb-6 border border-green-500/20 shadow-[0_0_30px_rgba(34,197,94,0.15)] relative">
-                <div className="absolute inset-0 border border-green-500/30 rounded-full animate-ping opacity-25"></div>
-                <CheckCircle2 className="w-12 h-12" />
+              <div className="relative mb-6">
+                <div className="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center text-green-500 border border-green-500/20 shadow-[0_0_30px_rgba(34,197,94,0.15)] relative mx-auto">
+                  <div className="absolute inset-0 border border-green-500/30 rounded-full animate-ping opacity-25"></div>
+                  <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 300, delay: 0.2 }}>
+                    <CheckCircle2 className="w-12 h-12" />
+                  </motion.div>
+                </div>
+                {/* Confetti burst */}
+                {[...Array(8)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 1, scale: 0, x: 0, y: 0 }}
+                    animate={{ opacity: 0, scale: 1, x: Math.cos((i / 8) * Math.PI * 2) * 60, y: Math.sin((i / 8) * Math.PI * 2) * 60 }}
+                    transition={{ duration: 0.8, delay: 0.3 + i * 0.05 }}
+                    className="absolute top-1/2 left-1/2 w-2 h-2 rounded-full"
+                    style={{ background: ['#C5A059','#22c55e','#3b82f6','#f59e0b','#ec4899','#8b5cf6','#14b8a6','#f97316'][i] }}
+                  />
+                ))}
               </div>
             ) : (
                <div className="w-24 h-24 bg-amber-500/10 rounded-full flex items-center justify-center text-amber-500 mb-6 border border-amber-500/20 shadow-[0_0_30px_rgba(245,158,11,0.15)]">
@@ -151,20 +167,28 @@ export default function Track() {
             </button>
           </div>
 
-          <div className={`w-full space-y-5 border-t pt-8 ${themeMode === 'dark' ? 'border-white/10' : 'border-gray-100'}`}>
-            <div className="flex justify-between items-center text-sm">
-              <span className="text-gray-500 dark:text-white/50">{lang === 'id' ? 'Mempelai' : 'The Couple'}</span>
-              <span className="font-semibold text-gray-900 dark:text-white text-base">{order.groom_name} <span className="text-[#C5A059] mx-1">&</span> {order.bride_name}</span>
-            </div>
-            <div className="flex justify-between items-center text-sm">
-              <span className="text-gray-500 dark:text-white/50">{lang === 'id' ? 'Tema Dipilih' : 'Chosen Theme'}</span>
-              <span className="font-medium text-gray-900 dark:text-white">{themeName}</span>
-            </div>
-            <div className="flex justify-between items-center text-sm">
-              <span className="text-gray-500 dark:text-white/50">{lang === 'id' ? 'URL Undangan' : 'Invitation URL'}</span>
-              <span className="font-medium text-[#C5A059] bg-[#C5A059]/10 px-3 py-1.5 rounded-lg border border-[#C5A059]/20">/invitation/{order.slug}</span>
-            </div>
-          </div>
+          <motion.div
+            className={`w-full space-y-5 border-t pt-8 ${themeMode === 'dark' ? 'border-white/10' : 'border-gray-100'}`}
+            variants={{ show: { transition: { staggerChildren: 0.1 } } }}
+            initial="hidden"
+            animate="show"
+          >
+            {[
+              { label: lang === 'id' ? 'Mempelai' : 'The Couple', value: <span className="font-semibold text-gray-900 dark:text-white text-base">{order.groom_name} <span className="text-[#C5A059] mx-1">&</span> {order.bride_name}</span> },
+              { label: lang === 'id' ? 'Tema Dipilih' : 'Chosen Theme', value: <span className="font-medium text-gray-900 dark:text-white">{THEME_REGISTRY.find(t => t.id === order.theme_id)?.name || 'Unknown Theme'}</span> },
+              { label: lang === 'id' ? 'URL Undangan' : 'Invitation URL', value: <span className="font-medium text-[#C5A059] bg-[#C5A059]/10 px-3 py-1.5 rounded-lg border border-[#C5A059]/20">/invitation/{order.slug}</span> },
+            ].map(({ label, value }, i) => (
+              <motion.div
+                key={i}
+                variants={{ hidden: { opacity: 0, x: -10 }, show: { opacity: 1, x: 0 } }}
+                transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+                className="flex justify-between items-center text-sm"
+              >
+                <span className="text-gray-500 dark:text-white/50">{label}</span>
+                {value}
+              </motion.div>
+            ))}
+          </motion.div>
 
           <div className="w-full mt-10 space-y-4">
             {order.status === 'PAID' ? (

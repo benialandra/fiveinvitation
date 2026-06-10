@@ -1,7 +1,44 @@
-import React, { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-import { Star, Quote, Search, PenTool, CheckCircle, Zap, ArrowRight } from 'lucide-react';
+import { Star, Quote, Search, PenTool, Zap, ArrowRight } from 'lucide-react';
+
+// Animated counter hook
+function useAnimatedCounter(target: number, duration = 2000) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true });
+
+  useEffect(() => {
+    if (!inView) return;
+    let start = 0;
+    const step = target / (duration / 16);
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= target) {
+        setCount(target);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(start));
+      }
+    }, 16);
+    return () => clearInterval(timer);
+  }, [inView, target, duration]);
+
+  return { count, ref };
+}
+
+// Ripple effect hook
+function useRipple() {
+  const [ripples, setRipples] = useState<{x:number;y:number;id:number}[]>([]);
+  const addRipple = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const id = Date.now();
+    setRipples(r => [...r, { x: e.clientX - rect.left, y: e.clientY - rect.top, id }]);
+    setTimeout(() => setRipples(r => r.filter(rp => rp.id !== id)), 600);
+  }, []);
+  return { ripples, addRipple };
+}
 
 const RECENT_ORDERS = [
   { id: 1, names: "Beni & Deti", theme: "Elegant Minimalist", image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=300" },
@@ -34,6 +71,13 @@ export default function Home() {
   const navigate = useNavigate();
   const [trackId, setTrackId] = useState('');
   const { lang, themeMode } = useOutletContext<{ lang: 'en' | 'id', themeMode: string }>();
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
+  const heroCardsY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
+  const { ripples: ripple1, addRipple: addRipple1 } = useRipple();
+  const { ripples: ripple2, addRipple: addRipple2 } = useRipple();
+  const counter1 = useAnimatedCounter(500);
+  const counter2 = useAnimatedCounter(50);
 
   // Randomize hero orders on every page load
   const randomHeroOrders = useMemo(() => {
@@ -61,7 +105,7 @@ export default function Home() {
     <div className="flex flex-col w-full relative overflow-hidden">
       
       {/* Hero Section */}
-      <div className="min-h-[calc(100vh-80px)] grid grid-cols-1 lg:grid-cols-12 gap-0 relative">
+      <div ref={heroRef} className="min-h-[calc(100vh-80px)] grid grid-cols-1 lg:grid-cols-12 gap-0 relative">
         <div className="col-span-1 lg:col-span-6 flex flex-col justify-center px-6 lg:pl-24 xl:pl-32 lg:pr-8 py-12 lg:py-0 z-10">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
@@ -101,15 +145,21 @@ export default function Home() {
             className="flex flex-col sm:flex-row gap-4"
           >
             <button 
-              onClick={() => navigate('/themes')}
-              className="gold-gradient text-[#0A0A0B] px-8 py-4 text-sm font-semibold uppercase tracking-widest shadow-2xl shadow-[#C5A059]/20 hover:opacity-90 transition-opacity cursor-pointer"
+              onClick={(e) => { addRipple1(e); navigate('/themes'); }}
+              className="relative overflow-hidden gold-gradient text-[#0A0A0B] px-8 py-4 text-sm font-semibold uppercase tracking-widest shadow-2xl shadow-[#C5A059]/20 hover:opacity-90 transition-opacity cursor-pointer"
             >
-              {lang === 'id' ? 'Buat Undangan Sekarang' : 'Create Invitation Ahora'}
+              {ripple1.map(r => (
+                <span key={r.id} className="absolute rounded-full bg-white/30 animate-[ripple_0.6s_ease-out_forwards]" style={{ left: r.x - 20, top: r.y - 20, width: 40, height: 40 }} />
+              ))}
+              {lang === 'id' ? 'Buat Undangan Sekarang' : 'Create Invitation Now'}
             </button>
             <button 
-              onClick={() => navigate('/themes')}
-              className="flex items-center justify-center gap-3 border border-gray-300 dark:border-white/20 px-8 py-4 text-sm font-light uppercase tracking-widest text-gray-900 dark:text-white hover:border-[#C5A059] hover:text-[#C5A059] hover:shadow-[0_0_20px_rgba(197,160,89,0.3)] transition-all duration-300 cursor-pointer group"
+              onClick={(e) => { addRipple2(e); navigate('/themes'); }}
+              className="relative overflow-hidden flex items-center justify-center gap-3 border border-gray-300 dark:border-white/20 px-8 py-4 text-sm font-light uppercase tracking-widest text-gray-900 dark:text-white hover:border-[#C5A059] hover:text-[#C5A059] hover:shadow-[0_0_20px_rgba(197,160,89,0.3)] transition-all duration-300 cursor-pointer group"
             >
+              {ripple2.map(r => (
+                <span key={r.id} className="absolute rounded-full bg-[#C5A059]/20 animate-[ripple_0.6s_ease-out_forwards]" style={{ left: r.x - 20, top: r.y - 20, width: 40, height: 40 }} />
+              ))}
               {lang === 'id' ? 'Lihat Demo Tema' : 'View Theme Demos'}
               <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
             </button>
@@ -123,14 +173,11 @@ export default function Home() {
           <motion.div 
             initial={{ opacity: 0, scale: 0.9, y: 40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
+            style={{ y: heroCardsY }}
             transition={{ type: "spring", stiffness: 80, damping: 25, delay: 0.2 }}
             className="w-[300px] h-[450px] sm:w-[360px] sm:h-[520px] lg:w-full lg:max-w-[420px] lg:h-[600px] relative group cursor-pointer"
           >
             {randomHeroOrders.map((order, idx) => {
-              // Fan-out classes for hover
-              // idx 0 (bottom): left opening
-              // idx 1 (middle): straight
-              // idx 2 (top): right opening
               const idleTransforms = [
                 '-rotate-6 -translate-x-4 translate-y-2',
                 'rotate-0 translate-y-0',
@@ -183,35 +230,30 @@ export default function Home() {
                {/* Arrow connecting steps on desktop */}
                <div className="hidden md:block absolute top-[60px] left-[20%] right-[20%] h-[2px] bg-gradient-to-r from-transparent via-[#C5A059]/30 to-transparent"></div>
 
-               <div className="bg-gray-50 dark:bg-black/40 p-8 rounded-[32px] border border-black/5 dark:border-white/5 relative flex flex-col items-center text-center group hover:bg-white dark:hover:bg-white/5 hover:border-[#C5A059]/50 transition-all duration-300">
-                  <div className="w-16 h-16 rounded-full bg-white dark:bg-[#111] shadow-xl flex items-center justify-center mb-8 border border-black/5 dark:border-white/10 group-hover:scale-110 group-hover:bg-[#C5A059] group-hover:text-white transition-all text-[#C5A059] z-10">
-                     <Search width={24} height={24} />
-                  </div>
-                  <h3 className="text-xl font-serif text-gray-900 dark:text-white mb-4">{lang === 'id' ? '1. Pilih Tema' : '1. Choose a Theme'}</h3>
-                  <p className="text-gray-500 dark:text-gray-400 text-sm leading-loose">
-                     {lang === 'id' ? 'Temukan desain undangan yang paling mewakili kisah cinta Anda dari koleksi eksklusif kami.' : 'Find the invitation design that best represents your love story from our exclusive collection.'}
-                  </p>
-               </div>
-
-               <div className="bg-gray-50 dark:bg-black/40 p-8 rounded-[32px] border border-black/5 dark:border-white/5 relative flex flex-col items-center text-center group hover:bg-white dark:hover:bg-white/5 hover:border-[#C5A059]/50 transition-all duration-300">
-                  <div className="w-16 h-16 rounded-full bg-white dark:bg-[#111] shadow-xl flex items-center justify-center mb-8 border border-black/5 dark:border-white/10 group-hover:scale-110 group-hover:bg-[#C5A059] group-hover:text-white transition-all text-[#C5A059] z-10">
-                     <PenTool width={24} height={24} />
-                  </div>
-                  <h3 className="text-xl font-serif text-gray-900 dark:text-white mb-4">{lang === 'id' ? '2. Isi Detail Acara' : '2. Fill Event Details'}</h3>
-                  <p className="text-gray-500 dark:text-gray-400 text-sm leading-loose">
-                     {lang === 'id' ? 'Lengkapi informasi acara pernikahan Anda. Tanpa perlu mendaftar akun, prosesnya instan.' : 'Complete your wedding event information. No account registration needed, instant process.'}
-                  </p>
-               </div>
-
-               <div className="bg-gray-50 dark:bg-black/40 p-8 rounded-[32px] border border-black/5 dark:border-white/5 relative flex flex-col items-center text-center group hover:bg-white dark:hover:bg-white/5 hover:border-[#C5A059]/50 transition-all duration-300">
-                  <div className="w-16 h-16 rounded-full bg-white dark:bg-[#111] shadow-xl flex items-center justify-center mb-8 border border-black/5 dark:border-white/10 group-hover:scale-110 group-hover:bg-[#C5A059] group-hover:text-white transition-all text-[#C5A059] z-10">
-                     <Zap width={24} height={24} />
-                  </div>
-                  <h3 className="text-xl font-serif text-gray-900 dark:text-white mb-4">{lang === 'id' ? '3. Aktif & Bagikan' : '3. Active & Share'}</h3>
-                  <p className="text-gray-500 dark:text-gray-400 text-sm leading-loose">
-                     {lang === 'id' ? 'Selesaikan pembayaran otomatis dan tautan undangan Anda siap dibagikan seketika.' : 'Complete automatic payment and your invitation link is ready to share instantly.'}
-                  </p>
-               </div>
+               {[
+                  { icon: Search, label: lang === 'id' ? '1. Pilih Tema' : '1. Choose a Theme', desc: lang === 'id' ? 'Temukan desain yang merepresentasikan kisah cinta Anda dari koleksi eksklusif kami.' : 'Find the design that best represents your love story from our exclusive collection.' },
+                  { icon: PenTool, label: lang === 'id' ? '2. Isi Detail Acara' : '2. Fill Event Details', desc: lang === 'id' ? 'Lengkapi informasi acara pernikahan Anda. Tanpa perlu mendaftar akun, prosesnya instan.' : 'Complete your wedding event information. No account registration needed, instant process.' },
+                  { icon: Zap, label: lang === 'id' ? '3. Aktif & Bagikan' : '3. Active & Share', desc: lang === 'id' ? 'Selesaikan pembayaran dan tautan undangan Anda siap dibagikan seketika.' : 'Complete payment and your invitation link is ready to share instantly.' },
+               ].map(({ icon: Icon, label, desc }, i) => (
+                 <motion.div
+                   key={i}
+                   initial={{ opacity: 0, y: 30 }}
+                   whileInView={{ opacity: 1, y: 0 }}
+                   viewport={{ once: true }}
+                   transition={{ delay: i * 0.15, type: 'spring', stiffness: 100, damping: 20 }}
+                   className="bg-gray-50 dark:bg-black/40 p-8 rounded-[32px] border border-black/5 dark:border-white/5 relative flex flex-col items-center text-center group hover:bg-white dark:hover:bg-white/5 hover:border-[#C5A059]/50 transition-all duration-300"
+                 >
+                   <motion.div
+                     whileHover={{ scale: 1.15, rotate: 5 }}
+                     transition={{ type: 'spring', stiffness: 300, damping: 15 }}
+                     className="w-16 h-16 rounded-full bg-white dark:bg-[#111] shadow-xl flex items-center justify-center mb-8 border border-black/5 dark:border-white/10 group-hover:bg-[#C5A059] group-hover:text-white transition-all text-[#C5A059] z-10"
+                   >
+                     <Icon width={24} height={24} />
+                   </motion.div>
+                   <h3 className="text-xl font-serif text-gray-900 dark:text-white mb-4">{label}</h3>
+                   <p className="text-gray-500 dark:text-gray-400 text-sm leading-loose">{desc}</p>
+                 </motion.div>
+               ))}
             </div>
          </div>
       </div>
@@ -240,12 +282,12 @@ export default function Home() {
                </p>
                <div className="flex items-center gap-6">
                   <div className="flex flex-col">
-                     <span className="text-3xl font-serif text-[#C5A059]">500+</span>
+                     <span ref={counter1.ref} className="text-3xl font-serif text-[#C5A059]">{counter1.count}+</span>
                      <span className="text-sm text-gray-500 dark:text-white/50">{lang === 'id' ? 'Pasangan Bahagia' : 'Happy Couples'}</span>
                   </div>
                   <div className="w-[1px] h-12 bg-gray-200 dark:bg-white/10"></div>
                   <div className="flex flex-col">
-                     <span className="text-3xl font-serif text-[#C5A059]">50+</span>
+                     <span ref={counter2.ref} className="text-3xl font-serif text-[#C5A059]">{counter2.count}+</span>
                      <span className="text-sm text-gray-500 dark:text-white/50">{lang === 'id' ? 'Tema Premium' : 'Premium Themes'}</span>
                   </div>
                </div>

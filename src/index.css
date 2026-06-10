@@ -72,6 +72,11 @@ a, button, [role="button"], .cursor-pointer {
   100% { transform: translateX(150%) skewX(-12deg); }
 }
 
+@keyframes ripple {
+  0% { transform: scale(0); opacity: 0.6; }
+  100% { transform: scale(10); opacity: 0; }
+}
+
 @keyframes marquee-reverse {
   0% { transform: translateX(-50%); }
   100% { transform: translateX(0%); }

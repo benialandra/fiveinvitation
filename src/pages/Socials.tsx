@@ -1,5 +1,5 @@
 import React from 'react';
-import { Instagram, Facebook, Twitter, Youtube, Mail, MessageCircle, ArrowRight } from 'lucide-react';
+import { Instagram, Facebook, Twitter, Youtube, Mail, MessageCircle, ArrowRight, Sparkles, Monitor, CreditCard, Music2, HeartHandshake, Leaf } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useOutletContext } from 'react-router-dom';
 
@@ -119,32 +119,32 @@ export default function Socials() {
               {
                 title: lang === 'id' ? 'Desain Elegan & Premium' : 'Elegant & Premium Design',
                 description: lang === 'id' ? 'Keindahan visual yang menyatu dengan kemewahan desain. Setiap tema dipoles layaknya undangan fisik premium yang memukau.' : 'Visual beauty blending with design luxury. Each theme is polished like a stunning premium physical invitation.',
-                icon: '✨'
+                icon: <Sparkles size={24} className="text-[#C5A059]" />
               },
               {
                 title: lang === 'id' ? 'Sistem Manajemen Lengkap' : 'Complete Management System',
                 description: lang === 'id' ? 'Dilengkapi dashboard praktis untuk memantau kehadiran, ucapan, dan status pengiriman undangan langsung dari perangkatmu.' : 'Equipped with a practical dashboard to monitor attendance, wishes, and invitation delivery status right from your device.',
-                icon: '🖥️'
+                icon: <Monitor size={24} className="text-[#C5A059]" />
               },
               {
                 title: lang === 'id' ? 'Terintegrasi Pembayaran Digital' : 'Digital Payment Integrated',
                 description: lang === 'id' ? 'Tamu dapat memberikan hadiah dengan mudah melalui fitur dompet digital terintegrasi di dalam undangan, tanpa ribet.' : 'Guests can easily give gifts through integrated digital wallet features within the invitation, hassle-free.',
-                icon: '💳'
+                icon: <CreditCard size={24} className="text-[#C5A059]" />
               },
               {
                 title: lang === 'id' ? 'Pengalaman Interaktif' : 'Interactive Experience',
                 description: lang === 'id' ? 'Musik latar romantis, efek animasi scrolling elegan, dan pengalaman visual yang memanjakan mata tamu Anda.' : 'Romantic background music, elegant scrolling animation effects, and a visual experience that spoils your guests\' eyes.',
-                icon: '🎵'
+                icon: <Music2 size={24} className="text-[#C5A059]" />
               },
               {
                 title: lang === 'id' ? 'Dukungan Prioritas 24/7' : '24/7 Priority Support',
                 description: lang === 'id' ? 'Kami selalu siap membantu. Tim layanan pelanggan kami mendampingi kamu sejak pembuatan awal hingga hari bahagiamu tiba.' : 'We are always ready to help. Our customer service team assists you from initial creation to your happy day.',
-                icon: '🤝'
+                icon: <HeartHandshake size={24} className="text-[#C5A059]" />
               },
               {
                 title: lang === 'id' ? 'Cepat & Ramah Lingkungan' : 'Fast & Eco-Friendly',
                 description: lang === 'id' ? 'Buat undangan dalam hitungan menit dan bagikan secara seketika. Kurangi limbah kertas dan selamatkan lingkungan.' : 'Create invitations in minutes and share them instantly. Reduce paper waste and save the environment.',
-                icon: '🌱'
+                icon: <Leaf size={24} className="text-[#C5A059]" />
               }
             ].map((feature, idx) => (
               <motion.div
@@ -158,7 +158,7 @@ export default function Socials() {
                 {/* Decorative corner */}
                 <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#C5A059]/20 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 
-                <div className="w-14 h-14 bg-gray-50 dark:bg-white/5 rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform duration-500">
+                <div className="w-14 h-14 bg-[#C5A059]/10 dark:bg-[#C5A059]/10 border border-[#C5A059]/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-[#C5A059]/20 transition-all duration-500">
                   {feature.icon}
                 </div>
                 <h3 className="font-serif text-xl mb-4 text-gray-900 dark:text-white group-hover:text-[#C5A059] transition-colors">{feature.title}</h3>

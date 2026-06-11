@@ -28,7 +28,7 @@ export default function FakeSalesNotification() {
       const randomTheme = THEME_REGISTRY[Math.floor(Math.random() * THEME_REGISTRY.length)]?.name || 'Tema Eksklusif';
       
       // Show toast
-      const toastId = toast.custom((t) => (
+      toast.custom((t) => (
         <div
           onClick={() => toast.dismiss(t.id)}
           className={`${
@@ -70,14 +70,17 @@ export default function FakeSalesNotification() {
             </div>
           </div>
         </div>
-      ), { duration: 5000, position: 'bottom-center' });
+      ), { id: 'fake-order-toast', duration: 5000, position: 'bottom-center' });
       
       // Force dismiss after 5 seconds to prevent it getting stuck if user touches it (which pauses the timer)
-      setTimeout(() => toast.dismiss(toastId), 5000);
+      setTimeout(() => toast.dismiss('fake-order-toast'), 5000);
       
     }, 30000); // 30 seconds
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      toast.dismiss('fake-order-toast'); // Dismiss instantly if user navigates away
+    };
   }, [location.pathname]);
 
   return null;

@@ -76,8 +76,30 @@ export default function Invitation() {
      content = <ThemeComponent data={order} guestName={guestName || ''} />;
   }
 
+  let customStyles = null;
+  if (order?.customizations) {
+    const { font, color } = order.customizations;
+    const styles = [];
+    if (font && font !== 'default') {
+      styles.push(`@import url('https://fonts.googleapis.com/css2?family=${font.replace(/\s+/g, '+')}&display=swap');`);
+      styles.push(`* { font-family: '${font}', serif !important; }`);
+    }
+    if (color && color !== 'default') {
+      // Override the default gold color (#C5A059) with the custom premium color
+      styles.push(`.text-\\[\\#C5A059\\] { color: ${color} !important; }`);
+      styles.push(`.bg-\\[\\#C5A059\\] { background-color: ${color} !important; }`);
+      styles.push(`.border-\\[\\#C5A059\\] { border-color: ${color} !important; }`);
+      styles.push(`svg *[fill="#C5A059"] { fill: ${color} !important; }`);
+      styles.push(`svg *[stroke="#C5A059"] { stroke: ${color} !important; }`);
+    }
+    if (styles.length > 0) {
+      customStyles = <style dangerouslySetInnerHTML={{ __html: styles.join('\\n') }} />;
+    }
+  }
+
   return (
     <div className="w-full min-h-screen">
+       {customStyles}
        {content}
     </div>
   );

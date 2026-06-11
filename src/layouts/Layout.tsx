@@ -264,6 +264,7 @@ export default function Layout() {
            <MessageCircle size={24} className="relative z-10" />
         </motion.button>
       </div>
+      <CookieConsent lang={lang} />
     </div>
   );
 }

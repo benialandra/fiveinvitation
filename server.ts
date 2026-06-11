@@ -65,6 +65,7 @@ setInterval(() => {
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
 const ADMIN_TOKEN_SECRET = process.env.ADMIN_TOKEN_SECRET || crypto.randomBytes(32).toString('hex');
 const adminSessions = new Map<string, { createdAt: number; expiresAt: number }>();
+const otpStore = new Map<string, { otp: string; expiresAt: number }>();
 const ADMIN_SESSION_TTL = 4 * 60 * 60 * 1000; // 4 hours
 
 function generateAdminToken(): string {
@@ -440,9 +441,70 @@ app.put("/api/orders/:orderCode", upload.fields([{ name: 'cover_image' }, { name
   }
 });
 
+// ==========================================
+// OTP VALIDATION ENDPOINTS
+// ==========================================
+
+// Send OTP to email
+app.post("/api/otp/send-email", async (req, res) => {
+  const { email } = req.body;
+  if (!email || !email.includes('@')) {
+    return res.status(400).json({ error: "Email tidak valid." });
+  }
+
+  // Generate 4-digit OTP
+  const otp = Math.floor(1000 + Math.random() * 9000).toString();
+  const expiresAt = Date.now() + 5 * 60 * 1000; // 5 minutes
+  
+  otpStore.set(email, { otp, expiresAt });
+
+  try {
+    if (process.env.SMTP_USER) {
+      await sendEmailNotification(
+        email,
+        "Kode OTP Verifikasi - FiveInvitation",
+        `Kode OTP Anda adalah: ${otp}. Kode ini berlaku selama 5 menit.`,
+        `<div style="font-family: sans-serif; text-align: center; padding: 20px;">
+          <h2>Verifikasi Email Anda</h2>
+          <p>Gunakan kode OTP berikut untuk melanjutkan pesanan Anda:</p>
+          <h1 style="color: #C5A059; letter-spacing: 5px; font-size: 32px;">${otp}</h1>
+          <p>Kode ini hanya berlaku selama 5 menit.</p>
+        </div>`
+      );
+    } else {
+      console.log(`[DEV MODE] Simulated OTP for ${email}: ${otp}`);
+    }
+    return res.json({ success: true, message: "OTP terkirim." });
+  } catch (error: any) {
+    console.error("Gagal mengirim OTP:", error);
+    return res.status(500).json({ error: "Gagal mengirim email OTP. Pastikan konfigurasi SMTP benar." });
+  }
+});
+
+// Verify OTP
+app.post("/api/otp/verify", (req, res) => {
+  const { email, otp } = req.body;
+  const stored = otpStore.get(email);
+
+  if (!stored) {
+    return res.status(400).json({ error: "Kode OTP tidak ditemukan atau belum dikirim." });
+  }
+  if (Date.now() > stored.expiresAt) {
+    otpStore.delete(email);
+    return res.status(400).json({ error: "Kode OTP sudah kedaluwarsa. Silakan kirim ulang." });
+  }
+  if (stored.otp !== otp) {
+    return res.status(400).json({ error: "Kode OTP salah." });
+  }
+
+  // Valid
+  otpStore.delete(email);
+  return res.json({ success: true, message: "Email berhasil diverifikasi." });
+});
+
 app.post("/api/order/create", async (req, res) => {
   try {
-    const { order_id, gross_amount, first_name, email, theme_id, groom_name, bride_name } = req.body;
+    const { order_id, gross_amount, first_name, email, theme_id, groom_name, bride_name, customizations } = req.body;
     
     // Save to Supabase
     try {
@@ -455,7 +517,9 @@ app.post("/api/order/create", async (req, res) => {
            status: 'PENDING',
            slug: req.body.slug,
            akad_date: req.body.akad_date || null,
-           customer_email: email
+           customer_email: email,
+           is_email_verified: true, // Assuming they verified via OTP to reach here
+           customizations: customizations || null
         };
 
         let { error } = await supabase.from('orders').insert([insertData]);

@@ -32,8 +32,10 @@ CREATE TABLE IF NOT EXISTS public.orders (
     music_url TEXT,
     slug VARCHAR(100) UNIQUE, -- cth: beni-salsa
     customer_email VARCHAR(255),
+    is_email_verified BOOLEAN DEFAULT false,
     cover_image TEXT,
     hero_image TEXT,
+    customizations JSONB,
     
     -- Timestamps
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()),

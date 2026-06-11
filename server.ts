@@ -9,14 +9,9 @@ import nodemailer from 'nodemailer';
 import { createClient } from "@supabase/supabase-js";
 import multer from 'multer';
 import fs from "fs";
+import crypto from "crypto";
 
 dotenv.config();
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-// Enable JSON parsing
-app.use(express.json());
 
 if (fs.existsSync(".env")) {
   dotenv.config({ path: ".env" });
@@ -24,11 +19,116 @@ if (fs.existsSync(".env")) {
   dotenv.config({ path: ".env.example" });
 }
 
-// Multer Setup
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// ==========================================
+// SECURITY: Rate Limiting (in-memory)
+// ==========================================
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX_REQUESTS = 60;      // 60 requests per minute per IP
+const RATE_LIMIT_AUTH_MAX = 5;            // 5 login attempts per minute
+
+function rateLimiter(maxRequests: number = RATE_LIMIT_MAX_REQUESTS) {
+  return (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const ip = req.ip || req.socket.remoteAddress || 'unknown';
+    const key = `${ip}:${req.path}`;
+    const now = Date.now();
+    const entry = rateLimitMap.get(key);
+
+    if (!entry || now > entry.resetTime) {
+      rateLimitMap.set(key, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS });
+      return next();
+    }
+
+    if (entry.count >= maxRequests) {
+      return res.status(429).json({ error: "Too many requests. Please try again later." });
+    }
+
+    entry.count++;
+    return next();
+  };
+}
+
+// Clean up rate limit map every 5 minutes
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, entry] of rateLimitMap.entries()) {
+    if (now > entry.resetTime) rateLimitMap.delete(key);
+  }
+}, 5 * 60 * 1000);
+
+// ==========================================
+// SECURITY: Admin Session Management
+// ==========================================
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+const ADMIN_TOKEN_SECRET = process.env.ADMIN_TOKEN_SECRET || crypto.randomBytes(32).toString('hex');
+const adminSessions = new Map<string, { createdAt: number; expiresAt: number }>();
+const ADMIN_SESSION_TTL = 4 * 60 * 60 * 1000; // 4 hours
+
+function generateAdminToken(): string {
+  const payload = `${Date.now()}-${crypto.randomBytes(16).toString('hex')}`;
+  const hmac = crypto.createHmac('sha256', ADMIN_TOKEN_SECRET).update(payload).digest('hex');
+  return `${payload}.${hmac}`;
+}
+
+function validateAdminToken(token: string): boolean {
+  const session = adminSessions.get(token);
+  if (!session) return false;
+  if (Date.now() > session.expiresAt) {
+    adminSessions.delete(token);
+    return false;
+  }
+  return true;
+}
+
+// Clean up expired sessions every 30 minutes
+setInterval(() => {
+  const now = Date.now();
+  for (const [token, session] of adminSessions.entries()) {
+    if (now > session.expiresAt) adminSessions.delete(token);
+  }
+}, 30 * 60 * 1000);
+
+// Admin auth middleware — validates Bearer token in Authorization header
+function requireAdmin(req: express.Request, res: express.Response, next: express.NextFunction) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: "Unauthorized: Missing or invalid token" });
+  }
+  const token = authHeader.slice(7);
+  if (!validateAdminToken(token)) {
+    return res.status(401).json({ error: "Unauthorized: Token expired or invalid" });
+  }
+  next();
+}
+
+// ==========================================
+// SECURITY HEADERS
+// ==========================================
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  next();
+});
+
+// Enable JSON parsing
+app.use(express.json({ limit: '2mb' }));
+
+// Apply general rate limiting to all API routes
+app.use('/api', rateLimiter(RATE_LIMIT_MAX_REQUESTS));
+
+// Multer Setup with file size and type restrictions
 const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
+
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 const upload = multer({
   storage: multer.diskStorage({
@@ -36,9 +136,21 @@ const upload = multer({
       cb(null, uploadsDir);
     },
     filename: (req, file, cb) => {
-      cb(null, Date.now() + '-' + file.originalname.replace(/[^a-zA-Z0-9.\-_]/g, ''));
+      const safeName = file.originalname.replace(/[^a-zA-Z0-9.\-_]/g, '');
+      cb(null, Date.now() + '-' + safeName);
     }
-  })
+  }),
+  limits: {
+    fileSize: MAX_FILE_SIZE,
+    files: 5
+  },
+  fileFilter: (req, file, cb) => {
+    if (ALLOWED_IMAGE_TYPES.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error(`File type ${file.mimetype} is not allowed. Only images (JPEG, PNG, WebP, GIF) are accepted.`));
+    }
+  }
 });
 
 // Serve uploads directory specifically
@@ -64,8 +176,35 @@ const snap = new midtransClient.Snap({
 // API ROUTES
 // ==========================================
 
+// Admin Login Endpoint (server-side authentication)
+app.post("/api/admin/login", rateLimiter(RATE_LIMIT_AUTH_MAX), (req, res) => {
+  const { password } = req.body;
+  if (!password || password !== ADMIN_PASSWORD) {
+    return res.status(401).json({ error: "Password salah." });
+  }
+  const token = generateAdminToken();
+  const now = Date.now();
+  adminSessions.set(token, { createdAt: now, expiresAt: now + ADMIN_SESSION_TTL });
+  return res.json({ success: true, token, expiresIn: ADMIN_SESSION_TTL });
+});
+
+// Admin Logout Endpoint
+app.post("/api/admin/logout", (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    adminSessions.delete(authHeader.slice(7));
+  }
+  return res.json({ success: true });
+});
+
+// Admin Session Validation Endpoint
+app.get("/api/admin/session", requireAdmin, (req, res) => {
+  return res.json({ authenticated: true });
+});
+
 // Seed Themes Endpoint (Initial manual seeding to Supabase)
-app.post("/api/admin/themes/seed", async (req, res) => {
+// PROTECTED: requires admin authentication
+app.post("/api/admin/themes/seed", requireAdmin, async (req, res) => {
   try {
     if (supabaseUrl === 'https://mock.supabase.co') {
       return res.status(400).json({ error: "Connect to real Supabase to seed" });
@@ -115,7 +254,8 @@ app.get("/api/themes/:id", async (req, res) => {
 });
 
 // Create Theme Endpoint
-app.post("/api/admin/themes", upload.fields([{ name: 'zipFile', maxCount: 1 }, { name: 'images', maxCount: 5 }]), async (req: any, res: any) => {
+// PROTECTED: requires admin authentication
+app.post("/api/admin/themes", requireAdmin, upload.fields([{ name: 'zipFile', maxCount: 1 }, { name: 'images', maxCount: 5 }]), async (req: any, res: any) => {
   try {
     const { id, name, category, price, thumbnail, config_json } = req.body;
     
@@ -158,69 +298,17 @@ app.post("/api/admin/themes", upload.fields([{ name: 'zipFile', maxCount: 1 }, {
   }
 });
 
-// Edit Theme Endpoint
-app.post("/api/admin/themes/upload-component", upload.single('componentFile'), async (req: any, res: any) => {
-  try {
-    const { id, name, category, price, componentName, thumbnail } = req.body;
-    
-    if (!req.file) return res.status(400).json({ error: "Missing componentFile" });
-    if (!componentName) return res.status(400).json({ error: "Missing componentName" });
-
-    // Save TSX file to src/themes
-    const tsxSourcePath = req.file.path;
-    const destPath = path.join(process.cwd(), 'src', 'themes', `${componentName}.tsx`);
-    fs.copyFileSync(tsxSourcePath, destPath);
-    
-    // Read registry.tsx
-    const registryPath = path.join(process.cwd(), 'src', 'themes', 'registry.tsx');
-    let registryContent = fs.readFileSync(registryPath, 'utf8');
-    
-    // Inject import if not exists
-    const importStatement = `import ${componentName} from './${componentName}';`;
-    if (!registryContent.includes(importStatement)) {
-       // Insert after the last import statement
-       const importRegex = /import.*?;(\r?\n)/g;
-       let lastMatch;
-       let match;
-       while ((match = importRegex.exec(registryContent)) !== null) {
-          lastMatch = match;
-       }
-       if (lastMatch) {
-          const insertPos = lastMatch.index + lastMatch[0].length;
-          registryContent = registryContent.slice(0, insertPos) + importStatement + '\n' + registryContent.slice(insertPos);
-       } else {
-          registryContent = importStatement + '\n' + registryContent;
-       }
-    }
-
-    // Inject to THEME_REGISTRY array
-    const newThemeObj = `
-  {
-    id: '${id}',
-    name: '${name}',
-    category: '${category}',
-    price: ${Number(price)},
-    thumbnail: '${thumbnail || ''}',
-    component: ${componentName}
-  },`;
-
-    const registryArrayRegex = /export const THEME_REGISTRY: ThemeMeta\[\] = \[\s*/;
-    if (registryArrayRegex.test(registryContent)) {
-       registryContent = registryContent.replace(registryArrayRegex, `export const THEME_REGISTRY: ThemeMeta[] = [${newThemeObj}`);
-    } else {
-       return res.status(500).json({ error: "Could not find THEME_REGISTRY array in registry.tsx" });
-    }
-
-    fs.writeFileSync(registryPath, registryContent, 'utf8');
-
-    return res.json({ success: true, message: "Component uploaded and registered successfully." });
-  } catch (err: any) {
-    console.error("Failed to upload theme component:", err);
-    return res.status(500).json({ error: err.message });
-  }
+// SECURITY: Upload TSX endpoint has been REMOVED.
+// Uploading arbitrary code files to the server is a Remote Code Execution (RCE) vulnerability.
+// Theme components should be added via Git commits and proper CI/CD pipelines.
+app.post("/api/admin/themes/upload-component", (req: any, res: any) => {
+  return res.status(403).json({ 
+    error: "This endpoint has been disabled for security reasons. Add theme components via Git." 
+  });
 });
 
-app.put("/api/admin/themes/:id", upload.fields([{ name: 'thumbnailFile', maxCount: 1 }, { name: 'images', maxCount: 5 }]), async (req: any, res: any) => {
+// PROTECTED: requires admin authentication
+app.put("/api/admin/themes/:id", requireAdmin, upload.fields([{ name: 'thumbnailFile', maxCount: 1 }, { name: 'images', maxCount: 5 }]), async (req: any, res: any) => {
   try {
     const { id } = req.params;
     const { name, category, price, thumbnail: currentThumbnail, config_json } = req.body;
@@ -468,9 +556,23 @@ async function sendEmailNotification(to: string, subject: string, text: string, 
   }
 }
 
-// 2. Midtrans Webhook Callback
+// 2. Midtrans Webhook Callback (with signature verification)
 app.post("/api/webhook/midtrans", async (req, res) => {
   try {
+    // SECURITY: Verify Midtrans webhook signature
+    const serverKey = processMidtransServerKey.replace(/^["']|["']$/g, '');
+    if (serverKey && serverKey !== 'dummy_server_key' && req.body.signature_key) {
+      const { order_id, status_code, gross_amount, signature_key } = req.body;
+      const expectedSignature = crypto
+        .createHash('sha512')
+        .update(`${order_id}${status_code}${gross_amount}${serverKey}`)
+        .digest('hex');
+      if (signature_key !== expectedSignature) {
+        console.error(`Webhook signature mismatch for order ${order_id}`);
+        return res.status(403).json({ error: "Invalid webhook signature" });
+      }
+    }
+
     const statusResponse = await snap.transaction.notification(req.body);
     const orderId = statusResponse.order_id;
     const transactionStatus = statusResponse.transaction_status;

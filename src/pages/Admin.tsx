@@ -19,7 +19,9 @@ const data = [
 
 export default function Admin() {
   const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(() => sessionStorage.getItem('adminAuth') === 'true');
+  const [adminToken, setAdminToken] = useState<string | null>(() => sessionStorage.getItem('adminToken'));
+  const [isAuthenticated, setIsAuthenticated] = useState(() => !!sessionStorage.getItem('adminToken'));
+  const [loginLoading, setLoginLoading] = useState(false);
   const [password, setPassword] = useState('');
   const [themeOverrides, setThemeOverrides] = useState<Record<string, any>>({});
   
@@ -185,16 +187,16 @@ export default function Admin() {
              thumbnail: t.thumbnail,
              sales: 0
          }));
-         const res = await fetch('/api/admin/themes/seed', {
-             method: 'POST',
-             headers: { 'Content-Type': 'application/json' },
-             body: JSON.stringify({ themes: themesToSeed })
-         });
+          const res = await fetch('/api/admin/themes/seed', {
+              method: 'POST',
+              headers: adminHeaders({ 'Content-Type': 'application/json' }),
+              body: JSON.stringify({ themes: themesToSeed })
+          });
          const data = await res.json();
          if (!res.ok) throw new Error(data.error || 'Failed to seed');
          
          // Refetch from DB to ensure TSX and DB data are perfectly synced in the UI
-         const refetchRes = await fetch('/api/themes');
+         const refetchRes = await fetch('/api/themes', { headers: adminHeaders() });
          const refetchData = await refetchRes.json();
          if (Array.isArray(refetchData)) {
             setDbThemes(refetchData);
@@ -297,14 +299,34 @@ export default function Admin() {
     return filteredThemes.slice(startIndex, startIndex + themePageSize);
   }, [filteredThemes, themePage]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  // Helper to create auth headers for admin API calls
+  const adminHeaders = (extra?: Record<string, string>): Record<string, string> => ({
+    'Authorization': `Bearer ${adminToken}`,
+    ...extra
+  });
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const adminPass = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
-    if (password === adminPass) {
-      sessionStorage.setItem('adminAuth', 'true');
+    setLoginLoading(true);
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || 'Login failed.');
+        return;
+      }
+      sessionStorage.setItem('adminToken', data.token);
+      setAdminToken(data.token);
       setIsAuthenticated(true);
-    } else {
-      toast.error('Password salah.');
+      toast.success('Login berhasil!');
+    } catch (err: any) {
+      toast.error('Gagal menghubungi server. Pastikan backend berjalan.');
+    } finally {
+      setLoginLoading(false);
     }
   };
 
@@ -324,8 +346,8 @@ export default function Admin() {
               value={password}
               onChange={e => setPassword(e.target.value)}
             />
-            <button type="submit" className="w-full h-12 gold-gradient text-black rounded-xl font-semibold uppercase tracking-widest text-sm hover:opacity-90 transition-opacity">
-              Log In
+            <button type="submit" disabled={loginLoading} className="w-full h-12 gold-gradient text-black rounded-xl font-semibold uppercase tracking-widest text-sm hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
+              {loginLoading ? 'Authenticating...' : 'Log In'}
             </button>
           </form>
         </div>
@@ -369,10 +391,17 @@ export default function Admin() {
                <button onClick={() => navigate('/')} className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-colors text-sm uppercase tracking-widest font-medium border ${themeMode === 'dark' ? 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10' : 'border-[#C5A059]/30 text-[#C5A059] hover:bg-[#C5A059]/10'}`}>
                   <HomeIcon className="w-4 h-4 shrink-0" /> <span className="truncate">Go to Main Page</span>
                </button>
-               <button onClick={() => {
-                  sessionStorage.removeItem('adminAuth');
-                  setIsAuthenticated(false);
-               }} className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm uppercase tracking-widest font-medium text-red-500 hover:bg-red-500/10 rounded-xl transition-colors">
+               <button onClick={async () => {
+                   try {
+                     await fetch('/api/admin/logout', {
+                       method: 'POST',
+                       headers: adminHeaders()
+                     });
+                   } catch {}
+                   sessionStorage.removeItem('adminToken');
+                   setAdminToken(null);
+                   setIsAuthenticated(false);
+                }} className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm uppercase tracking-widest font-medium text-red-500 hover:bg-red-500/10 rounded-xl transition-colors">
                   <LogOut className="w-4 h-4 shrink-0" /> <span className="truncate">Log Out</span>
                </button>
              </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, Link } from 'react-router-dom';
-import { Moon, Sun, MessageCircle, X, Mail, ArrowUp } from 'lucide-react';
+import { Moon, Sun, MessageCircle, X, Mail, ArrowUp, Menu } from 'lucide-react';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 
 export default function Layout() {
@@ -8,6 +8,7 @@ export default function Layout() {
   const [lang, setLang] = useState<'id'|'en'>('en');
   const [csOpen, setCsOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -107,12 +108,45 @@ export default function Layout() {
           >
             {themeMode === 'light' ? <Moon size={18} /> : <Sun size={18} />}
           </button>
+          {/* Mobile hamburger menu */}
+          <button 
+             onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
+             className="md:hidden flex w-10 h-10 rounded-full items-center justify-center hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+             aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
         <motion.div 
            className="absolute bottom-0 left-0 right-0 h-[2px] origin-left gold-gradient" 
            style={{ scaleX }}
         />
       </nav>
+
+      {/* Mobile navigation drawer */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="fixed top-20 left-0 right-0 z-40 md:hidden bg-white/95 dark:bg-[#0A0A0B]/95 backdrop-blur-lg border-b border-black/5 dark:border-white/5"
+          >
+            <div className="flex flex-col py-4 px-6 gap-1">
+              <Link to="/themes" onClick={() => setMobileMenuOpen(false)} className="py-3 text-sm uppercase tracking-widest font-medium hover:text-[#C5A059] transition-colors border-b border-black/5 dark:border-white/5">
+                {lang === 'id' ? 'Katalog Tema' : 'Themes'}
+              </Link>
+              <Link to="/track/search" onClick={() => setMobileMenuOpen(false)} className="py-3 text-sm uppercase tracking-widest font-medium hover:text-[#C5A059] transition-colors border-b border-black/5 dark:border-white/5">
+                {lang === 'id' ? 'Lacak Order' : 'Track Order'}
+              </Link>
+              <Link to="/socials" onClick={() => setMobileMenuOpen(false)} className="py-3 text-sm uppercase tracking-widest font-medium hover:text-[#C5A059] transition-colors">
+                {lang === 'id' ? 'Sosial Media' : 'Socials'}
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <main className="flex-1 w-full flex flex-col relative z-10 pt-20">
         <Outlet context={{ lang, themeMode }} />

@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { THEME_REGISTRY, ThemeCategory } from '../themes/registry';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Eye, ShoppingCart } from 'lucide-react';
 import RippleLink from '../components/RippleLink';
@@ -118,11 +118,11 @@ export default function Themes() {
           </div>
           
           {/* Dropdown Category Filter */}
-          <div className="w-full sm:w-auto relative">
+          <div className="w-full sm:w-64 relative">
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value as ThemeCategory | 'All')}
-              className="w-full sm:w-64 h-12 pl-4 pr-10 appearance-none rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/30 dark:text-white outline-none focus:border-[#C5A059] transition-colors cursor-pointer text-sm font-medium"
+              className="w-full h-12 pl-4 pr-10 appearance-none rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/30 dark:text-white outline-none focus:border-[#C5A059] transition-colors cursor-pointer text-sm font-medium"
             >
               {categories.map(cat => (
                 <option key={cat} value={cat} className="text-gray-900">
@@ -170,13 +170,18 @@ export default function Themes() {
                   }}
                   className="group bg-white dark:bg-black/40 rounded-2xl border border-black/5 dark:border-white/5 overflow-hidden flex flex-col hover:shadow-xl dark:hover:shadow-[#C5A059]/10 transition-all duration-300"
                 >
-                  <div className="w-full aspect-[4/5] bg-gray-100 dark:bg-gray-900 overflow-hidden relative group/image">
-                    <img 
-                      src={theme.thumbnail} 
-                      alt={theme.name}
-                      className="w-full h-full object-cover group-hover/image:scale-105 transition-transform duration-700" 
-                    />
-                    <div className="absolute inset-0 bg-black/0 group-hover/image:bg-black/20 transition-colors duration-300 pointer-events-none" />
+                  <div className="w-full aspect-[4/5] bg-gray-100 dark:bg-gray-900 overflow-hidden relative group/image active:scale-[0.98] transition-transform duration-200 cursor-pointer">
+                    <Link to={`/preview/${theme.id}`} className="block w-full h-full">
+                      <img 
+                        src={theme.thumbnail || 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=300&auto=format&fit=crop'} 
+                        alt={theme.name}
+                        loading="lazy"
+                        decoding="async"
+                        onError={(e) => { e.currentTarget.style.opacity = '0'; }}
+                        className="w-full h-full object-cover group-hover/image:scale-105 transition-transform duration-700" 
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover/image:bg-black/20 transition-colors duration-300 pointer-events-none" />
+                    </Link>
                     
                     <div className="absolute top-4 left-4 z-10 pointer-events-none">
                       <span className="px-3 py-1 bg-white/90 dark:bg-black/80 backdrop-blur text-xs font-semibold uppercase tracking-wider rounded-full shadow-sm text-gray-900 dark:text-white border border-black/5 dark:border-white/10">
@@ -184,7 +189,7 @@ export default function Themes() {
                       </span>
                     </div>
 
-                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-center gap-2 shrink-0 opacity-0 group-hover/image:opacity-100 translate-y-4 group-hover/image:translate-y-0 transition-all duration-300 z-20">
+                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-center gap-2 shrink-0 opacity-100 translate-y-0 lg:opacity-0 lg:group-hover/image:opacity-100 lg:translate-y-4 lg:group-hover/image:translate-y-0 transition-all duration-300 z-20">
                         <RippleLink 
                           to={`/preview/${theme.id}`}
                           target="_blank"

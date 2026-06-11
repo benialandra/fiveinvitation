@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { THEME_REGISTRY } from '../themes/registry';
 import MasterTheme from '../themes/MasterTheme';
 import { supabase } from '../lib/supabase';
@@ -10,6 +10,9 @@ export default function Preview() {
   const [theme, setTheme] = useState<any>(THEME_REGISTRY.find(t => t.id === themeId));
   const [loading, setLoading] = useState(true);
   const [deviceMode, setDeviceMode] = useState<'mobile'|'tablet'|'desktop'>('mobile');
+  const [searchParams] = useSearchParams();
+  const font = searchParams.get('font');
+  const color = searchParams.get('color');
 
   useEffect(() => {
     const fetchTheme = async () => {
@@ -79,10 +82,31 @@ export default function Preview() {
   } else {
      const ThemeComponent = theme.component;
      if (ThemeComponent) {
-        content = <ThemeComponent {...sampleProps} />;
+        content = (
+          <React.Suspense fallback={<div className="h-full min-h-[500px] flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-[#C5A059]" /></div>}>
+            <ThemeComponent {...sampleProps} />
+          </React.Suspense>
+        );
      } else {
         content = <div className="p-8 text-center">Komponen Tema tidak tersedia</div>;
      }
+  }
+
+  let customStyles = null;
+  const styles = [];
+  if (font && font !== 'default') {
+    styles.push(`@import url('https://fonts.googleapis.com/css2?family=${font.replace(/\s+/g, '+')}&display=swap');`);
+    styles.push(`* { font-family: '${font}', serif !important; }`);
+  }
+  if (color && color !== 'default') {
+    styles.push(`.text-\\[\\#C5A059\\] { color: ${color} !important; }`);
+    styles.push(`.bg-\\[\\#C5A059\\] { background-color: ${color} !important; }`);
+    styles.push(`.border-\\[\\#C5A059\\] { border-color: ${color} !important; }`);
+    styles.push(`svg *[fill="#C5A059"] { fill: ${color} !important; }`);
+    styles.push(`svg *[stroke="#C5A059"] { stroke: ${color} !important; }`);
+  }
+  if (styles.length > 0) {
+    customStyles = <style dangerouslySetInnerHTML={{ __html: styles.join('\n') }} />;
   }
 
   return (
@@ -133,6 +157,7 @@ export default function Preview() {
         }`}
       >
           <div className="w-full h-full overflow-y-auto no-scrollbar relative">
+             {customStyles}
              {content}
           </div>
       </div>

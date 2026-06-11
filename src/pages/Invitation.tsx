@@ -73,7 +73,11 @@ export default function Invitation() {
   } else {
      const ThemeComponent = getThemeById(order.theme_id)?.component;
      if (!ThemeComponent) return <div className="h-screen w-screen flex items-center justify-center">Tema rusak.</div>;
-     content = <ThemeComponent data={order} guestName={guestName || ''} />;
+     content = (
+       <React.Suspense fallback={<div className="h-screen w-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-[#C5A059]" /></div>}>
+         <ThemeComponent data={order} guestName={guestName || ''} />
+       </React.Suspense>
+     );
   }
 
   let customStyles = null;

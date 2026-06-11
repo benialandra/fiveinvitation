@@ -5,6 +5,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import Home from './pages/Home';
 import Layout from './layouts/Layout';
 import { Loader2 } from 'lucide-react';
+import FakeSalesNotification from './components/FakeSalesNotification';
 
 // Lazy-loaded pages for code splitting — reduces initial bundle by ~300KB+
 const Themes = React.lazy(() => import('./pages/Themes'));
@@ -79,6 +80,7 @@ export default function App() {
   return (
     <ErrorBoundary>
       <BrowserRouter>
+        <FakeSalesNotification />
         <Toaster position="top-center" />
         <Suspense fallback={<PageLoader />}>
           <Routes>

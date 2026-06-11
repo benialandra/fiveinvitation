@@ -12,17 +12,24 @@ function useAnimatedCounter(target: number, duration = 2000) {
   useEffect(() => {
     if (!inView) return;
     let start = 0;
-    const step = target / (duration / 16);
-    const timer = setInterval(() => {
-      start += step;
+    let lastTime = performance.now();
+    let animationFrameId: number;
+
+    const step = (currentTime: number) => {
+      const deltaTime = currentTime - lastTime;
+      lastTime = currentTime;
+      
+      start += (target / duration) * deltaTime;
       if (start >= target) {
         setCount(target);
-        clearInterval(timer);
       } else {
         setCount(Math.floor(start));
+        animationFrameId = requestAnimationFrame(step);
       }
-    }, 16);
-    return () => clearInterval(timer);
+    };
+    
+    animationFrameId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(animationFrameId);
   }, [inView, target, duration]);
 
   return { count, ref };
@@ -61,8 +68,6 @@ export default function Home() {
   const [trackId, setTrackId] = useState('');
   const { lang, themeMode } = useOutletContext<{ lang: 'en' | 'id', themeMode: string }>();
   const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
-  const heroCardsY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
   const { ripples: ripple1, addRipple: addRipple1 } = useRipple();
   const { ripples: ripple2, addRipple: addRipple2 } = useRipple();
   const randomHappyCouples = useMemo(() => Math.floor(Math.random() * 501) + 500, []);
@@ -71,10 +76,14 @@ export default function Home() {
   const counter2 = useAnimatedCounter(randomPremiumThemes);
 
   // Randomize hero orders on every page load
-  const randomHeroOrders = useMemo(() => {
+  const [heroOrders, setHeroOrders] = useState(() => {
     const shuffled = [...RECENT_ORDERS].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, 3);
-  }, []);
+  });
+
+  const cycleHeroOrders = () => {
+    setHeroOrders(prev => [prev[1], prev[2], prev[0]]);
+  };
 
   const [aboutImgIndex, setAboutImgIndex] = useState(() => Math.floor(Math.random() * ABOUT_IMAGES.length));
 
@@ -163,11 +172,11 @@ export default function Home() {
           <motion.div 
             initial={{ opacity: 0, scale: 0.9, y: 40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            style={{ y: heroCardsY }}
             transition={{ type: "spring", stiffness: 80, damping: 25, delay: 0.2 }}
+            onClick={cycleHeroOrders}
             className="w-[300px] h-[450px] sm:w-[360px] sm:h-[520px] lg:w-full lg:max-w-[420px] lg:h-[600px] relative group cursor-pointer"
           >
-            {randomHeroOrders.map((order, idx) => {
+            {heroOrders.map((order, idx) => {
               const idleTransforms = [
                 '-rotate-6 -translate-x-4 translate-y-2',
                 'rotate-0 translate-y-0',

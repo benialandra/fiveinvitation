@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 
 // Default layout configuration
 export const defaultJSONConfig = {
@@ -188,7 +189,7 @@ export default function MasterTheme({
       <div className="py-24 px-6 w-full" style={{ backgroundColor: colors?.background }}>
          <div className="max-w-4xl mx-auto">
              <h2 className="text-3xl md:text-4xl mb-8 text-center" style={titleStyle}>Buku Tamu</h2>
-             <form className="max-w-xl mx-auto p-8 rounded-2xl border" style={{ backgroundColor: colors?.background, borderColor: (colors?.text || '#000000') + '20', boxShadow: `0 10px 40px ${(colors?.text || '#000000')}10` }} onSubmit={(e) => { e.preventDefault(); alert("Terima kasih atas ucapan Anda!"); }}>
+             <form className="max-w-xl mx-auto p-8 rounded-2xl border" style={{ backgroundColor: colors?.background, borderColor: (colors?.text || '#000000') + '20', boxShadow: `0 10px 40px ${(colors?.text || '#000000')}10` }} onSubmit={(e) => { e.preventDefault(); toast.success("Terima kasih atas ucapan Anda!"); }}>
                 <div className="mb-4">
                    <label className="block text-sm mb-2 opacity-80" style={{ color: colors?.text }}>Nama Anda</label>
                    <input type="text" className="w-full px-4 py-3 rounded-xl border focus:outline-none" style={{ backgroundColor: 'transparent', borderColor: (colors?.text || '#000000') + '30', color: colors?.text }} placeholder="Masukkan nama..." required />

@@ -184,8 +184,17 @@ export default function Order() {
       let slugVal = formData.slug;
       if (!slugVal) {
          const baseSlug = `${formData.groom_name}-${formData.bride_name}`.toLowerCase().replace(/[^a-z0-9]+/g, '-') || 'invitation';
-         const randomSuffix = Math.random().toString(36).substring(2, 6);
-         slugVal = `${baseSlug}-${randomSuffix}`;
+         let dateSuffix = '';
+         if (formData.akad_date) {
+            const d = new Date(formData.akad_date);
+            const dd = String(d.getDate()).padStart(2, '0');
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const yy = String(d.getFullYear()).slice(-2);
+            dateSuffix = `-${dd}${mm}${yy}`;
+         } else {
+            dateSuffix = `-${Math.random().toString(36).substring(2, 6)}`;
+         }
+         slugVal = `${baseSlug}${dateSuffix}`;
       }
       
       const customizations = { font: customFont, color: customColor };
@@ -265,7 +274,7 @@ export default function Order() {
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 border-b border-black/5 dark:border-white/10 pb-4">
                  {lang === 'id' ? 'Ringkasan Pesanan' : 'Order Summary'}
               </h2>
-              <div className="aspect-[4/3] rounded-2xl bg-gray-100 dark:bg-black/50 overflow-hidden mb-6 relative group">
+              <div className="aspect-[4/3] rounded-2xl bg-gray-100 dark:bg-black/50 overflow-hidden mb-4 relative group">
                  <AnimatePresence mode="wait">
                    <motion.img 
                      key={currentImageIndex}
@@ -282,6 +291,13 @@ export default function Order() {
                     </div>
                  </div>
               </div>
+              <a 
+                href={`/preview/${theme.id}?font=${customFont}&color=${encodeURIComponent(customColor || '')}`} 
+                target="_blank" 
+                className="w-full mb-6 bg-black dark:bg-white text-white dark:text-black py-3 rounded-xl flex justify-center text-sm font-bold uppercase tracking-widest hover:opacity-90 transition-opacity"
+              >
+                Lihat Live Preview Kustomisasi
+              </a>
               <div className="space-y-4">
                  <div className="flex justify-between text-sm">
                     <span className="text-gray-500">Harga Dasar</span>

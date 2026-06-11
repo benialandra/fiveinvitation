@@ -121,7 +121,7 @@ export default function Themes() {
           <div className="w-full sm:w-auto relative">
             <select
               value={category}
-              onChange={(e) => setCategory(e.target.value as ThemeCategory | 'all')}
+              onChange={(e) => setCategory(e.target.value as ThemeCategory | 'All')}
               className="w-full sm:w-64 h-12 pl-4 pr-10 appearance-none rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/30 dark:text-white outline-none focus:border-[#C5A059] transition-colors cursor-pointer text-sm font-medium"
             >
               {categories.map(cat => (

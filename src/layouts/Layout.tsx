@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import { Moon, Sun, MessageCircle, X, Mail, ArrowUp, Menu } from 'lucide-react';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
+import CookieConsent from '../components/CookieConsent';
 
 export default function Layout() {
   const [themeMode, setThemeMode] = useState<'light'|'dark'>('dark');

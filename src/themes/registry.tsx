@@ -124,6 +124,7 @@ export interface ThemeMeta {
   category: ThemeCategory;
   price: number;
   thumbnail: string;
+  config_json?: any;
   component: React.ComponentType<{ guestName?: string, data?: any }>;
 }
 

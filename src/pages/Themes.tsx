@@ -117,26 +117,22 @@ export default function Themes() {
             />
           </div>
           
-          {/* Pill Category Filter */}
-          <div className="flex flex-wrap gap-2">
-            {categories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setCategory(cat)}
-                className="relative px-5 py-2 rounded-full text-sm font-medium transition-colors duration-200 outline-none border border-gray-200 dark:border-white/10 overflow-hidden"
-              >
-                {category === cat && (
-                  <motion.span
-                    layoutId="active-pill"
-                    className="absolute inset-0 bg-[#C5A059]"
-                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                  />
-                )}
-                <span className={`relative z-10 transition-colors duration-200 ${category === cat ? 'text-white' : 'text-gray-600 dark:text-gray-300'}`}>
+          {/* Dropdown Category Filter */}
+          <div className="w-full sm:w-auto relative">
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value as ThemeCategory | 'all')}
+              className="w-full sm:w-64 h-12 pl-4 pr-10 appearance-none rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/30 dark:text-white outline-none focus:border-[#C5A059] transition-colors cursor-pointer text-sm font-medium"
+            >
+              {categories.map(cat => (
+                <option key={cat} value={cat} className="text-gray-900">
                   {categoryLabels[cat]}
-                </span>
-              </button>
-            ))}
+                </option>
+              ))}
+            </select>
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500 dark:text-white/50">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
           </div>
         </motion.div>
 
@@ -174,16 +170,35 @@ export default function Themes() {
                   }}
                   className="group bg-white dark:bg-black/40 rounded-2xl border border-black/5 dark:border-white/5 overflow-hidden flex flex-col hover:shadow-xl dark:hover:shadow-[#C5A059]/10 transition-all duration-300"
                 >
-                  <div className="w-full aspect-[4/5] bg-gray-100 dark:bg-gray-900 overflow-hidden relative">
+                  <div className="w-full aspect-[4/5] bg-gray-100 dark:bg-gray-900 overflow-hidden relative group/image">
                     <img 
                       src={theme.thumbnail} 
                       alt={theme.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                      className="w-full h-full object-cover group-hover/image:scale-105 transition-transform duration-700" 
                     />
-                    <div className="absolute top-4 left-4">
+                    <div className="absolute inset-0 bg-black/0 group-hover/image:bg-black/20 transition-colors duration-300 pointer-events-none" />
+                    
+                    <div className="absolute top-4 left-4 z-10 pointer-events-none">
                       <span className="px-3 py-1 bg-white/90 dark:bg-black/80 backdrop-blur text-xs font-semibold uppercase tracking-wider rounded-full shadow-sm text-gray-900 dark:text-white border border-black/5 dark:border-white/10">
                         {theme.category}
                       </span>
+                    </div>
+
+                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-center gap-2 shrink-0 opacity-0 group-hover/image:opacity-100 translate-y-4 group-hover/image:translate-y-0 transition-all duration-300 z-20">
+                        <RippleLink 
+                          to={`/preview/${theme.id}`}
+                          target="_blank"
+                          rel="noopener"
+                          className="flex-1 h-10 flex items-center justify-center rounded-xl border border-white/20 bg-black/40 backdrop-blur-md text-white hover:bg-black/60 transition-colors text-xs font-bold uppercase tracking-wider"
+                        >
+                          Preview
+                        </RippleLink>
+                        <RippleLink 
+                          to={`/order/${theme.id}`}
+                          className="flex-1 h-10 flex items-center justify-center bg-[#C5A059] text-white rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-[#b08d4a] transition-colors shadow-lg shadow-black/20"
+                        >
+                          {lang === 'id' ? 'Pesan' : 'Order'}
+                        </RippleLink>
                     </div>
                   </div>
                   
@@ -196,25 +211,9 @@ export default function Themes() {
                     </div>
 
                     <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100 dark:border-white/5">
-                      <span className="font-bold text-[#C5A059] whitespace-nowrap text-[13px] sm:text-sm">
+                      <span className="font-bold text-[#C5A059] text-[15px]">
                         Rp {theme.price.toLocaleString('id-ID')}
                       </span>
-                      <div className="flex items-center gap-1.5 shrink-0">
-                        <RippleLink 
-                          to={`/preview/${theme.id}`}
-                          target="_blank"
-                          rel="noopener"
-                          className="px-2 sm:px-3 h-8 sm:h-9 flex items-center justify-center rounded-lg border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors text-[9px] sm:text-[10px] font-bold uppercase tracking-wider"
-                        >
-                          Preview
-                        </RippleLink>
-                        <RippleLink 
-                          to={`/order/${theme.id}`}
-                          className="px-3 sm:px-4 h-8 sm:h-9 flex items-center justify-center bg-gray-900 dark:bg-white text-white dark:text-black rounded-lg text-[9px] sm:text-[10px] font-bold uppercase tracking-wider hover:bg-[#C5A059] dark:hover:bg-gray-200 transition-colors whitespace-nowrap"
-                        >
-                          {lang === 'id' ? 'Pesan' : 'Order'}
-                        </RippleLink>
-                      </div>
                     </div>
                   </div>
                 </motion.div>

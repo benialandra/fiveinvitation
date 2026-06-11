@@ -65,8 +65,10 @@ export default function Home() {
   const heroCardsY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
   const { ripples: ripple1, addRipple: addRipple1 } = useRipple();
   const { ripples: ripple2, addRipple: addRipple2 } = useRipple();
-  const counter1 = useAnimatedCounter(500);
-  const counter2 = useAnimatedCounter(50);
+  const randomHappyCouples = useMemo(() => Math.floor(Math.random() * 501) + 500, []);
+  const randomPremiumThemes = useMemo(() => Math.floor(Math.random() * 80) + 115, []);
+  const counter1 = useAnimatedCounter(randomHappyCouples);
+  const counter2 = useAnimatedCounter(randomPremiumThemes);
 
   // Randomize hero orders on every page load
   const randomHeroOrders = useMemo(() => {
@@ -96,66 +98,65 @@ export default function Home() {
       {/* Hero Section */}
       <div ref={heroRef} className="min-h-[calc(100vh-80px)] grid grid-cols-1 lg:grid-cols-12 gap-0 relative">
         <div className="col-span-1 lg:col-span-6 flex flex-col justify-center px-6 lg:pl-24 xl:pl-32 lg:pr-8 py-12 lg:py-0 z-10">
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0 }}
-            className="mb-4 inline-flex items-center gap-2 text-[#C5A059]"
-          >
-            <span className="w-8 h-[1px] bg-[#C5A059]"></span>
-            <span className="text-xs uppercase tracking-[0.4em] font-medium">Premium Digital Invitation</span>
-          </motion.div>
-          
-          <motion.h1 
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.15 }}
-            className="font-serif text-5xl md:text-7xl leading-[1.1] mb-6 font-light text-gray-900 dark:text-white"
-          >
-            {lang === 'id' ? 'Abadikan Momen' : 'Capture Your'} <br/>
-            <span className="italic font-normal">{lang === 'id' ? 'Terindah Anda' : 'Precious Moments'}</span>
-          </motion.h1>
-          
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.3 }}
-            className="text-gray-600 dark:text-white/60 text-lg font-light leading-relaxed mb-8 max-w-lg"
-          >
-            {lang === 'id' 
-              ? 'Platform undangan digital premium. Buat undangan eksklusif dengan mudah, proses instan, dan siap dibagikan dalam hitungan menit.'
-              : 'Premium digital invitation platform. Create exclusive invitations easily, instant processing, and ready to share in minutes.'}
-          </motion.p>
-          
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.45 }}
-            className="flex flex-col sm:flex-row gap-4"
-          >
-            <button 
-              onClick={(e) => { addRipple1(e); navigate('/themes'); }}
-              className="relative overflow-hidden gold-gradient text-[#0A0A0B] px-8 py-4 text-sm font-semibold uppercase tracking-widest shadow-2xl shadow-[#C5A059]/20 hover:opacity-90 transition-opacity cursor-pointer"
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0 }}
+              className="mb-4 inline-flex items-center gap-2 text-[#C5A059]"
             >
-              {ripple1.map(r => (
-                <span key={r.id} className="absolute rounded-full bg-white/30 animate-[ripple_0.6s_ease-out_forwards]" style={{ left: r.x - 20, top: r.y - 20, width: 40, height: 40 }} />
-              ))}
-              {lang === 'id' ? 'Buat Undangan Sekarang' : 'Create Invitation Now'}
-            </button>
-            <button 
-              onClick={(e) => { addRipple2(e); navigate('/themes'); }}
-              className="relative overflow-hidden flex items-center justify-center gap-3 border border-gray-300 dark:border-white/20 px-8 py-4 text-sm font-light uppercase tracking-widest text-gray-900 dark:text-white hover:border-[#C5A059] hover:text-[#C5A059] hover:shadow-[0_0_20px_rgba(197,160,89,0.3)] transition-all duration-300 cursor-pointer group"
+              <span className="w-8 h-[1px] bg-[#C5A059]"></span>
+              <span className="text-xs uppercase tracking-[0.4em] font-medium">Premium Digital Invitation</span>
+            </motion.div>
+            
+            <motion.h1 
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.15 }}
+              className="font-serif text-5xl md:text-7xl leading-[1.1] mb-6 font-light text-gray-900 dark:text-white"
             >
-              {ripple2.map(r => (
-                <span key={r.id} className="absolute rounded-full bg-[#C5A059]/20 animate-[ripple_0.6s_ease-out_forwards]" style={{ left: r.x - 20, top: r.y - 20, width: 40, height: 40 }} />
-              ))}
-              {lang === 'id' ? 'Lihat Demo Tema' : 'View Theme Demos'}
-              <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </button>
-          </motion.div>
-        </div>
+              {lang === 'id' ? 'Abadikan Momen' : 'Capture Your'} <br/>
+              <span className="italic font-normal">{lang === 'id' ? 'Terindah Anda' : 'Precious Moments'}</span>
+            </motion.h1>
+            
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.3 }}
+              className="text-gray-600 dark:text-white/60 text-lg font-light leading-relaxed mb-8 max-w-lg"
+            >
+              {lang === 'id' 
+                ? 'Platform undangan digital premium. Buat undangan eksklusif dengan mudah, proses instan, dan siap dibagikan dalam hitungan menit.'
+                : 'Premium digital invitation platform. Create exclusive invitations easily, instant processing, and ready to share in minutes.'}
+            </motion.p>
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.45 }}
+              className="flex flex-col sm:flex-row gap-4"
+            >
+              <button 
+                onClick={(e) => { addRipple1(e); navigate('/themes'); }}
+                className="relative overflow-hidden gold-gradient text-[#0A0A0B] px-8 py-4 text-sm font-semibold uppercase tracking-widest shadow-2xl shadow-[#C5A059]/20 hover:opacity-90 transition-opacity cursor-pointer"
+              >
+                {ripple1.map(r => (
+                  <span key={r.id} className="absolute rounded-full bg-white/30 animate-[ripple_0.6s_ease-out_forwards]" style={{ left: r.x - 20, top: r.y - 20, width: 40, height: 40 }} />
+                ))}
+                {lang === 'id' ? 'Buat Undangan Sekarang' : 'Create Invitation Now'}
+              </button>
+              <button 
+                onClick={(e) => { addRipple2(e); navigate('/themes'); }}
+                className="relative overflow-hidden flex items-center justify-center gap-3 border border-gray-300 dark:border-white/20 px-8 py-4 text-sm font-light uppercase tracking-widest text-gray-900 dark:text-white hover:border-[#C5A059] hover:text-[#C5A059] hover:shadow-[0_0_20px_rgba(197,160,89,0.3)] transition-all duration-300 cursor-pointer group"
+              >
+                {ripple2.map(r => (
+                  <span key={r.id} className="absolute rounded-full bg-[#C5A059]/20 animate-[ripple_0.6s_ease-out_forwards]" style={{ left: r.x - 20, top: r.y - 20, width: 40, height: 40 }} />
+                ))}
+                {lang === 'id' ? 'Lihat Demo Tema' : 'View Theme Demos'}
+                <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </button>
+            </motion.div>
+          </div>
 
-        {/* Background Visual Overlay */}
         <div className="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-[#C5A059]/10 to-transparent pointer-events-none hidden lg:block"></div>
         
         <div className="col-span-1 lg:col-span-6 relative flex items-center justify-center p-6 pb-24 lg:pb-6 lg:pr-24 xl:pr-32 lg:pl-8 mt-8 lg:mt-0">
@@ -216,8 +217,29 @@ export default function Home() {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 relative">
-               {/* Arrow connecting steps on desktop */}
-               <div className="hidden md:block absolute top-[60px] left-[20%] right-[20%] h-[2px] bg-gradient-to-r from-transparent via-[#C5A059]/30 to-transparent"></div>
+               {/* SVG animated arrow connecting steps on desktop */}
+               <div className="hidden md:block absolute top-[60px] left-[15%] right-[15%] h-[2px] pointer-events-none z-0">
+                 <svg className="w-full h-[50px] overflow-visible" viewBox="0 0 100 20" preserveAspectRatio="none">
+                   <motion.path
+                     d="M0,0 Q50,20 100,0"
+                     fill="none"
+                     stroke="url(#gradient-line)"
+                     strokeWidth="1"
+                     strokeDasharray="1 1"
+                     initial={{ pathLength: 0, opacity: 0 }}
+                     whileInView={{ pathLength: 1, opacity: 1 }}
+                     viewport={{ once: true, margin: "-100px" }}
+                     transition={{ duration: 1.5, ease: "easeInOut" }}
+                   />
+                   <defs>
+                     <linearGradient id="gradient-line" x1="0%" y1="0%" x2="100%" y2="0%">
+                       <stop offset="0%" stopColor="#C5A059" stopOpacity="0" />
+                       <stop offset="50%" stopColor="#C5A059" stopOpacity="0.4" />
+                       <stop offset="100%" stopColor="#C5A059" stopOpacity="0" />
+                     </linearGradient>
+                   </defs>
+                 </svg>
+               </div>
 
                {[
                   { icon: Search, label: lang === 'id' ? '1. Pilih Tema' : '1. Choose a Theme', desc: lang === 'id' ? 'Temukan desain yang merepresentasikan kisah cinta Anda dari koleksi eksklusif kami.' : 'Find the design that best represents your love story from our exclusive collection.' },
@@ -281,9 +303,23 @@ export default function Home() {
                   </div>
                </div>
             </div>
-            <div className="relative group cursor-pointer" onClick={handleChangeAboutImage}>
+            <div className="relative group cursor-pointer" onClick={handleChangeAboutImage} style={{ perspective: '1200px' }}>
                <div className="absolute inset-0 bg-[#C5A059]/10 transform translate-x-4 translate-y-4 rounded-[32px] -z-10 transition-transform duration-300 group-hover:translate-x-6 group-hover:translate-y-6"></div>
-               <img src={ABOUT_IMAGES[aboutImgIndex]} alt="Wedding Couple" className="rounded-[32px] w-full h-[500px] object-cover shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]" />
+               
+               <div className="w-full h-[500px] relative rounded-[32px] shadow-2xl overflow-visible group-hover:scale-[1.02] transition-transform duration-500">
+                 <AnimatePresence mode="wait">
+                   <motion.img 
+                     key={aboutImgIndex}
+                     src={ABOUT_IMAGES[aboutImgIndex]} 
+                     alt="Wedding Couple" 
+                     initial={{ rotateY: 90, opacity: 0, transformOrigin: 'left' }}
+                     animate={{ rotateY: 0, opacity: 1, transformOrigin: 'left' }}
+                     exit={{ rotateY: -90, opacity: 0, transformOrigin: 'right' }}
+                     transition={{ duration: 0.6, type: 'spring', stiffness: 80, damping: 20 }}
+                     className="absolute inset-0 w-full h-full object-cover rounded-[32px]" 
+                   />
+                 </AnimatePresence>
+               </div>
                
                {/* Overlay Hint */}
                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20 rounded-[32px] pointer-events-none">

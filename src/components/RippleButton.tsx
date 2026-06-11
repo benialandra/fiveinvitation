@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent } from 'react';
+import React, { useState, useEffect, MouseEvent } from 'react';
 
 interface RippleButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
@@ -46,7 +46,7 @@ export default function RippleButton({ children, className = '', onClick, ...pro
           }}
         />
       ) : null}
-      <span className="relative z-10">{children}</span>
+      <span className="relative z-10 flex items-center justify-center w-full h-full gap-2">{children}</span>
     </button>
   );
 }

@@ -95,7 +95,7 @@ export default function Track() {
                 }
               }}
             />
-            <RippleButton 
+            <button 
               className="absolute right-2 top-2 bottom-2 w-10 bg-[#C5A059] text-white rounded-xl flex items-center justify-center hover:bg-[#b08d4a] transition-colors"
               onClick={(e) => {
                  const val = (e.currentTarget.previousElementSibling as HTMLInputElement).value.trim();
@@ -103,7 +103,7 @@ export default function Track() {
               }}
             >
                <ArrowRight size={18} />
-            </RippleButton>
+            </button>
           </div>
         </div>
       </div>

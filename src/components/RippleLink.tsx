@@ -47,7 +47,7 @@ export default function RippleLink({ children, className = '', onClick, ...props
           }}
         />
       ) : null}
-      <span className="relative z-10">{children}</span>
+      <span className="relative z-10 flex items-center justify-center w-full h-full gap-2">{children}</span>
     </Link>
   );
 }

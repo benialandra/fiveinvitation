@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
 import { THEME_REGISTRY } from '../themes/registry';
 import { generateOrderCode } from '../lib/utils';
-import { ChevronRight, ArrowLeft, Loader2 } from 'lucide-react';
+import { ChevronRight, ChevronLeft, ArrowLeft, Loader2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -78,6 +78,25 @@ export default function Order() {
   });
 
   if (!theme) return <div className="p-12 text-center text-gray-500">{lang === 'id' ? 'Tema tidak ditemukan.' : 'Theme not found.'}</div>;
+
+  const carouselImages = (() => {
+    let imgs: string[] = [];
+    if (theme.config_json?.gallery && Array.isArray(theme.config_json.gallery) && theme.config_json.gallery.length > 0) {
+       imgs = [...theme.config_json.gallery];
+    }
+    const mainImg = (theme as any).image || theme.thumbnail;
+    if (mainImg && !imgs.includes(mainImg)) {
+       imgs.unshift(mainImg); // Pastikan thumbnail utama selalu di urutan pertama
+    }
+    if (imgs.length === 0) {
+       imgs.push("https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=800");
+    }
+    return imgs;
+  })();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const prevImage = () => setCurrentImageIndex(prev => prev === 0 ? carouselImages.length - 1 : prev - 1);
+  const nextImage = () => setCurrentImageIndex(prev => prev === carouselImages.length - 1 ? 0 : prev + 1);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -187,9 +206,37 @@ export default function Order() {
                  {lang === 'id' ? 'Ringkasan Pesanan' : 'Order Summary'}
               </h2>
               <div className="aspect-[4/3] rounded-2xl bg-gray-100 dark:bg-black/50 overflow-hidden mb-6 relative group">
-                 {/* Asumsi theme.image ada, atau gunakan placeholder */}
-                 <img src={(theme as any).image || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=800"} alt={theme.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-5">
+                 <AnimatePresence mode="wait">
+                   <motion.img 
+                     key={currentImageIndex}
+                     src={carouselImages[currentImageIndex]} 
+                     alt={theme.name} 
+                     initial={{ opacity: 0 }}
+                     animate={{ opacity: 1 }}
+                     exit={{ opacity: 0 }}
+                     transition={{ duration: 0.3 }}
+                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                   />
+                 </AnimatePresence>
+                 
+                 {carouselImages.length > 1 && (
+                   <>
+                     <button type="button" onClick={prevImage} className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm z-20 cursor-pointer">
+                       <ChevronLeft size={18} />
+                     </button>
+                     <button type="button" onClick={nextImage} className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/30 hover:bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm z-20 cursor-pointer">
+                       <ChevronRight size={18} />
+                     </button>
+
+                     <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-1.5 z-20">
+                       {carouselImages.map((_, idx) => (
+                         <div key={idx} className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentImageIndex ? 'w-4 bg-white' : 'w-1.5 bg-white/40'}`} />
+                       ))}
+                     </div>
+                   </>
+                 )}
+
+                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-5 pointer-events-none z-10">
                     <div>
                        <span className="text-xs uppercase tracking-widest text-[#C5A059] mb-1 font-semibold block">{lang === 'id' ? 'Pilihan Anda' : 'Your Choice'}</span>
                        <span className="text-white font-serif text-2xl">{theme.name}</span>

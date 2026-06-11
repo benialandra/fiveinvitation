@@ -4,8 +4,8 @@ import { Moon, Sun, MessageCircle, X, Mail, ArrowUp } from 'lucide-react';
 import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
 
 export default function Layout() {
-  const [themeMode, setThemeMode] = useState<'light'|'dark'>('light');
-  const [lang, setLang] = useState<'id'|'en'>('id');
+  const [themeMode, setThemeMode] = useState<'light'|'dark'>('dark');
+  const [lang, setLang] = useState<'id'|'en'>('en');
   const [csOpen, setCsOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
@@ -43,8 +43,8 @@ export default function Layout() {
     if (saved) {
       setThemeMode(saved);
     } else {
-      const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setThemeMode(isSystemDark ? 'dark' : 'light');
+      setThemeMode('dark');
+      localStorage.setItem('app-theme', 'dark');
     }
 
     // Listen to system theme changes
@@ -165,7 +165,19 @@ export default function Layout() {
                          >
                            <div className="flex flex-col items-center">
                              <span className="w-7 h-7 rounded-full bg-[#C5A059]/10 border border-[#C5A059]/40 flex items-center justify-center text-xs text-[#C5A059] font-bold shrink-0">{step}</span>
-                             {i < arr.length - 1 && <div className="w-[1px] h-8 bg-[#C5A059]/20 my-1" />}
+                             {i < arr.length - 1 && (
+                               <svg className="w-1 h-8 my-1 overflow-visible">
+                                 <motion.line
+                                   x1="2" y1="0" x2="2" y2="32"
+                                   stroke="#C5A059"
+                                   strokeWidth="1"
+                                   strokeDasharray="2 2"
+                                   initial={{ pathLength: 0, opacity: 0 }}
+                                   animate={{ pathLength: 1, opacity: 0.5 }}
+                                   transition={{ duration: 1, delay: i * 0.2 + 0.3 }}
+                                 />
+                               </svg>
+                             )}
                            </div>
                            <div className="pb-6">
                              <p className="text-sm font-semibold text-gray-900 dark:text-white">{title}</p>

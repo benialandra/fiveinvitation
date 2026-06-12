@@ -38,7 +38,11 @@ export default function EditOrder() {
     gallery_1: '',
     gallery_2: '',
     gallery_3: '',
-    gallery_4: ''
+    gallery_4: '',
+    bank_name: '',
+    bank_account: '',
+    bank_owner: '',
+    live_stream_url: ''
   });
 
   const [files, setFiles] = useState<{ [key: string]: File | null }>({
@@ -79,7 +83,11 @@ export default function EditOrder() {
             gallery_1: cust.gallery_1 || '',
             gallery_2: cust.gallery_2 || '',
             gallery_3: cust.gallery_3 || '',
-            gallery_4: cust.gallery_4 || ''
+            gallery_4: cust.gallery_4 || '',
+            bank_name: cust.bank_name || '',
+            bank_account: cust.bank_account || '',
+            bank_owner: cust.bank_owner || '',
+            live_stream_url: cust.live_stream_url || ''
           });
         } else {
           toast.error('Pesanan tidak ditemukan.');
@@ -158,7 +166,11 @@ export default function EditOrder() {
         gallery_1: uploadedUrls.gallery_1 || formData.gallery_1,
         gallery_2: uploadedUrls.gallery_2 || formData.gallery_2,
         gallery_3: uploadedUrls.gallery_3 || formData.gallery_3,
-        gallery_4: uploadedUrls.gallery_4 || formData.gallery_4
+        gallery_4: uploadedUrls.gallery_4 || formData.gallery_4,
+        bank_name: formData.bank_name,
+        bank_account: formData.bank_account,
+        bank_owner: formData.bank_owner,
+        live_stream_url: formData.live_stream_url
       };
 
       dataToSubmit.append('customizations', JSON.stringify(finalCustomizations));
@@ -257,7 +269,7 @@ export default function EditOrder() {
     { id: 'info', label: lang === 'id' ? 'Profil Pengantin' : 'Couple Profile', icon: Heart },
     { id: 'events', label: lang === 'id' ? 'Jadwal & Lokasi' : 'Events & Location', icon: MapPin },
     { id: 'media', label: lang === 'id' ? 'Galeri & Media' : 'Gallery & Media', icon: ImageIcon },
-    { id: 'extra', label: lang === 'id' ? 'Cerita & Musik' : 'Story & Music', icon: Sparkles }
+    { id: 'extra', label: lang === 'id' ? 'Cerita, Musik & Hadiah' : 'Story, Music & Gift', icon: Sparkles }
   ];
 
   const SelectedTheme = THEME_REGISTRY.find((t) => t.id === themeId);
@@ -373,6 +385,10 @@ export default function EditOrder() {
                       </button>
                     </div>
                   </div>
+                  <div className="md:col-span-2">
+                    <label className={labelClass}>{lang === 'id' ? 'Link Live Streaming (Opsional)' : 'Live Streaming Link (Optional)'}</label>
+                    <input type="url" name="live_stream_url" value={formData.live_stream_url} onChange={handleChange} className={inputClass} placeholder="https://youtube.com/live/..." />
+                  </div>
                 </div>
               </div>
             )}
@@ -423,6 +439,26 @@ export default function EditOrder() {
                       <option value="romantic_3.mp3">Canon in D - Piano</option>
                       <option value="romantic_4.mp3">Beautiful in White - Piano</option>
                     </select>
+                  </div>
+                </div>
+                
+                <div className="pt-4 border-t border-gray-100 dark:border-white/5 mt-6">
+                  <h3 className="text-base font-serif text-gray-900 dark:text-white mb-2">{lang === 'id' ? 'Amplop Digital (Angpao / Rekening)' : 'Digital Envelope'}</h3>
+                  <p className="text-xs text-gray-400 dark:text-white/40 mb-5">{lang === 'id' ? 'Kosongkan jika Anda tidak ingin mengaktifkan fitur amplop digital pada undangan Anda.' : 'Leave blank if you do not want to use digital envelopes.'}</p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className={labelClass}>{lang === 'id' ? 'Nama Bank / E-Wallet' : 'Bank / E-Wallet Name'}</label>
+                      <input type="text" name="bank_name" value={formData.bank_name} onChange={handleChange} className={inputClass} placeholder="BCA / Mandiri / GoPay" />
+                    </div>
+                    <div>
+                      <label className={labelClass}>{lang === 'id' ? 'Nomor Rekening / No. HP' : 'Account Number'}</label>
+                      <input type="text" name="bank_account" value={formData.bank_account} onChange={handleChange} className={inputClass} placeholder="1234567890" />
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className={labelClass}>{lang === 'id' ? 'Nama Pemilik Rekening' : 'Account Holder Name'}</label>
+                      <input type="text" name="bank_owner" value={formData.bank_owner} onChange={handleChange} className={inputClass} placeholder="John Doe" />
+                    </div>
                   </div>
                 </div>
               </div>

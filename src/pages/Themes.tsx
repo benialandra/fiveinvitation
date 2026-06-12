@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { THEME_REGISTRY, ThemeCategory } from '../themes/registry';
 import { useOutletContext, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Eye, ShoppingCart } from 'lucide-react';
+import { Search, Eye, ShoppingCart, ArrowUpDown } from 'lucide-react';
 import RippleLink from '../components/RippleLink';
 
 function ThemeSkeleton() {
@@ -24,7 +24,9 @@ function ThemeSkeleton() {
 export default function Themes() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<ThemeCategory | 'All'>('All');
-  const [visibleCount, setVisibleCount] = useState(12);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
   const { lang, themeMode } = useOutletContext<{ lang: 'en' | 'id', themeMode: string }>();
 
   const [dbThemes, setDbThemes] = useState<any[]>([]);
@@ -51,30 +53,41 @@ export default function Themes() {
     }
   }, []);
 
-  const filteredThemes = useMemo(() => {
-    const baseThemes = (() => {
-      const map = new Map();
-      [...THEME_REGISTRY, ...uploadedThemes].forEach(t => map.set(t.id, t));
-      dbThemes.forEach(dbT => {
-        const existing = map.get(dbT.id) || {};
-        map.set(dbT.id, { 
-           ...existing, 
-           ...dbT, 
-           thumbnail: dbT.thumbnail || existing.thumbnail 
-        });
+  const baseThemes = useMemo(() => {
+    const map = new Map();
+    [...THEME_REGISTRY, ...uploadedThemes].forEach(t => map.set(t.id, t));
+    dbThemes.forEach(dbT => {
+      const existing = map.get(dbT.id) || {};
+      map.set(dbT.id, { 
+         ...existing, 
+         ...dbT, 
+         thumbnail: dbT.thumbnail || existing.thumbnail 
       });
-      return Array.from(map.values());
-    })();
-    return baseThemes.filter(theme => {
+    });
+    return Array.from(map.values());
+  }, [uploadedThemes, dbThemes]);
+
+  const filteredThemes = useMemo(() => {
+    let result = baseThemes.filter(theme => {
       const matchSearch = theme.name.toLowerCase().includes(search.toLowerCase());
       const matchCategory = category === 'All' || theme.category === category;
       return matchSearch && matchCategory;
     });
-  }, [search, category, uploadedThemes, dbThemes]);
+    
+    result.sort((a, b) => {
+      if (sortOrder === 'asc') return a.name.localeCompare(b.name);
+      return b.name.localeCompare(a.name);
+    });
+    
+    return result;
+  }, [baseThemes, search, category, sortOrder]);
 
-  const loadMore = () => {
-    setVisibleCount(prev => prev + 4);
-  };
+  const totalPages = Math.ceil(filteredThemes.length / itemsPerPage);
+  const paginatedThemes = filteredThemes.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [search, category, sortOrder]);
 
   const categories: (ThemeCategory | 'All')[] = ['All', 'Elegant', 'Dark', 'Minimalist', 'Islamic', 'Floral'];
   const categoryLabels: Record<string, string> = {
@@ -117,22 +130,35 @@ export default function Themes() {
             />
           </div>
           
-          {/* Dropdown Category Filter */}
-          <div className="w-full sm:w-64 relative">
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value as ThemeCategory | 'All')}
-              className="w-full h-12 pl-4 pr-10 appearance-none rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/30 dark:text-white outline-none focus:border-[#C5A059] transition-colors cursor-pointer text-sm font-medium"
-            >
-              {categories.map(cat => (
-                <option key={cat} value={cat} className="text-gray-900">
-                  {categoryLabels[cat]}
-                </option>
-              ))}
-            </select>
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500 dark:text-white/50">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          {/* Dropdown Category Filter & Sort */}
+          <div className="flex gap-4 w-full sm:w-auto">
+            <div className="w-full sm:w-48 relative">
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value as ThemeCategory | 'All')}
+                className="w-full h-12 pl-4 pr-10 appearance-none rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/30 dark:text-white outline-none focus:border-[#C5A059] transition-colors cursor-pointer text-sm font-medium"
+              >
+                {categories.map(cat => (
+                  <option key={cat} value={cat} className="text-gray-900">
+                    {categoryLabels[cat]}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500 dark:text-white/50">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
             </div>
+            
+            <button
+              onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
+              className="h-12 px-4 flex items-center justify-center gap-2 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/30 dark:text-white hover:border-[#C5A059] transition-colors"
+              title={lang === 'id' ? 'Urutkan Nama' : 'Sort Name'}
+            >
+              <ArrowUpDown size={18} className="text-gray-500 dark:text-gray-400" />
+              <span className="text-sm font-medium hidden sm:block">
+                {sortOrder === 'asc' ? 'A-Z' : 'Z-A'}
+              </span>
+            </button>
           </div>
         </motion.div>
 
@@ -151,7 +177,7 @@ export default function Themes() {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
           >
             <AnimatePresence>
-              {filteredThemes.slice(0, visibleCount).map((theme) => (
+              {paginatedThemes.map((theme) => (
                 <motion.div 
                   key={theme.id}
                   initial="hidden"
@@ -181,7 +207,7 @@ export default function Themes() {
                     </Link>
                     
                     <div className="absolute top-4 left-4 z-10 pointer-events-none">
-                      <span className="px-3 py-1 bg-white/90 dark:bg-black/80 backdrop-blur text-xs font-semibold uppercase tracking-wider rounded-full shadow-sm text-gray-900 dark:text-white border border-black/5 dark:border-white/10">
+                      <span className="px-3 py-1 bg-white/95 dark:bg-black/90 text-xs font-semibold uppercase tracking-wider rounded-full shadow-sm text-gray-900 dark:text-white border border-black/5 dark:border-white/10">
                         {theme.category}
                       </span>
                     </div>
@@ -191,7 +217,7 @@ export default function Themes() {
                           to={`/preview/${theme.id}`}
                           target="_blank"
                           rel="noopener"
-                          className="flex-1 h-10 flex items-center justify-center rounded-xl border border-white/20 bg-black/40 backdrop-blur-md text-white hover:bg-black/60 transition-colors text-xs font-bold uppercase tracking-wider"
+                          className="flex-1 h-10 flex items-center justify-center rounded-xl border border-white/20 bg-black/60 text-white hover:bg-black/80 transition-colors text-xs font-bold uppercase tracking-wider"
                         >
                           Preview
                         </RippleLink>
@@ -235,16 +261,33 @@ export default function Themes() {
           </motion.div>
         )}
 
-        {!loading && visibleCount < filteredThemes.length && (
-          <div className="mt-12 flex justify-center">
-            <motion.button 
-              onClick={loadMore}
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.96 }}
-              className="px-8 py-3 rounded-full border border-gray-300 dark:border-white/10 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+        {!loading && totalPages > 1 && (
+          <div className="mt-12 flex justify-center items-center gap-4">
+            <button 
+              onClick={() => {
+                setCurrentPage(p => Math.max(1, p - 1));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              disabled={currentPage === 1}
+              className="px-6 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-white/5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              {lang === 'id' ? 'Muat Lebih Banyak' : 'Load More'}
-            </motion.button>
+              {lang === 'id' ? 'Seb.' : 'Prev'}
+            </button>
+            
+            <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
+              {lang === 'id' ? 'Halaman' : 'Page'} {currentPage} {lang === 'id' ? 'dari' : 'of'} {totalPages}
+            </span>
+
+            <button 
+              onClick={() => {
+                setCurrentPage(p => Math.min(totalPages, p + 1));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              disabled={currentPage === totalPages}
+              className="px-6 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-white/5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              {lang === 'id' ? 'Lanjut' : 'Next'}
+            </button>
           </div>
         )}
       </div>

@@ -404,11 +404,15 @@ app.put("/api/orders/:orderCode", upload.fields([{ name: 'cover_image' }, { name
       customizations
     } = req.body;
 
+    console.log("PUT order body raw customizations:", customizations);
+
     let updateData: any = {
       groom_name, bride_name, groom_parents, bride_parents, 
       location_name, maps_link, story, music_url, slug, cover_image, hero_image,
       customizations: customizations ? (typeof customizations === 'string' ? JSON.parse(customizations) : customizations) : null
     };
+
+    console.log("PUT order updateData:", updateData);
 
     updateData.akad_date = akad_date || null;
     updateData.resepsi_date = resepsi_date || null;

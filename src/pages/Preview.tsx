@@ -77,7 +77,7 @@ export default function Preview() {
   };
 
   let content = null;
-  if (theme.config_json) {
+  if (theme.config_json && themeId !== 'winter-romance') {
      content = <MasterTheme {...sampleProps} config_json={theme.config_json} hero_image={theme.thumbnail} />;
   } else {
      const ThemeComponent = theme.component;

@@ -61,7 +61,7 @@ const SampleMotif69 = React.lazy(() => import('./SampleMotif69'));
 const SampleMotif70 = React.lazy(() => import('./SampleMotif70'));
 const CleanVanilla = React.lazy(() => import('./CleanVanilla'));
 const FloralBliss = React.lazy(() => import('./FloralBliss'));
-const SampleMotif7 = React.lazy(() => import('./SampleMotif7'));
+const WinterRomance = React.lazy(() => import('./WinterRomance'));
 const SampleMotif8 = React.lazy(() => import('./SampleMotif8'));
 const SampleMotif9 = React.lazy(() => import('./SampleMotif9'));
 const SampleMotif10 = React.lazy(() => import('./SampleMotif10'));
@@ -501,12 +501,12 @@ export const THEME_REGISTRY: ThemeMeta[] = [
     thumbnail: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=80&w=300&auto=format&fit=crop',
     component: SampleMotif8
   },{
-    id: 'mockup-theme-7',
-    name: 'Sample Motif 7',
-    category: 'Islamic',
-    price: 120000,
+    id: 'winter-romance',
+    name: 'Winter Romance',
+    category: 'Premium',
+    price: 150000,
     thumbnail: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=300&auto=format&fit=crop',
-    component: SampleMotif7
+    component: WinterRomance
   },{
     id: 'floral-bliss',
     name: 'Floral Bliss',

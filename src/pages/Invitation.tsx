@@ -61,7 +61,7 @@ export default function Invitation() {
 
   let content = null;
   
-  if (themeData && themeData.config_json) {
+  if (themeData && themeData.config_json && order.theme_id !== 'winter-romance') {
      content = <MasterTheme 
                  bride={order.bride_name} 
                  groom={order.groom_name} 

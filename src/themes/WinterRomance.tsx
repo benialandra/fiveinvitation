@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import {
-  Heart, Calendar, MapPin, Clock, Music, Music2,
+import { 
+  Heart, Calendar, MapPin, Clock, Music, Music2, 
   ChevronDown, Camera, Gift, CreditCard, Send, Volume2, VolumeX,
   Snowflake, ExternalLink, QrCode, Check, Flower2
 } from 'lucide-react';
@@ -27,7 +27,7 @@ const Snowfall = () => {
     canvas.height = height;
 
     const snowflakes: any[] = [];
-    const numFlakes = 100;
+    const numFlakes = 40;
 
     for (let i = 0; i < numFlakes; i++) {
       snowflakes.push({
@@ -45,7 +45,8 @@ const Snowfall = () => {
 
     const drawFlakes = () => {
       ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+      const isDark = document.documentElement.classList.contains('dark');
+      ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.2)';
       ctx.beginPath();
       for (let i = 0; i < numFlakes; i++) {
         const flake = snowflakes[i];
@@ -112,7 +113,7 @@ const FadeIn = ({ children, delay = 0, className = "" }: { children: React.React
 );
 
 const FloatingFlowers = () => {
-  const petals = Array.from({ length: 15 });
+  const petals = Array.from({ length: 6 });
   return (
     <div className="fixed inset-0 pointer-events-none z-[90] overflow-hidden">
       {petals.map((_, i) => {
@@ -124,6 +125,7 @@ const FloatingFlowers = () => {
             key={i}
             className="absolute -top-10 text-white/40 drop-shadow-sm"
             initial={{ y: -50, x: `${left}vw`, rotate: 0, opacity: 0 }}
+            style={{ willChange: "transform" }}
             animate={{
               y: '120vh',
               x: [`${left}vw`, `${left + 5}vw`, `${left - 5}vw`, `${left}vw`],
@@ -145,19 +147,53 @@ const FloatingFlowers = () => {
   );
 };
 
-export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProps) {
+export default function WinterRomance({ data, guestName, lang = 'id' }: ThemeProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const { scrollYProgress } = useScroll();
-
+  
   const yHero = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
   const opacityHero = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
+  // Dynamic Data Mapping
   const groomName = data?.groom_name || "William";
   const brideName = data?.bride_name || "Eleanor";
+  const groomParents = data?.groom_parents || "Mr. Robert Smith & Mrs. Mary Smith";
+  const brideParents = data?.bride_parents || "Mr. John Doe & Mrs. Jane Doe";
+  
   const dateStr = data?.akad_date || "2026-12-25T09:00:00";
+  const resepsiDateStr = data?.resepsi_date || "2026-12-25T19:00:00";
+  
   const weddingDate = new Date(dateStr);
+  const resepsiDate = new Date(resepsiDateStr);
+
+  const locationName = data?.location_name || "Grand Chapel, The Winter Hotel";
+  const mapsLink = data?.maps_link || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126920.24036662483!2d106.75871783510565!3d-6.22974653556554!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3e945e34b9d%3A0x5371bf0fdad786a2!2sJakarta%2C%20Daerah%20Khusus%20Ibukota%20Jakarta!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid";
+
+  const story = data?.story || "We met at a winter festival. It was cold outside, but warm in our hearts.";
+
+  const bankName = data?.bank_name || "BCA Bank";
+  const bankAccount = data?.bank_account || "1234 5678 9012";
+  const bankAccountName = data?.bank_account_name || `A.n. ${groomName}`;
+  const qrisImage = data?.qris_image || "https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg";
+
+  // Gallery
+  const defaultGallery = [
+    "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=600&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?q=80&w=600&auto=format&fit=crop"
+  ];
+  
+  const gallery = [
+    data?.gallery_1, data?.gallery_2, data?.gallery_3, 
+    data?.gallery_4, data?.gallery_5, data?.gallery_6
+  ].filter(Boolean);
+
+  const finalGallery = gallery.length > 0 ? gallery : defaultGallery;
 
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
@@ -217,10 +253,10 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
   const heroImage = data?.hero_image || "https://images.unsplash.com/photo-1543615468-197e41b9d4ec?q=80&w=1500&auto=format&fit=crop";
 
   return (
-    <div className="bg-[#f0f4f8] min-h-screen text-slate-800 font-sans selection:bg-blue-200 selection:text-slate-900 overflow-x-hidden">
+    <div className="bg-[#f0f4f8] min-h-screen text-slate-800 dark:text-white font-sans selection:bg-blue-200 selection:text-slate-900 overflow-x-hidden">
       <Snowfall />
       <FloatingFlowers />
-
+      
       {/* Audio Element */}
       <audio ref={audioRef} loop>
         <source src="https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3" type="audio/mpeg" />
@@ -234,7 +270,7 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0 }}
             onClick={toggleAudio}
-            className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-white/20 backdrop-blur-md border border-white/50 text-slate-700 shadow-xl hover:bg-white/40 transition-all duration-300"
+            className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-white dark:bg-slate-800/20 backdrop-blur-md border border-white/50 text-slate-700 dark:text-slate-200 shadow-xl hover:bg-white dark:bg-slate-800/40 transition-all duration-300"
           >
             {isPlaying ? <Volume2 size={24} /> : <VolumeX size={24} />}
           </motion.button>
@@ -273,7 +309,7 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.6, duration: 1 }}
-                  className="mt-8 mb-12 p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 w-full max-w-sm"
+                  className="mt-8 mb-12 p-6 rounded-2xl bg-white dark:bg-slate-800/10 backdrop-blur-md border border-white/20 w-full max-w-sm"
                 >
                   <p className="text-sm text-slate-300 mb-2">Dear Mr/Mrs/Ms,</p>
                   <p className="text-2xl font-serif text-white">{guestName}</p>
@@ -285,9 +321,9 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1, duration: 1 }}
                 onClick={handleOpen}
-                className="group flex items-center gap-3 px-8 py-4 bg-white text-slate-900 rounded-full font-medium tracking-wider hover:bg-blue-50 transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.3)]"
+                className="group flex items-center gap-3 px-8 py-4 bg-white dark:bg-slate-800 text-slate-900 rounded-full font-medium tracking-wider hover:bg-blue-50 transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.3)]"
               >
-                <Heart size={18} className="text-slate-400 group-hover:text-red-400 transition-colors duration-300" />
+                <Heart size={18} className="text-slate-400 dark:text-slate-400 group-hover:text-red-400 transition-colors duration-300" />
                 <span>Open Invitation</span>
               </motion.button>
             </div>
@@ -298,7 +334,7 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
       {/* Main Content (Visible after Opening) */}
       {isOpen && (
         <main className="relative z-10 bg-[#f8fafd]">
-
+          
           {/* Hero Parallax Section */}
           <section className="relative h-screen flex items-center justify-center overflow-hidden">
             <motion.div style={{ y: yHero, opacity: opacityHero }} className="absolute inset-0 z-0">
@@ -308,17 +344,17 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
 
             <div className="relative z-10 text-center px-4 mt-32">
               <FadeIn>
-                <p className="tracking-[0.4em] text-slate-500 uppercase text-xs md:text-sm mb-4 font-semibold">We Are Getting Married</p>
-                <h2 className="text-6xl md:text-8xl font-serif text-slate-800 mb-6 drop-shadow-sm" style={{ fontFamily: '"Playfair Display", serif' }}>
+                <p className="tracking-[0.4em] text-slate-500 dark:text-slate-400 dark:text-slate-400 uppercase text-xs md:text-sm mb-4 font-semibold">We Are Getting Married</p>
+                <h2 className="text-6xl md:text-8xl font-serif text-slate-800 dark:text-white mb-6 drop-shadow-sm" style={{ fontFamily: '"Playfair Display", serif' }}>
                   {brideName} <br className="md:hidden" /><span className="text-blue-300 mx-4 italic font-light">&amp;</span><br className="md:hidden" /> {groomName}
                 </h2>
-                <p className="text-lg text-slate-600 font-serif italic mb-12">{weddingDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                <p className="text-lg text-slate-600 dark:text-slate-300 font-serif italic mb-12">{weddingDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
               </FadeIn>
-
-              <motion.div
-                animate={{ y: [0, 10, 0] }}
+              
+              <motion.div 
+                animate={{ y: [0, 10, 0] }} 
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute bottom-12 left-1/2 -translate-x-1/2 text-slate-400"
+                className="absolute bottom-12 left-1/2 -translate-x-1/2 text-slate-400 dark:text-slate-400"
               >
                 <ChevronDown size={32} />
               </motion.div>
@@ -332,29 +368,29 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
                 <div className="flex justify-center mb-6 text-blue-300">
                   <Snowflake size={32} className="animate-spin-slow" />
                 </div>
-                <h3 className="text-3xl md:text-5xl font-serif text-slate-800 mb-12" style={{ fontFamily: '"Playfair Display", serif' }}>Bride & Groom</h3>
-                <p className="text-slate-600 mb-16 max-w-2xl mx-auto leading-relaxed italic">
+                <h3 className="text-3xl md:text-5xl font-serif text-slate-800 dark:text-white mb-12" style={{ fontFamily: '"Playfair Display", serif' }}>Bride & Groom</h3>
+                <p className="text-slate-600 dark:text-slate-300 mb-16 max-w-2xl mx-auto leading-relaxed italic">
                   "And above all these put on love, which binds everything together in perfect harmony."
                 </p>
               </FadeIn>
 
               <div className="grid md:grid-cols-2 gap-16 md:gap-8 items-center">
                 <FadeIn delay={0.2}>
-                  <div className="relative w-48 h-64 md:w-64 md:h-80 mx-auto mb-6 rounded-[2rem] overflow-hidden p-2 bg-white/50 border border-white backdrop-blur-sm shadow-xl">
+                  <div className="relative w-48 h-64 md:w-64 md:h-80 mx-auto mb-6 rounded-[2rem] overflow-hidden p-2 bg-white dark:bg-slate-800/50 border border-white backdrop-blur-sm shadow-xl">
                     <img src="https://images.unsplash.com/photo-1546822830-4663ec40a3dd?q=80&w=600&auto=format&fit=crop" alt="Bride" className="w-full h-full object-cover rounded-[1.5rem]" />
                   </div>
-                  <h4 className="text-3xl font-serif text-slate-800 mb-2">{brideName}</h4>
-                  <p className="text-sm text-slate-500 mb-4 uppercase tracking-widest">The Bride</p>
-                  <p className="text-slate-600 text-sm">Daughter of Mr. John Doe & Mrs. Jane Doe</p>
+                  <h4 className="text-3xl font-serif text-slate-800 dark:text-white mb-2">{brideName}</h4>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-400 mb-4 uppercase tracking-widest">The Bride</p>
+                  <p className="text-slate-600 dark:text-slate-300 text-sm">Daughter of {brideParents}</p>
                 </FadeIn>
 
                 <FadeIn delay={0.4}>
-                  <div className="relative w-48 h-64 md:w-64 md:h-80 mx-auto mb-6 rounded-[2rem] overflow-hidden p-2 bg-white/50 border border-white backdrop-blur-sm shadow-xl">
-                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=600&auto=format&fit=crop" alt="Groom" className="w-full h-full object-cover rounded-[1.5rem]" />
+                  <div className="relative w-48 h-64 md:w-64 md:h-80 mx-auto mb-6 rounded-[2rem] overflow-hidden p-2 bg-white dark:bg-slate-800/50 border border-white backdrop-blur-sm shadow-xl">
+                    <img src={data?.groom_image || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=600&auto=format&fit=crop"} alt="Groom" className="w-full h-full object-cover rounded-[1.5rem]" />
                   </div>
-                  <h4 className="text-3xl font-serif text-slate-800 mb-2">{groomName}</h4>
-                  <p className="text-sm text-slate-500 mb-4 uppercase tracking-widest">The Groom</p>
-                  <p className="text-slate-600 text-sm">Son of Mr. Robert Smith & Mrs. Mary Smith</p>
+                  <h4 className="text-3xl font-serif text-slate-800 dark:text-white mb-2">{groomName}</h4>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-400 mb-4 uppercase tracking-widest">The Groom</p>
+                  <p className="text-slate-600 dark:text-slate-300 text-sm">Son of {groomParents}</p>
                 </FadeIn>
               </div>
             </div>
@@ -376,7 +412,7 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
                     { label: 'Secs', value: timeLeft.seconds },
                   ].map((item, idx) => (
                     <div key={idx} className="flex flex-col items-center">
-                      <div className="w-16 h-16 md:w-24 md:h-24 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl flex items-center justify-center mb-3 shadow-lg">
+                      <div className="w-16 h-16 md:w-24 md:h-24 bg-white dark:bg-slate-800/10 backdrop-blur-md border border-white/20 rounded-2xl flex items-center justify-center mb-3 shadow-lg">
                         <span className="text-2xl md:text-4xl font-light font-serif">{item.value}</span>
                       </div>
                       <span className="text-xs md:text-sm uppercase tracking-wider text-slate-300">{item.label}</span>
@@ -392,35 +428,35 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
             <div className="max-w-5xl mx-auto">
               <FadeIn>
                 <div className="text-center mb-16">
-                  <h3 className="text-3xl md:text-5xl font-serif text-slate-800 mb-4">Wedding Events</h3>
-                  <p className="text-slate-500">We invite you to celebrate with us</p>
+                  <h3 className="text-3xl md:text-5xl font-serif text-slate-800 dark:text-white mb-4">Wedding Events</h3>
+                  <p className="text-slate-500 dark:text-slate-400 dark:text-slate-400">We invite you to celebrate with us</p>
                 </div>
               </FadeIn>
 
               <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
                 {/* Akad / Ceremony */}
                 <FadeIn delay={0.2}>
-                  <div className="bg-white rounded-3xl p-8 md:p-12 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] border border-slate-100 relative overflow-hidden group hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] transition-shadow">
+                  <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 md:p-12 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] border border-slate-100 dark:border-slate-700 relative overflow-hidden group hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] transition-shadow">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110" />
                     <div className="relative z-10 text-center">
                       <div className="w-16 h-16 bg-blue-50 text-blue-400 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
                         <Heart size={28} />
                       </div>
-                      <h4 className="text-2xl font-serif text-slate-800 mb-2">Holy Matrimony</h4>
-                      <p className="text-blue-400 font-medium mb-8">Friday, 25 Dec 2026</p>
-
-                      <div className="space-y-4 text-sm text-slate-600 mb-8">
+                      <h4 className="text-2xl font-serif text-slate-800 dark:text-white mb-2">Holy Matrimony</h4>
+                      <p className="text-blue-400 font-medium mb-8">{weddingDate.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                      
+                      <div className="space-y-4 text-sm text-slate-600 dark:text-slate-300 mb-8">
                         <div className="flex items-center justify-center gap-3">
-                          <Clock size={16} className="text-slate-400" />
-                          <span>09:00 AM - 11:00 AM</span>
+                          <Clock size={16} className="text-slate-400 dark:text-slate-400" />
+                          <span>{weddingDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
                         </div>
                         <div className="flex items-center justify-center gap-3">
-                          <MapPin size={16} className="text-slate-400" />
-                          <span>Grand Chapel, The Winter Hotel</span>
+                          <MapPin size={16} className="text-slate-400 dark:text-slate-400" />
+                          <span>{locationName}</span>
                         </div>
                       </div>
 
-                      <a href="#" className="inline-block px-6 py-3 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-xl text-sm font-medium transition-colors border border-slate-200">
+                      <a href={data?.maps_link_url || "#"} className="inline-block px-6 py-3 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 text-slate-700 dark:text-slate-200 rounded-xl text-sm font-medium transition-colors border border-slate-200 dark:border-slate-700">
                         View Location
                       </a>
                     </div>
@@ -429,27 +465,27 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
 
                 {/* Reception */}
                 <FadeIn delay={0.4}>
-                  <div className="bg-white rounded-3xl p-8 md:p-12 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] border border-slate-100 relative overflow-hidden group hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] transition-shadow">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110" />
+                  <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 md:p-12 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] border border-slate-100 dark:border-slate-700 relative overflow-hidden group hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] transition-shadow">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 dark:bg-slate-800 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110" />
                     <div className="relative z-10 text-center">
-                      <div className="w-16 h-16 bg-slate-50 text-slate-400 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
+                      <div className="w-16 h-16 bg-slate-50 dark:bg-slate-800 text-slate-400 dark:text-slate-400 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
                         <Music2 size={28} />
                       </div>
-                      <h4 className="text-2xl font-serif text-slate-800 mb-2">Wedding Reception</h4>
-                      <p className="text-blue-400 font-medium mb-8">Friday, 25 Dec 2026</p>
-
-                      <div className="space-y-4 text-sm text-slate-600 mb-8">
+                      <h4 className="text-2xl font-serif text-slate-800 dark:text-white mb-2">Wedding Reception</h4>
+                      <p className="text-blue-400 font-medium mb-8">{resepsiDate.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                      
+                      <div className="space-y-4 text-sm text-slate-600 dark:text-slate-300 mb-8">
                         <div className="flex items-center justify-center gap-3">
-                          <Clock size={16} className="text-slate-400" />
-                          <span>07:00 PM - 10:00 PM</span>
+                          <Clock size={16} className="text-slate-400 dark:text-slate-400" />
+                          <span>{resepsiDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
                         </div>
                         <div className="flex items-center justify-center gap-3">
-                          <MapPin size={16} className="text-slate-400" />
-                          <span>Grand Ballroom, The Winter Hotel</span>
+                          <MapPin size={16} className="text-slate-400 dark:text-slate-400" />
+                          <span>{locationName}</span>
                         </div>
                       </div>
 
-                      <a href="#" className="inline-block px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-sm font-medium transition-colors shadow-md">
+                      <a href={data?.maps_link_url || "#"} className="inline-block px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-sm font-medium transition-colors shadow-md">
                         View Location
                       </a>
                     </div>
@@ -459,14 +495,14 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
 
               {/* Map embedded */}
               <FadeIn delay={0.6}>
-                <div className="mt-16 bg-white p-2 rounded-3xl shadow-lg border border-slate-100 overflow-hidden">
-                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1m2!1m3!1m2!1m3!1m2!1m3!1m2!1m3!1m2!1m3!1m2!1m3!1m2!1m3!1m2!1m3!1m2!1m3!1m2!1m3!1m2!1m3!1m2!1m3!1m2!1m3!1m2!1m3!1m2!1m3!1m2!1m3!1m2!1m3!1m2"
-                    width="100%"
-                    height="400"
-                    style={{ border: 0, borderRadius: '1.5rem' }}
-                    allowFullScreen={true}
-                    loading="lazy"
+                <div className="mt-16 bg-white dark:bg-slate-800 p-2 rounded-3xl shadow-lg border border-slate-100 dark:border-slate-700 overflow-hidden">
+                  <iframe 
+                    src={mapsLink}
+                    width="100%" 
+                    height="400" 
+                    style={{ border: 0, borderRadius: '1.5rem' }} 
+                    allowFullScreen={true} 
+                    loading="lazy" 
                     referrerPolicy="no-referrer-when-downgrade"
                     title="Google Maps"
                   ></iframe>
@@ -479,14 +515,12 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
           <section className="py-24 px-6 relative bg-[#f8fafd]">
             <div className="max-w-3xl mx-auto">
               <FadeIn>
-                <h3 className="text-3xl md:text-5xl font-serif text-center text-slate-800 mb-16">Our Journey</h3>
+                <h3 className="text-3xl md:text-5xl font-serif text-center text-slate-800 dark:text-white mb-16">Our Journey</h3>
               </FadeIn>
 
               <div className="space-y-12 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-blue-200 before:to-transparent">
                 {[
-                  { year: '2020', title: 'First Met', desc: 'We met at a winter festival. It was cold outside, but warm in our hearts.' },
-                  { year: '2023', title: 'The Proposal', desc: 'Under the falling snow in Central Park, he kneeled and asked the question.' },
-                  { year: '2026', title: 'Getting Married', desc: 'And now, we are embarking on a new journey together.' }
+                  { year: 'Our Journey', title: 'How We Met', desc: story }
                 ].map((item, idx) => (
                   <FadeIn key={idx} delay={idx * 0.2}>
                     <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
@@ -494,12 +528,12 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
                       <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-blue-50 text-blue-400 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
                         <Heart size={14} className="fill-current" />
                       </div>
-
+                      
                       {/* Content */}
-                      <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                      <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-shadow">
                         <span className="font-serif text-blue-400 text-sm font-bold tracking-widest">{item.year}</span>
-                        <h4 className="text-lg font-bold text-slate-800 mt-1 mb-2">{item.title}</h4>
-                        <p className="text-slate-600 text-sm leading-relaxed">{item.desc}</p>
+                        <h4 className="text-lg font-bold text-slate-800 dark:text-white mt-1 mb-2">{item.title}</h4>
+                        <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">{item.desc}</p>
                       </div>
                     </div>
                   </FadeIn>
@@ -509,29 +543,22 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
           </section>
 
           {/* Gallery Masonry */}
-          <section className="py-24 px-6 bg-white">
+          <section className="py-24 px-6 bg-white dark:bg-slate-800">
             <div className="max-w-6xl mx-auto">
               <FadeIn>
                 <div className="text-center mb-16">
                   <Camera size={32} className="mx-auto text-slate-300 mb-4" />
-                  <h3 className="text-3xl md:text-5xl font-serif text-slate-800">Gallery</h3>
+                  <h3 className="text-3xl md:text-5xl font-serif text-slate-800 dark:text-white">Gallery</h3>
                 </div>
               </FadeIn>
 
               <div className="columns-1 sm:columns-2 md:columns-3 gap-4 space-y-4">
-                {[
-                  "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=600&auto=format&fit=crop",
-                  "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop",
-                  "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=600&auto=format&fit=crop",
-                  "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=600&auto=format&fit=crop",
-                  "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=600&auto=format&fit=crop",
-                  "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?q=80&w=600&auto=format&fit=crop"
-                ].map((src, idx) => (
+                {finalGallery.map((src, idx) => (
                   <FadeIn key={idx} delay={idx * 0.1}>
                     <div className="break-inside-avoid relative group rounded-2xl overflow-hidden cursor-pointer shadow-sm">
                       <img src={src} alt={`Gallery ${idx + 1}`} className="w-full object-cover transition-transform duration-700 group-hover:scale-110" />
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                        <Heart className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" size={32} />
+                         <Heart className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" size={32} />
                       </div>
                     </div>
                   </FadeIn>
@@ -544,45 +571,45 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
           <section className="py-24 px-6 bg-[#f8fafd]">
             <div className="max-w-xl mx-auto">
               <FadeIn>
-                <div className="bg-white rounded-[2rem] p-8 md:p-12 shadow-xl border border-slate-100 relative overflow-hidden">
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-100">
+                <div className="bg-white dark:bg-slate-800 rounded-[2rem] p-8 md:p-12 shadow-xl border border-slate-100 dark:border-slate-700 relative overflow-hidden">
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-sm border border-slate-100 dark:border-slate-700">
                     <Send size={24} className="text-blue-400 ml-1" />
                   </div>
-
+                  
                   <div className="text-center mt-6 mb-10">
-                    <h3 className="text-3xl font-serif text-slate-800 mb-2">RSVP & Wishes</h3>
-                    <p className="text-slate-500 text-sm">Kindly confirm your attendance</p>
+                    <h3 className="text-3xl font-serif text-slate-800 dark:text-white mb-2">RSVP & Wishes</h3>
+                    <p className="text-slate-500 dark:text-slate-400 dark:text-slate-400 text-sm">Kindly confirm your attendance</p>
                   </div>
 
                   <AnimatePresence mode="wait">
                     {!isRsvpSubmitted ? (
-                      <motion.form
+                      <motion.form 
                         key="form"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
-                        className="space-y-6"
+                        className="space-y-6" 
                         onSubmit={(e) => {
                           e.preventDefault();
                           setIsRsvpSubmitted(true);
                         }}
                       >
                         <div>
-                          <input
-                            type="text"
+                          <input 
+                            type="text" 
                             required
-                            placeholder="Your Name"
+                            placeholder="Your Name" 
                             value={rsvpForm.name}
-                            onChange={(e) => setRsvpForm({ ...rsvpForm, name: e.target.value })}
-                            className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all"
+                            onChange={(e) => setRsvpForm({...rsvpForm, name: e.target.value})}
+                            className="w-full px-5 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all" 
                           />
                         </div>
                         <div>
-                          <select
+                          <select 
                             required
                             value={rsvpForm.attendance}
-                            onChange={(e) => setRsvpForm({ ...rsvpForm, attendance: e.target.value })}
-                            className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all text-slate-600"
+                            onChange={(e) => setRsvpForm({...rsvpForm, attendance: e.target.value})}
+                            className="w-full px-5 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all text-slate-600 dark:text-slate-300"
                           >
                             <option value="">Will you attend?</option>
                             <option value="yes">Yes, I will attend</option>
@@ -591,11 +618,11 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
                         </div>
                         {rsvpForm.attendance === 'yes' && (
                           <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}>
-                            <select
+                            <select 
                               required
                               value={rsvpForm.guests}
-                              onChange={(e) => setRsvpForm({ ...rsvpForm, guests: e.target.value })}
-                              className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all text-slate-600"
+                              onChange={(e) => setRsvpForm({...rsvpForm, guests: e.target.value})}
+                              className="w-full px-5 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all text-slate-600 dark:text-slate-300"
                             >
                               <option value="">Number of Guests</option>
                               <option value="1">1 Person</option>
@@ -604,13 +631,13 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
                           </motion.div>
                         )}
                         <div>
-                          <textarea
+                          <textarea 
                             required
-                            placeholder="Your Wishes"
-                            rows={4}
+                            placeholder="Your Wishes" 
+                            rows={4} 
                             value={rsvpForm.wishes}
-                            onChange={(e) => setRsvpForm({ ...rsvpForm, wishes: e.target.value })}
-                            className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all resize-none"
+                            onChange={(e) => setRsvpForm({...rsvpForm, wishes: e.target.value})}
+                            className="w-full px-5 py-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all resize-none"
                           ></textarea>
                         </div>
                         <button type="submit" className="w-full py-4 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-medium transition-colors shadow-lg shadow-slate-900/20 flex justify-center items-center gap-2">
@@ -619,7 +646,7 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
                         </button>
                       </motion.form>
                     ) : (
-                      <motion.div
+                      <motion.div 
                         key="success"
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -628,8 +655,8 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
                         <div className="w-20 h-20 bg-blue-50 text-blue-400 rounded-full flex items-center justify-center mx-auto mb-6">
                           <Heart size={40} className="fill-current animate-pulse" />
                         </div>
-                        <h4 className="text-2xl font-serif text-slate-800 mb-2">Thank You!</h4>
-                        <p className="text-slate-500">Your RSVP and wishes have been sent successfully.</p>
+                        <h4 className="text-2xl font-serif text-slate-800 dark:text-white mb-2">Thank You!</h4>
+                        <p className="text-slate-500 dark:text-slate-400 dark:text-slate-400">Your RSVP and wishes have been sent successfully.</p>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -639,12 +666,12 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
           </section>
 
           {/* Digital Gift */}
-          <section className="py-24 px-6 bg-white relative">
+          <section className="py-24 px-6 bg-white dark:bg-slate-800 relative">
             <div className="max-w-3xl mx-auto text-center">
               <FadeIn>
                 <Gift size={32} className="mx-auto text-slate-300 mb-6" />
-                <h3 className="text-3xl md:text-5xl font-serif text-slate-800 mb-6">Wedding Gift</h3>
-                <p className="text-slate-600 mb-12 max-w-xl mx-auto leading-relaxed">
+                <h3 className="text-3xl md:text-5xl font-serif text-slate-800 dark:text-white mb-6">Wedding Gift</h3>
+                <p className="text-slate-600 dark:text-slate-300 mb-12 max-w-xl mx-auto leading-relaxed">
                   Your blessing and presence at our wedding are the most precious gifts for us. However, if you wish to give a gift, you may send it digitally below.
                 </p>
               </FadeIn>
@@ -657,14 +684,14 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
                       <CreditCard size={64} />
                     </div>
                     <div>
-                      <p className="text-slate-400 text-sm uppercase tracking-wider mb-2">BCA Bank</p>
-                      <p className="text-2xl font-mono tracking-widest mb-2 text-white/90">1234 5678 9012</p>
-                      <p className="text-slate-300 text-sm uppercase">A.n. {groomName}</p>
+                      <p className="text-slate-400 dark:text-slate-400 text-sm uppercase tracking-wider mb-2">{bankName}</p>
+                      <p className="text-2xl font-mono tracking-widest mb-2 text-white/90">{bankAccount}</p>
+                      <p className="text-slate-300 text-sm uppercase">{bankAccountName}</p>
                     </div>
-                    <button
-                      onClick={() => handleCopy('123456789012')}
+                    <button 
+                      onClick={() => handleCopy(bankAccount)}
                       className={`mt-8 px-6 py-3 rounded-xl text-sm font-medium w-max backdrop-blur-md transition-all border flex items-center gap-2
-                        ${isCopied ? 'bg-blue-500/20 border-blue-400 text-blue-300' : 'bg-white/10 hover:bg-white/20 border-white/10 text-white'}`}
+                        ${isCopied ? 'bg-blue-500/20 border-blue-400 text-blue-300' : 'bg-white dark:bg-slate-800/10 hover:bg-white dark:bg-slate-800/20 border-white/10 text-white'}`}
                     >
                       {isCopied ? (
                         <>
@@ -681,12 +708,12 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
 
                 {/* QRIS */}
                 <FadeIn delay={0.4}>
-                  <div className="bg-slate-50 border border-slate-200 p-8 rounded-[2rem] text-center h-full flex flex-col items-center justify-center shadow-sm hover:shadow-md transition-shadow">
+                  <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-8 rounded-[2rem] text-center h-full flex flex-col items-center justify-center shadow-sm hover:shadow-md transition-shadow">
                     <QrCode size={32} className="text-blue-400 mb-4" />
-                    <p className="font-bold text-slate-800 mb-2">QRIS Payment</p>
-                    <p className="text-sm text-slate-500 mb-6">Scan QR code using any e-wallet</p>
-                    <div className="w-32 h-32 bg-white p-2 rounded-xl shadow-sm border border-slate-100 flex items-center justify-center mx-auto">
-                      <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" alt="QRIS" className="w-full h-full opacity-50" />
+                    <p className="font-bold text-slate-800 dark:text-white mb-2">QRIS Payment</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-400 mb-6">Scan QR code using any e-wallet</p>
+                    <div className="w-32 h-32 bg-white dark:bg-slate-800 p-2 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-center mx-auto">
+                      <img src={qrisImage} alt="QRIS" className="w-full h-full opacity-80 object-contain" />
                     </div>
                   </div>
                 </FadeIn>
@@ -695,7 +722,7 @@ export default function SampleMotif7({ data, guestName, lang = 'id' }: ThemeProp
           </section>
 
           {/* Footer */}
-          <footer className="py-12 bg-slate-900 text-center text-slate-400 relative overflow-hidden">
+          <footer className="py-12 bg-slate-900 text-center text-slate-400 dark:text-slate-400 relative overflow-hidden">
             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1478265409131-1f65c88f965c?q=80&w=2000&auto=format&fit=crop')] opacity-10 bg-cover bg-center" />
             <FadeIn className="relative z-10">
               <h2 className="text-3xl font-serif text-white mb-6" style={{ fontFamily: '"Playfair Display", serif' }}>

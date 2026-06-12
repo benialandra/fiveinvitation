@@ -22,8 +22,8 @@ export default function GlassmorphismElegance({ data, guestName }: { data?: any,
   const loveStory = data?.story || "We found each other in the most unexpected way, and our journey has been nothing short of magical.";
   const coverImg = data?.cover_image || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=2000&auto=format&fit=crop";
   const heroImg = data?.hero_image || "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=80&w=2000&auto=format&fit=crop";
-  const gallery1 = data?.gallery_1 || "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=1000&auto=format&fit=crop";
-  const gallery2 = data?.gallery_2 || "https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1000&auto=format&fit=crop";
+  const groomImg = data?.groom_image || data?.gallery_1 || "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=1000&auto=format&fit=crop";
+  const brideImg = data?.bride_image || data?.gallery_2 || "https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1000&auto=format&fit=crop";
   const bankName1 = data?.bank_name_1 || "BCA";
   const bankAccount1 = data?.bank_account_1 || "0987654321";
   const bankAccountName1 = data?.bank_account_name_1 || groom;
@@ -156,29 +156,29 @@ export default function GlassmorphismElegance({ data, guestName }: { data?: any,
         <section className="py-24 px-6 z-10 relative">
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12">
             <motion.div 
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1 }}
-              viewport={{ once: true }}
-              className="flex flex-col items-center bg-white/5 backdrop-blur-lg border border-white/10 p-10 rounded-[3rem]"
-            >
-               <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-white/10 mb-8 p-2">
-                 <img src={gallery1} className="w-full h-full object-cover rounded-full" alt="Groom" />
-               </div>
-               <h3 className="text-3xl font-bold mb-2">{groom}</h3>
-               <p className="text-slate-400 text-sm uppercase tracking-widest text-center">Son of<br/><span className="text-white font-medium">{data?.groom_parents || 'Bpk. Hendra & Ibu Susi'}</span></p>
-            </motion.div>
+               initial={{ opacity: 0, x: -50 }}
+               whileInView={{ opacity: 1, x: 0 }}
+               transition={{ duration: 1 }}
+               viewport={{ once: true }}
+               className="flex flex-col items-center bg-white/5 backdrop-blur-lg border border-white/10 p-10 rounded-[3rem]"
+             >
+                <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-white/10 mb-8 p-2">
+                  <img src={groomImg} className="w-full h-full object-cover rounded-full" alt="Groom" />
+                </div>
+                <h3 className="text-3xl font-bold mb-2">{groom}</h3>
+                <p className="text-slate-400 text-sm uppercase tracking-widest text-center">Son of<br/><span className="text-white font-medium">{data?.groom_parents || 'Bpk. Hendra & Ibu Susi'}</span></p>
+             </motion.div>
 
-            <motion.div 
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, delay: 0.2 }}
-              viewport={{ once: true }}
-              className="flex flex-col items-center bg-white/5 backdrop-blur-lg border border-white/10 p-10 rounded-[3rem]"
-            >
-               <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-white/10 mb-8 p-2">
-                 <img src={gallery2} className="w-full h-full object-cover rounded-full" alt="Bride" />
-               </div>
+             <motion.div 
+               initial={{ opacity: 0, x: 50 }}
+               whileInView={{ opacity: 1, x: 0 }}
+               transition={{ duration: 1, delay: 0.2 }}
+               viewport={{ once: true }}
+               className="flex flex-col items-center bg-white/5 backdrop-blur-lg border border-white/10 p-10 rounded-[3rem]"
+             >
+                <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-white/10 mb-8 p-2">
+                  <img src={brideImg} className="w-full h-full object-cover rounded-full" alt="Bride" />
+                </div>
                <h3 className="text-3xl font-bold mb-2">{bride}</h3>
                <p className="text-slate-400 text-sm uppercase tracking-widest text-center">Daughter of<br/><span className="text-white font-medium">{data?.bride_parents || 'Bpk. Budi & Ibu Ani'}</span></p>
             </motion.div>

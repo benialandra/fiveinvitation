@@ -49,9 +49,12 @@ export default function ElegantGold({ data, guestName, lang = 'id' }: ThemeProps
   
   const coverImg = data.cover_image || "https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=80&w=2000&auto=format&fit=crop";
   const heroImg = data.hero_image || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2000&auto=format&fit=crop";
+  const groomImg = data.groom_image || data.gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800&auto=format&fit=crop";
+  const brideImg = data.bride_image || data.gallery_2 || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop";
   const gallery1 = data.gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800&auto=format&fit=crop";
   const gallery2 = data.gallery_2 || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop";
   const gallery3 = data.gallery_3 || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=800&auto=format&fit=crop";
+  const gallery4 = data.gallery_4 || "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?q=80&w=800&auto=format&fit=crop";
   
   const bankName1 = data.bank_name_1 || "BCA";
   const bankAccount1 = data.bank_account_1 || "1234567890";
@@ -167,7 +170,7 @@ export default function ElegantGold({ data, guestName, lang = 'id' }: ThemeProps
                     className="flex-1 text-center"
                   >
                      <div className="w-56 h-72 mx-auto border border-amber-900/40 p-2 mb-8 rounded-t-full">
-                        <img src={gallery1} className="w-full h-full object-cover rounded-t-full opacity-80 hover:opacity-100 transition-opacity" alt={groom} />
+                        <img src={groomImg} className="w-full h-full object-cover rounded-t-full opacity-80 hover:opacity-100 transition-opacity" alt={groom} />
                      </div>
                      <h3 className="text-4xl font-light text-amber-300 mb-2">{groom}</h3>
                      <p className="text-xs text-white/50 uppercase tracking-widest font-sans">Putra dari<br/><span className="text-white mt-1 block">{data.groom_parents || 'Bpk. Hendra & Ibu Susi'}</span></p>
@@ -183,7 +186,7 @@ export default function ElegantGold({ data, guestName, lang = 'id' }: ThemeProps
                     className="flex-1 text-center"
                   >
                      <div className="w-56 h-72 mx-auto border border-amber-900/40 p-2 mb-8 rounded-t-full">
-                        <img src={gallery2} className="w-full h-full object-cover rounded-t-full opacity-80 hover:opacity-100 transition-opacity" alt={bride} />
+                        <img src={brideImg} className="w-full h-full object-cover rounded-t-full opacity-80 hover:opacity-100 transition-opacity" alt={bride} />
                      </div>
                      <h3 className="text-4xl font-light text-amber-300 mb-2">{bride}</h3>
                      <p className="text-xs text-white/50 uppercase tracking-widest font-sans">Putri dari<br/><span className="text-white mt-1 block">{data.bride_parents || 'Bpk. Budi & Ibu Ani'}</span></p>
@@ -255,14 +258,14 @@ export default function ElegantGold({ data, guestName, lang = 'id' }: ThemeProps
               <div className="max-w-6xl mx-auto">
                  <h3 className="text-center text-xs font-sans uppercase tracking-[0.3em] text-amber-500 mb-16">{t.gallery}</h3>
                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {[heroImg, gallery1, gallery2, gallery3].map((img, i) => (
+                    {[gallery1, gallery2, gallery3, gallery4].map((img, i) => (
                        <motion.div 
                          key={i} 
                          initial={{ opacity: 0, scale: 0.9 }}
                          whileInView={{ opacity: 1, scale: 1 }}
                          viewport={{ once: true }}
                          transition={{ duration: 0.8, delay: i * 0.1 }}
-                         className={`rounded-2xl overflow-hidden border border-amber-900/30 ${i === 0 ? 'col-span-2 row-span-2' : 'aspect-square'}`}
+                         className={`rounded-2xl overflow-hidden border border-amber-900/30 aspect-square`}
                        >
                           <img src={img} className="w-full h-full object-cover opacity-70 hover:opacity-100 hover:scale-105 transition-all duration-700" alt="Gallery" />
                        </motion.div>

@@ -8,13 +8,28 @@ import { Calendar, Clock, MapPin, Film, Video } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function CinematicLoveStory() {
+interface ThemeProps {
+  data?: any;
+  guestName?: string;
+  lang?: 'en' | 'id';
+}
+
+export default function CinematicLoveStory({ data, guestName, lang = 'id' }: ThemeProps) {
   const [isOpened, setIsOpened] = useState(false);
-  
-  const groom = "Daniel";
-  const bride = "Emma";
-  const date = "14 February 2027";
-  const location = "Grand Cinema Theater, LA";
+
+  const groom = data?.groom_name || "Daniel";
+  const bride = data?.bride_name || "Emma";
+  const date = data?.akad_date ? new Date(data.akad_date).toLocaleDateString() : "14 February 2027";
+  const location = data?.location_name || "Grand Cinema Theater, LA";
+
+  const coverImg = data?.cover_image || "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&q=80";
+  const groomImg = data?.groom_image || data?.gallery_1 || "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&q=80";
+  const brideImg = data?.bride_image || data?.gallery_2 || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80";
+
+  const gallery1 = data?.gallery_1 || "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80";
+  const gallery2 = data?.gallery_2 || "https://images.unsplash.com/photo-1544078755-9eeceba196a8?auto=format&fit=crop&q=80";
+  const gallery3 = data?.gallery_3 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80";
+  const gallery4 = data?.gallery_4 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80";
 
   // Video background source (using a placeholder romantic cinematic video)
   const videoBg = "https://player.vimeo.com/external/494241777.sd.mp4?s=d0092f69e98418012bb298d022b72cfefab83fba&profile_id=165&oauth2_token_id=57447761";
@@ -61,7 +76,7 @@ export default function CinematicLoveStory() {
         
         {/* Audio Controller */}
         {isOpened && (
-          <AudioController src="https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3" />
+          <AudioController src={data?.music_url || "https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3"} />
         )}
 
         {/* Opening Screen - Cinematic Reveal */}
@@ -73,7 +88,7 @@ export default function CinematicLoveStory() {
               className="fixed inset-0 z-[100] flex flex-col items-center justify-center p-6 bg-[#050201]"
             >
               <div className="absolute inset-0">
-                <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&q=80" alt="Cinematic Cover" className="w-full h-full object-cover opacity-30 mix-blend-luminosity" />
+                <img src={coverImg} alt="Cinematic Cover" className="w-full h-full object-cover opacity-30 mix-blend-luminosity" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0A0503] via-[#0A0503]/50 to-transparent" />
               </div>
               
@@ -183,13 +198,13 @@ export default function CinematicLoveStory() {
               <div className="max-w-3xl mx-auto space-y-32">
                 {[
                   {
-                    img: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&q=80",
+                    img: groomImg,
                     title: "The Meet Cute",
                     desc: "It started like any classic romance—a chance encounter in a crowded room, a lingering glance, and a spark that ignited a fire.",
                     time: "Scene 01"
                   },
                   {
-                    img: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80",
+                    img: brideImg,
                     title: "The Plot Thickens",
                     desc: "Through late-night drives and endless conversations, we realized this wasn't just a fleeting moment. It was the script of our lives.",
                     time: "Scene 02"
@@ -228,12 +243,7 @@ export default function CinematicLoveStory() {
               </div>
 
               <div className="flex flex-col gap-2">
-                {[
-                  "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80",
-                  "https://images.unsplash.com/photo-1544078755-9eeceba196a8?auto=format&fit=crop&q=80",
-                  "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80",
-                  "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80"
-                ].map((img, i) => (
+                {[gallery1, gallery2, gallery3, gallery4].map((img, i) => (
                   <div key={i} className="w-full h-[50vh] md:h-[70vh] relative overflow-hidden group">
                     <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors duration-700 z-10" />
                     <img src={img} alt="Scene" className="w-full h-full object-cover ken-burns-img" />

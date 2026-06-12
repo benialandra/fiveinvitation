@@ -381,7 +381,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
               <div className="grid md:grid-cols-2 gap-16 md:gap-8 items-center">
                 <FadeIn delay={0.2}>
                   <div className="relative w-48 h-64 md:w-64 md:h-80 mx-auto mb-6 rounded-[2rem] overflow-hidden p-2 bg-white dark:bg-slate-700 border border-white backdrop-blur-sm shadow-xl">
-                    <img src="https://images.unsplash.com/photo-1546822830-4663ec40a3dd?q=80&w=600&auto=format&fit=crop" alt="Bride" className="w-full h-full object-cover rounded-[1.5rem]" />
+                    <img src={data?.bride_image || data?.gallery_2 || "https://images.unsplash.com/photo-1546822830-4663ec40a3dd?q=80&w=600&auto=format&fit=crop"} alt="Bride" className="w-full h-full object-cover rounded-[1.5rem]" />
                   </div>
                   <h4 className="text-3xl font-serif text-slate-800 dark:text-white mb-2">{brideName}</h4>
                   <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 uppercase tracking-widest">The Bride</p>
@@ -390,7 +390,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
 
                 <FadeIn delay={0.4}>
                   <div className="relative w-48 h-64 md:w-64 md:h-80 mx-auto mb-6 rounded-[2rem] overflow-hidden p-2 bg-white dark:bg-slate-700 border border-white backdrop-blur-sm shadow-xl">
-                    <img src={data?.groom_image || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=600&auto=format&fit=crop"} alt="Groom" className="w-full h-full object-cover rounded-[1.5rem]" />
+                    <img src={data?.groom_image || data?.gallery_1 || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=600&auto=format&fit=crop"} alt="Groom" className="w-full h-full object-cover rounded-[1.5rem]" />
                   </div>
                   <h4 className="text-3xl font-serif text-slate-800 dark:text-white mb-2">{groomName}</h4>
                   <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 uppercase tracking-widest">The Groom</p>

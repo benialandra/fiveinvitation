@@ -42,8 +42,12 @@ export default function MinimalistMonochrome({ data, guestName, lang = 'id' }: T
   const bride = data.bride_name || 'Biana';
   const coverImage = data.cover_image || "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=1200&auto=format&fit=crop";
   const heroImage = data.hero_image || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1200&auto=format&fit=crop";
+  const groomImg = data.groom_image || data.gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800&auto=format&fit=crop";
+  const brideImg = data.bride_image || data.gallery_2 || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop";
   const gallery1 = data.gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800&auto=format&fit=crop";
   const gallery2 = data.gallery_2 || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop";
+  const gallery3 = data.gallery_3 || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=800&auto=format&fit=crop";
+  const gallery4 = data.gallery_4 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1200&auto=format&fit=crop";
   const story = data.story || "We started as strangers, became friends, and realized we couldn't live without each other.";
   const akadDateStr = data.akad_date || '2026-12-31T08:00:00';
 
@@ -135,7 +139,7 @@ export default function MinimalistMonochrome({ data, guestName, lang = 'id' }: T
              <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-16">
                 <div className="flex-1 text-center md:text-right">
                    <div className="w-48 h-64 md:w-64 md:h-80 mx-auto md:ml-auto md:mr-0 border border-gray-200 p-2 mb-8">
-                      <img src={gallery1} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt={groom} />
+                      <img src={groomImg} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt={groom} />
                    </div>
                    <h3 className="text-3xl font-light mb-2">{groom}</h3>
                    <p className="text-xs text-gray-500 uppercase tracking-widest">Putra dari<br/><span className="font-bold text-black">{data.groom_parents || 'Bpk. Hendra & Ibu Susi'}</span></p>
@@ -143,7 +147,7 @@ export default function MinimalistMonochrome({ data, guestName, lang = 'id' }: T
                 <div className="text-4xl font-light text-gray-200">&</div>
                 <div className="flex-1 text-center md:text-left">
                    <div className="w-48 h-64 md:w-64 md:h-80 mx-auto md:mr-auto md:ml-0 border border-gray-200 p-2 mb-8">
-                      <img src={gallery2} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt={bride} />
+                      <img src={brideImg} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt={bride} />
                    </div>
                    <h3 className="text-3xl font-light mb-2">{bride}</h3>
                    <p className="text-xs text-gray-500 uppercase tracking-widest">Putri dari<br/><span className="font-bold text-black">{data.bride_parents || 'Bpk. Budi & Ibu Ani'}</span></p>
@@ -222,7 +226,7 @@ export default function MinimalistMonochrome({ data, guestName, lang = 'id' }: T
                <h3 className="text-xs font-bold uppercase tracking-[0.3em]">{t.gallery}</h3>
             </div>
             <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
-               {[coverImage, heroImage, gallery1, gallery2].map((img, i) => (
+               {[gallery1, gallery2, gallery3, gallery4].map((img, i) => (
                   <div key={i} className="aspect-square border border-gray-200 p-2">
                      <img src={img} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Gallery" />
                   </div>

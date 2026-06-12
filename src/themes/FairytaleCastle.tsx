@@ -70,6 +70,8 @@ export default function FairytaleCastle({ data, guestName }: { data?: any, guest
   const heroImg = data?.hero_image || "https://images.unsplash.com/photo-1518805790407-73d8bb2a3dce?q=80&w=2000&auto=format&fit=crop"; 
   const gallery1 = data?.gallery_1 || "https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=800&auto=format&fit=crop";
   const gallery2 = data?.gallery_2 || "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=800&auto=format&fit=crop";
+  const gallery3 = data?.gallery_3 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800&auto=format&fit=crop";
+  const gallery4 = data?.gallery_4 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop";
   
   const bankName1 = data?.bank_name_1 || "Royal Bank";
   const bankAccount1 = data?.bank_account_1 || "1234567890";
@@ -293,12 +295,18 @@ export default function FairytaleCastle({ data, guestName }: { data?: any, guest
                  <p className="text-[#38BDF8] tracking-widest uppercase text-sm font-bold">Glimpses of our tale</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="p-4 bg-white/5 backdrop-blur-md rounded-[2rem] border border-white/10">
-                   <img src={gallery1} className="w-full aspect-[4/3] object-cover rounded-[1.5rem]" alt="Memory" />
-                </motion.div>
-                <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="p-4 bg-white/5 backdrop-blur-md rounded-[2rem] border border-white/10">
-                   <img src={gallery2} className="w-full aspect-[4/3] object-cover rounded-[1.5rem]" alt="Memory" />
-                </motion.div>
+                {[gallery1, gallery2, gallery3, gallery4].map((img, i) => (
+                  <motion.div 
+                    key={i}
+                    initial={{ opacity: 0, scale: 0.9 }} 
+                    whileInView={{ opacity: 1, scale: 1 }} 
+                    viewport={{ once: true }} 
+                    transition={{ delay: i * 0.1 }}
+                    className="p-4 bg-white/5 backdrop-blur-md rounded-[2rem] border border-white/10"
+                  >
+                     <img src={img} className="w-full aspect-[4/3] object-cover rounded-[1.5rem]" alt={`Memory ${i + 1}`} />
+                  </motion.div>
+                ))}
               </div>
             </div>
           </section>

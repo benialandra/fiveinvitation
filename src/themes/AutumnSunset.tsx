@@ -163,13 +163,13 @@ export default function AutumnSunset({ data, guestName, lang = 'id' }: ThemeProp
 
   const coverImage = data?.cover_image || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop";
   const heroImage = data?.hero_image || "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=1200&auto=format&fit=crop";
-  const groomImage = "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=600&auto=format&fit=crop";
-  const brideImage = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=600&auto=format&fit=crop";
-
+  const groomImage = data?.groom_image || data?.gallery_1 || "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=600&auto=format&fit=crop";
+  const brideImage = data?.bride_image || data?.gallery_2 || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=600&auto=format&fit=crop";
+  
   const gallery1 = data?.gallery_1 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=600&auto=format&fit=crop";
   const gallery2 = data?.gallery_2 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=600&auto=format&fit=crop";
   const gallery3 = data?.gallery_3 || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=600&auto=format&fit=crop";
-  const gallery4 = "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=80&w=600&auto=format&fit=crop";
+  const gallery4 = data?.gallery_4 || "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=80&w=600&auto=format&fit=crop";
 
   const weddingDate = new Date(dateStr);
   const currentLocale = lang === 'en' ? localeEn : localeId;

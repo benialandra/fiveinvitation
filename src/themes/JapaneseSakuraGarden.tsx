@@ -80,9 +80,12 @@ export default function JapaneseSakuraGarden({ data, guestName, lang = 'id' }: T
   
   const coverImg = data.cover_image || "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=2000&auto=format&fit=crop";
   const heroImg = data.hero_image || "https://images.unsplash.com/photo-1522383225653-ed111181a951?q=80&w=2000&auto=format&fit=crop";
+  const groomImg = data.groom_image || data.gallery_1 || "https://images.unsplash.com/photo-1542051812871-75f56cc9ee33?q=80&w=1000&auto=format&fit=crop";
+  const brideImg = data.bride_image || data.gallery_2 || "https://images.unsplash.com/photo-1508004526072-3be43a5005f6?q=80&w=1000&auto=format&fit=crop";
   const gallery1 = data.gallery_1 || "https://images.unsplash.com/photo-1542051812871-75f56cc9ee33?q=80&w=1000&auto=format&fit=crop";
   const gallery2 = data.gallery_2 || "https://images.unsplash.com/photo-1508004526072-3be43a5005f6?q=80&w=1000&auto=format&fit=crop";
   const gallery3 = data.gallery_3 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1000&auto=format&fit=crop";
+  const gallery4 = data.gallery_4 || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1000&auto=format&fit=crop";
   
   const bankName1 = data.bank_name_1 || "BCA";
   const bankAccount1 = data.bank_account_1 || "1234567890";
@@ -234,7 +237,7 @@ export default function JapaneseSakuraGarden({ data, guestName, lang = 'id' }: T
                <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16 md:gap-32">
                   <div className="text-center">
                      <div className="w-56 h-56 mx-auto rounded-full overflow-hidden border-8 border-white shadow-xl mb-6 bg-[#FFB7C5]/10">
-                        <img src={gallery1} className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt={groom} />
+                        <img src={groomImg} className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt={groom} />
                      </div>
                      <h3 className="text-3xl font-light text-[#4A4A4A] mb-2" style={{ fontFamily: '"Noto Serif JP", serif' }}>{groom}</h3>
                      <p className="text-[10px] font-bold tracking-widest text-[#FFB7C5] uppercase mb-1">Putra Dari</p>
@@ -243,7 +246,7 @@ export default function JapaneseSakuraGarden({ data, guestName, lang = 'id' }: T
 
                   <div className="text-center md:mt-24">
                      <div className="w-56 h-56 mx-auto rounded-full overflow-hidden border-8 border-white shadow-xl mb-6 bg-[#FFB7C5]/10">
-                        <img src={gallery2} className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt={bride} />
+                        <img src={brideImg} className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt={bride} />
                      </div>
                      <h3 className="text-3xl font-light text-[#4A4A4A] mb-2" style={{ fontFamily: '"Noto Serif JP", serif' }}>{bride}</h3>
                      <p className="text-[10px] font-bold tracking-widest text-[#FFB7C5] uppercase mb-1">Putri Dari</p>
@@ -307,7 +310,7 @@ export default function JapaneseSakuraGarden({ data, guestName, lang = 'id' }: T
             <section className="py-24 px-6 gsap-section text-center">
                <h3 className="text-xs uppercase tracking-[0.3em] text-[#FFB7C5] mb-12">{t.gallery}</h3>
                <div className="max-w-6xl mx-auto columns-2 md:columns-3 gap-4 space-y-4">
-                  {[heroImg, gallery1, gallery2, coverImg, gallery3].map((img, i) => (
+                  {[gallery1, gallery2, gallery3, gallery4].map((img, i) => (
                     <div key={i} className="break-inside-avoid rounded-[2rem] overflow-hidden border-4 border-white shadow-lg relative group">
                        <img src={img} className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700" alt="Gallery" />
                     </div>

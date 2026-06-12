@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
-import { Loader2, Save, ArrowLeft, MapPin, X } from 'lucide-react';
+import { useParams, useNavigate, useOutletContext, Link } from 'react-router-dom';
+import { Loader2, Save, ArrowLeft, MapPin, X, Heart, Image as ImageIcon, Sparkles, Eye, Check, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { supabase } from '../lib/supabase';
+import { THEME_REGISTRY } from '../themes/registry';
+import { isSupabaseConfigured, supabase } from '../lib/supabase';
+import RippleButton from '../components/RippleButton';
 
 export default function EditOrder() {
   const { orderCode } = useParams();
@@ -13,6 +15,9 @@ export default function EditOrder() {
   const [saving, setSaving] = useState(false);
   const [showMapModal, setShowMapModal] = useState(false);
   const [locLoading, setLocLoading] = useState(false);
+  const [themeId, setThemeId] = useState('');
+  const [activeTab, setActiveTab] = useState<'info' | 'events' | 'media' | 'extra'>('info');
+
   const [formData, setFormData] = useState({
     groom_name: '',
     bride_name: '',
@@ -26,11 +31,26 @@ export default function EditOrder() {
     music_url: '',
     slug: '',
     cover_image: '',
-    hero_image: ''
+    hero_image: '',
+    // Customizations images
+    groom_image: '',
+    bride_image: '',
+    gallery_1: '',
+    gallery_2: '',
+    gallery_3: '',
+    gallery_4: ''
   });
-  
-  const [coverFile, setCoverFile] = useState<File | null>(null);
-  const [heroFile, setHeroFile] = useState<File | null>(null);
+
+  const [files, setFiles] = useState<{ [key: string]: File | null }>({
+    cover_image: null,
+    hero_image: null,
+    groom_image: null,
+    bride_image: null,
+    gallery_1: null,
+    gallery_2: null,
+    gallery_3: null,
+    gallery_4: null
+  });
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -38,6 +58,8 @@ export default function EditOrder() {
         const response = await fetch(`/api/orders/${orderCode}`);
         if (response.ok) {
           const data = await response.json();
+          setThemeId(data.theme_id || '');
+          const cust = data.customizations || {};
           setFormData({
             groom_name: data.groom_name || '',
             bride_name: data.bride_name || '',
@@ -51,7 +73,13 @@ export default function EditOrder() {
             music_url: data.music_url || '',
             slug: data.slug || '',
             cover_image: data.cover_image || '',
-            hero_image: data.hero_image || ''
+            hero_image: data.hero_image || '',
+            groom_image: cust.groom_image || '',
+            bride_image: cust.bride_image || '',
+            gallery_1: cust.gallery_1 || '',
+            gallery_2: cust.gallery_2 || '',
+            gallery_3: cust.gallery_3 || '',
+            gallery_4: cust.gallery_4 || ''
           });
         } else {
           toast.error('Pesanan tidak ditemukan.');
@@ -71,10 +99,9 @@ export default function EditOrder() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'cover' | 'hero') => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, key: string) => {
     if (e.target.files && e.target.files.length > 0) {
-      if (type === 'cover') setCoverFile(e.target.files[0]);
-      if (type === 'hero') setHeroFile(e.target.files[0]);
+      setFiles((prev) => ({ ...prev, [key]: e.target.files![0] }));
     }
   };
 
@@ -83,43 +110,58 @@ export default function EditOrder() {
     setSaving(true);
     try {
       const dataToSubmit = new FormData();
-      Object.keys(formData).forEach((key) => {
-        if (key === 'cover_image' || key === 'hero_image') return; // Skip image string values
 
-        const val = (formData as any)[key];
-        if (key === 'akad_date' || key === 'resepsi_date') {
-          dataToSubmit.append(key, val ? new Date(val).toISOString() : '');
-        } else {
-           dataToSubmit.append(key, val);
-        }
+      // Standard text fields
+      const textKeys = [
+        'groom_name', 'bride_name', 'groom_parents', 'bride_parents',
+        'location_name', 'maps_link', 'story', 'music_url', 'slug'
+      ];
+      textKeys.forEach(key => {
+        dataToSubmit.append(key, (formData as any)[key]);
       });
-      
-      let finalCoverImage = formData.cover_image;
-      if (coverFile) {
-        const coverName = `${Date.now()}_${coverFile.name.replace(/[^a-zA-Z0-9.\-_]/g, '')}`;
-        const { error } = await supabase.storage.from('fiveinvitation-bucket').upload(`uploads/${coverName}`, coverFile, {
-            cacheControl: '3600',
-            upsert: false
-        });
-        if (error) throw error;
-        const { data } = supabase.storage.from('fiveinvitation-bucket').getPublicUrl(`uploads/${coverName}`);
-        finalCoverImage = data.publicUrl;
+
+      // Dates fields
+      dataToSubmit.append('akad_date', formData.akad_date ? new Date(formData.akad_date).toISOString() : '');
+      dataToSubmit.append('resepsi_date', formData.resepsi_date ? new Date(formData.resepsi_date).toISOString() : '');
+
+      // Upload files
+      const uploadedUrls: { [key: string]: string } = {};
+      const supabaseConfigured = isSupabaseConfigured();
+
+      for (const [key, file] of Object.entries(files)) {
+        if (file) {
+          if (!supabaseConfigured) {
+            uploadedUrls[key] = URL.createObjectURL(file);
+          } else {
+            const fileName = `${Date.now()}_${key}_${file.name.replace(/[^a-zA-Z0-9.\-_]/g, '')}`;
+            const { error } = await supabase.storage.from('fiveinvitation-bucket').upload(`uploads/${fileName}`, file, {
+              cacheControl: '3600',
+              upsert: false
+            });
+            if (error) throw error;
+            const { data } = supabase.storage.from('fiveinvitation-bucket').getPublicUrl(`uploads/${fileName}`);
+            uploadedUrls[key] = data.publicUrl;
+          }
+        }
       }
-      
-      let finalHeroImage = formData.hero_image;
-      if (heroFile) {
-        const heroName = `${Date.now()}_${heroFile.name.replace(/[^a-zA-Z0-9.\-_]/g, '')}`;
-        const { error } = await supabase.storage.from('fiveinvitation-bucket').upload(`uploads/${heroName}`, heroFile, {
-            cacheControl: '3600',
-            upsert: false
-        });
-        if (error) throw error;
-        const { data } = supabase.storage.from('fiveinvitation-bucket').getPublicUrl(`uploads/${heroName}`);
-        finalHeroImage = data.publicUrl;
-      }
+
+      const finalCoverImage = uploadedUrls.cover_image || formData.cover_image;
+      const finalHeroImage = uploadedUrls.hero_image || formData.hero_image;
 
       if (finalCoverImage) dataToSubmit.append('cover_image', finalCoverImage);
       if (finalHeroImage) dataToSubmit.append('hero_image', finalHeroImage);
+
+      // Customizations
+      const finalCustomizations = {
+        groom_image: uploadedUrls.groom_image || formData.groom_image,
+        bride_image: uploadedUrls.bride_image || formData.bride_image,
+        gallery_1: uploadedUrls.gallery_1 || formData.gallery_1,
+        gallery_2: uploadedUrls.gallery_2 || formData.gallery_2,
+        gallery_3: uploadedUrls.gallery_3 || formData.gallery_3,
+        gallery_4: uploadedUrls.gallery_4 || formData.gallery_4
+      };
+
+      dataToSubmit.append('customizations', JSON.stringify(finalCustomizations));
 
       const response = await fetch(`/api/orders/${orderCode}`, {
         method: 'PUT',
@@ -148,7 +190,7 @@ export default function EditOrder() {
         (position) => {
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
-          setFormData(prev => ({ ...prev, maps_link: `https://www.google.com/maps?q=${lat},${lng}` }));
+          setFormData((prev) => ({ ...prev, maps_link: `https://www.google.com/maps?q=${lat},${lng}` }));
           setLocLoading(false);
           setShowMapModal(false);
         },
@@ -161,6 +203,37 @@ export default function EditOrder() {
       toast.error('Browser Anda tidak mendukung geolokasi.');
       setLocLoading(false);
     }
+  };
+
+  const renderImageField = (label: string, key: string, currentUrl: string) => {
+    const file = files[key];
+    const previewUrl = file ? URL.createObjectURL(file) : currentUrl;
+
+    return (
+      <div className="flex flex-col gap-2.5 p-4 bg-gray-50 dark:bg-black/30 border border-gray-100 dark:border-white/5 rounded-2xl">
+        <label className="text-xs font-semibold text-gray-500 dark:text-white/40 uppercase tracking-wider">{label}</label>
+        <div className="flex items-center gap-4">
+          {previewUrl ? (
+            <img src={previewUrl} className="w-16 h-16 object-cover rounded-xl border border-gray-200 dark:border-white/10 shrink-0 shadow-sm" alt={label} />
+          ) : (
+            <div className="w-16 h-16 bg-gray-100 dark:bg-white/5 border border-dashed border-gray-200 dark:border-white/10 rounded-xl flex items-center justify-center shrink-0">
+              <ImageIcon className="text-gray-400 w-5 h-5" />
+            </div>
+          )}
+          <div className="flex-1 min-w-0">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleFileChange(e, key)}
+              className="w-full text-xs text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-[#C5A059]/10 file:text-[#C5A059] file:hover:bg-[#C5A059]/20 file:cursor-pointer"
+            />
+            {file && (
+              <p className="text-[10px] text-green-500 font-medium mt-1">✓ File siap diunggah</p>
+            )}
+          </div>
+        </div>
+      </div>
+    );
   };
 
   if (loading) {
@@ -178,207 +251,306 @@ export default function EditOrder() {
       : 'bg-gray-50 border-gray-200 text-gray-900 focus:border-[#C5A059]'
   }`;
 
-  const labelClass = "block text-sm font-medium text-gray-700 dark:text-white/80 mb-2";
+  const labelClass = 'block text-xs font-bold text-gray-500 dark:text-white/40 uppercase tracking-wider mb-2';
+
+  const tabs = [
+    { id: 'info', label: lang === 'id' ? 'Profil Pengantin' : 'Couple Profile', icon: Heart },
+    { id: 'events', label: lang === 'id' ? 'Jadwal & Lokasi' : 'Events & Location', icon: MapPin },
+    { id: 'media', label: lang === 'id' ? 'Galeri & Media' : 'Gallery & Media', icon: ImageIcon },
+    { id: 'extra', label: lang === 'id' ? 'Cerita & Musik' : 'Story & Music', icon: Sparkles }
+  ];
+
+  const SelectedTheme = THEME_REGISTRY.find((t) => t.id === themeId);
+  const ThemeComponent = SelectedTheme?.component;
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-6 py-12">
-      <button
-        onClick={() => navigate(`/track/${orderCode}`)}
-        className="flex items-center text-sm text-gray-500 hover:text-gray-900 dark:text-white/50 dark:hover:text-white transition-colors mb-8"
-      >
-        <ArrowLeft size={16} className="mr-2" />
-        {lang === 'id' ? 'Kembali ke Status' : 'Back to Status'}
-      </button>
-
-      <div className="mb-10">
-        <h1 className="font-serif text-3xl md:text-4xl text-gray-900 dark:text-white mb-3">
-          {lang === 'id' ? 'Lengkapi Data Undangan' : 'Complete Invitation Data'}
-        </h1>
-        <p className="text-gray-500 dark:text-white/60">
-          {lang === 'id' ? 'Silakan lengkapi informasi detail untuk undangan pernikahan Anda' : 'Please complete the detailed information for your wedding invitation'} (Kode: {orderCode}).
-        </p>
+    <div className="w-full max-w-7xl mx-auto px-6 py-12">
+      
+      {/* Top Header Row */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+          <button
+            onClick={() => navigate(`/track/${orderCode}`)}
+            className="flex items-center text-xs text-gray-500 hover:text-gray-900 dark:text-white/50 dark:hover:text-white transition-colors mb-3 uppercase tracking-wider font-semibold"
+          >
+            <ArrowLeft size={14} className="mr-1.5" />
+            {lang === 'id' ? 'Kembali ke Status' : 'Back to Status'}
+          </button>
+          <h1 className="font-serif text-3xl md:text-4xl text-gray-900 dark:text-white leading-tight">
+            {lang === 'id' ? 'Lengkapi Data Undangan' : 'Complete Invitation Data'}
+          </h1>
+          <p className="text-sm text-gray-500 dark:text-white/50 mt-1">
+            {lang === 'id' ? 'Isi formulir di sebelah kiri untuk melihat pembaruan desain Anda secara instan di sebelah kanan.' : 'Fill out the form on the left to see your design update instantly on the right.'} (Invoice: {orderCode})
+          </p>
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
-        {/* URL Undangan */}
-        <div className={`p-6 md:p-8 rounded-2xl ${themeMode === 'dark' ? 'bg-white/5 ring-1 ring-white/10' : 'bg-white shadow-sm ring-1 ring-gray-100'}`}>
-          <h2 className="text-xl font-serif text-gray-900 dark:text-white mb-6 border-b border-gray-100 dark:border-white/10 pb-4">{lang === 'id' ? 'URL Undangan' : 'Invitation URL'}</h2>
-          <div className="grid grid-cols-1 gap-6">
-            <div>
-              <label className={labelClass}>{lang === 'id' ? 'Slug Undangan (URL Akhir)' : 'Invitation Slug (URL End)'}</label>
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center">
-                  <span className="px-4 py-3 rounded-l-xl border-y border-l bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-white/50 border-gray-200 dark:border-white/20">
-                    yoursite.com/invitation/
-                  </span>
-                  <input
-                    type="text"
-                    name="slug"
-                    value={formData.slug}
-                    disabled
-                    className={`${inputClass} rounded-l-none border-l-0 opacity-70 cursor-not-allowed`}
-                  />
-                </div>
-                <p className="text-xs text-amber-600 dark:text-amber-500">{lang === 'id' ? '* URL ini telah otomatis dibuat secara permanen saat pesanan dan tidak dapat diubah lagi.' : '* This URL was auto-generated permanently during order and cannot be changed.'}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Mempelai */}
-        <div className={`p-6 md:p-8 rounded-2xl ${themeMode === 'dark' ? 'bg-white/5 ring-1 ring-white/10' : 'bg-white shadow-sm ring-1 ring-gray-100'}`}>
-          <h2 className="text-xl font-serif text-gray-900 dark:text-white mb-6 border-b border-gray-100 dark:border-white/10 pb-4">{lang === 'id' ? 'Data Mempelai' : 'Couple Data'}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className={labelClass}>{lang === 'id' ? 'Nama Mempelai Pria' : 'Groom Name'}</label>
-              <input type="text" name="groom_name" value={formData.groom_name} onChange={handleChange} className={inputClass} required />
-            </div>
-            <div>
-              <label className={labelClass}>{lang === 'id' ? 'Nama Orang Tua Mempelai Pria' : 'Groom Parents Name'}</label>
-              <input type="text" name="groom_parents" value={formData.groom_parents} onChange={handleChange} placeholder={lang === 'id' ? "Putra dari Bapak ... & Ibu ..." : "Son of Mr. ... & Mrs. ..."} className={inputClass} />
-            </div>
-            <div>
-              <label className={labelClass}>{lang === 'id' ? 'Nama Mempelai Wanita' : 'Bride Name'}</label>
-              <input type="text" name="bride_name" value={formData.bride_name} onChange={handleChange} className={inputClass} required />
-            </div>
-            <div>
-              <label className={labelClass}>{lang === 'id' ? 'Nama Orang Tua Mempelai Wanita' : 'Bride Parents Name'}</label>
-              <input type="text" name="bride_parents" value={formData.bride_parents} onChange={handleChange} placeholder={lang === 'id' ? "Putri dari Bapak ... & Ibu ..." : "Daughter of Mr. ... & Mrs. ..."} className={inputClass} />
-            </div>
-          </div>
-        </div>
-
-        {/* Acara */}
-        <div className={`p-6 md:p-8 rounded-2xl ${themeMode === 'dark' ? 'bg-white/5 ring-1 ring-white/10' : 'bg-white shadow-sm ring-1 ring-gray-100'}`}>
-          <h2 className="text-xl font-serif text-gray-900 dark:text-white mb-6 border-b border-gray-100 dark:border-white/10 pb-4">{lang === 'id' ? 'Detail Acara' : 'Event Details'}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className={labelClass}>{lang === 'id' ? 'Waktu Akad / Pemberkatan' : 'Matrimony Time'}</label>
-              <div className="relative">
-                <input type="datetime-local" name="akad_date" value={formData.akad_date} onChange={handleChange} min={new Date().toISOString().slice(0, 16)} className={`${inputClass} cursor-pointer shadow-sm`} />
-              </div>
-            </div>
-            <div>
-              <label className={labelClass}>{lang === 'id' ? 'Waktu Resepsi' : 'Reception Time'}</label>
-              <div className="relative">
-                <input type="datetime-local" name="resepsi_date" value={formData.resepsi_date} onChange={handleChange} min={new Date().toISOString().slice(0, 16)} className={`${inputClass} cursor-pointer shadow-sm`} />
-              </div>
-            </div>
-            <div className="md:col-span-2">
-              <label className={labelClass}>{lang === 'id' ? 'Nama & Alamat Lokasi' : 'Venue Name & Address'}</label>
-              <textarea name="location_name" value={formData.location_name} onChange={handleChange} className={`${inputClass} min-h-[100px]`} placeholder={lang === 'id' ? "Contoh: Gedung Serbaguna ABC, Jl. Raya No. 123..." : "E.g. Grand Ballroom, 123 Main St..."} />
-            </div>
-            <div className="md:col-span-2">
-              <label className={labelClass}>{lang === 'id' ? 'Link Google Maps' : 'Google Maps Link'}</label>
-              <div className="flex gap-3">
-                <input type="url" name="maps_link" value={formData.maps_link} onChange={handleChange} className={inputClass} placeholder="https://maps.app.goo.gl/..." />
+      {/* Main Side-by-Side Layout Grid */}
+      <div className="flex flex-col lg:flex-row gap-10 items-start">
+        
+        {/* Left Column: Form Panel (60% width) */}
+        <div className="flex-1 w-full space-y-8">
+          
+          {/* Tab Navigation Menu */}
+          <div className="flex p-1 bg-gray-100 dark:bg-white/5 rounded-2xl gap-1 overflow-x-auto no-scrollbar border border-gray-200/50 dark:border-white/5 shadow-inner">
+            {tabs.map((tab) => {
+              const TabIcon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
                 <button
+                  key={tab.id}
                   type="button"
-                  onClick={() => setShowMapModal(true)}
-                  className="px-4 py-3 bg-gray-100 dark:bg-white/10 text-gray-700 dark:text-white rounded-xl hover:bg-gray-200 dark:hover:bg-white/20 transition-colors whitespace-nowrap flex items-center font-medium shadow-sm"
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={`flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap flex-1 ${
+                    isActive 
+                      ? 'bg-[#C5A059] text-white shadow-md shadow-[#C5A059]/10' 
+                      : 'text-gray-500 hover:text-gray-900 dark:text-white/60 dark:hover:text-white'
+                  }`}
                 >
-                  <MapPin size={18} className="mr-2 text-[#C5A059]" />
-                  {lang === 'id' ? 'Cari Lokasi Saat Ini' : 'Find Current Location'}
+                  <TabIcon size={14} />
+                  {tab.label}
                 </button>
+              );
+            })}
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            
+            {/* Tab Content: Info (Mempelai) */}
+            {activeTab === 'info' && (
+              <div className={`p-6 md:p-8 rounded-3xl border ${themeMode === 'dark' ? 'border-white/10 glass-card bg-[#111]/80' : 'border-gray-200 bg-white shadow-xl shadow-black/5'} space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300`}>
+                <h2 className="text-xl font-serif text-gray-900 dark:text-white border-b pb-3 border-gray-100 dark:border-white/5">{lang === 'id' ? 'Profil Mempelai' : 'Couple Profile'}</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className={labelClass}>{lang === 'id' ? 'Nama Mempelai Pria' : 'Groom Name'}</label>
+                    <input type="text" name="groom_name" value={formData.groom_name} onChange={handleChange} className={inputClass} required />
+                  </div>
+                  <div>
+                    <label className={labelClass}>{lang === 'id' ? 'Nama Orang Tua Mempelai Pria' : 'Groom Parents'}</label>
+                    <input type="text" name="groom_parents" value={formData.groom_parents} onChange={handleChange} placeholder={lang === 'id' ? "Putra dari Bapak ... & Ibu ..." : "Son of Mr. ... & Mrs. ..."} className={inputClass} />
+                  </div>
+                  <div>
+                    <label className={labelClass}>{lang === 'id' ? 'Nama Mempelai Wanita' : 'Bride Name'}</label>
+                    <input type="text" name="bride_name" value={formData.bride_name} onChange={handleChange} className={inputClass} required />
+                  </div>
+                  <div>
+                    <label className={labelClass}>{lang === 'id' ? 'Nama Orang Tua Mempelai Wanita' : 'Bride Parents'}</label>
+                    <input type="text" name="bride_parents" value={formData.bride_parents} onChange={handleChange} placeholder={lang === 'id' ? "Putri dari Bapak ... & Ibu ..." : "Daughter of Mr. ... & Mrs. ..."} className={inputClass} />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Tab Content: Events (Acara) */}
+            {activeTab === 'events' && (
+              <div className={`p-6 md:p-8 rounded-3xl border ${themeMode === 'dark' ? 'border-white/10 glass-card bg-[#111]/80' : 'border-gray-200 bg-white shadow-xl shadow-black/5'} space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300`}>
+                <h2 className="text-xl font-serif text-gray-900 dark:text-white border-b pb-3 border-gray-100 dark:border-white/5">{lang === 'id' ? 'Detail Acara & Lokasi' : 'Event Details & Venue'}</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className={labelClass}>{lang === 'id' ? 'Waktu Akad / Pemberkatan' : 'Matrimony Time'}</label>
+                    <input type="datetime-local" name="akad_date" value={formData.akad_date} onChange={handleChange} className={inputClass} />
+                  </div>
+                  <div>
+                    <label className={labelClass}>{lang === 'id' ? 'Waktu Resepsi' : 'Reception Time'}</label>
+                    <input type="datetime-local" name="resepsi_date" value={formData.resepsi_date} onChange={handleChange} className={inputClass} />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className={labelClass}>{lang === 'id' ? 'Nama & Alamat Lokasi' : 'Venue Name & Address'}</label>
+                    <textarea name="location_name" value={formData.location_name} onChange={handleChange} className={`${inputClass} min-h-[100px]`} placeholder={lang === 'id' ? "Contoh: Gedung Serbaguna ABC, Jl. Raya No. 123..." : "E.g. Grand Ballroom, 123 Main St..."} />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className={labelClass}>{lang === 'id' ? 'Link Google Maps' : 'Google Maps Link'}</label>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <input type="url" name="maps_link" value={formData.maps_link} onChange={handleChange} className={inputClass} placeholder="https://maps.app.goo.gl/..." />
+                      <button
+                        type="button"
+                        onClick={() => setShowMapModal(true)}
+                        className="px-5 py-3 bg-gray-100 dark:bg-white/10 text-gray-700 dark:text-white rounded-xl hover:bg-gray-200 dark:hover:bg-white/20 transition-colors whitespace-nowrap flex items-center justify-center font-semibold text-xs uppercase tracking-wider shrink-0 shadow-sm border border-transparent dark:border-white/5 cursor-pointer"
+                      >
+                        <MapPin size={14} className="mr-1.5 text-[#C5A059]" />
+                        {lang === 'id' ? 'Cari Lokasi Anda' : 'Find My Location'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Tab Content: Media (Galeri Foto) */}
+            {activeTab === 'media' && (
+              <div className={`p-6 md:p-8 rounded-3xl border ${themeMode === 'dark' ? 'border-white/10 glass-card bg-[#111]/80' : 'border-gray-200 bg-white shadow-xl shadow-black/5'} space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300`}>
+                <div>
+                  <h2 className="text-xl font-serif text-gray-900 dark:text-white border-b pb-3 border-gray-100 dark:border-white/5">{lang === 'id' ? 'Wallpaper & Foto Utama' : 'Wallpaper & Main Photos'}</h2>
+                  <p className="text-xs text-gray-400 dark:text-white/40 mt-1.5">{lang === 'id' ? 'Foto utama untuk halaman sampul dan background undangan Anda.' : 'Main photos for invitation cover and background.'}</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {renderImageField(lang === 'id' ? 'Foto Sampul Undangan (Cover)' : 'Cover Image', 'cover_image', formData.cover_image)}
+                  {renderImageField(lang === 'id' ? 'Wallpaper Tema (Hero Background)' : 'Hero Wallpaper', 'hero_image', formData.hero_image)}
+                </div>
+
+                <div className="pt-4 border-t border-gray-100 dark:border-white/5">
+                  <h3 className="text-base font-serif text-gray-900 dark:text-white mb-2">{lang === 'id' ? 'Foto Pengantin & Galeri Undangan' : 'Couple Photos & Wedding Gallery'}</h3>
+                  <p className="text-xs text-gray-400 dark:text-white/40 mb-5">{lang === 'id' ? 'Unggah foto detail mempelai serta foto-foto galeri yang akan tampil di dalam undangan Anda.' : 'Upload groom/bride photos and other gallery items.'}</p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {renderImageField(lang === 'id' ? 'Foto Mempelai Pria' : 'Groom Photo', 'groom_image', formData.groom_image)}
+                    {renderImageField(lang === 'id' ? 'Foto Mempelai Wanita' : 'Bride Photo', 'bride_image', formData.bride_image)}
+                    {renderImageField(lang === 'id' ? 'Foto Galeri 1' : 'Gallery Photo 1', 'gallery_1', formData.gallery_1)}
+                    {renderImageField(lang === 'id' ? 'Foto Galeri 2' : 'Gallery Photo 2', 'gallery_2', formData.gallery_2)}
+                    {renderImageField(lang === 'id' ? 'Foto Galeri 3' : 'Gallery Photo 3', 'gallery_3', formData.gallery_3)}
+                    {renderImageField(lang === 'id' ? 'Foto Galeri 4' : 'Gallery Photo 4', 'gallery_4', formData.gallery_4)}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Tab Content: Extra (Cerita & Musik) */}
+            {activeTab === 'extra' && (
+              <div className={`p-6 md:p-8 rounded-3xl border ${themeMode === 'dark' ? 'border-white/10 glass-card bg-[#111]/80' : 'border-gray-200 bg-white shadow-xl shadow-black/5'} space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300`}>
+                <h2 className="text-xl font-serif text-gray-900 dark:text-white border-b pb-3 border-gray-100 dark:border-white/5">{lang === 'id' ? 'Kisah Cinta & Musik Latar' : 'Love Story & Audio'}</h2>
+                <div className="grid grid-cols-1 gap-6">
+                  <div>
+                    <label className={labelClass}>{lang === 'id' ? 'Kisah Cinta (Opsional)' : 'Love Story (Optional)'}</label>
+                    <textarea name="story" value={formData.story} onChange={handleChange} className={`${inputClass} min-h-[140px]`} placeholder={lang === 'id' ? "Ceritakan secara singkat bagaimana Anda berdua bertemu dan memutuskan melangkah ke pelaminan..." : "Tell your love story briefly..."} />
+                  </div>
+                  <div>
+                    <label className={labelClass}>{lang === 'id' ? 'Pilih Musik Latar' : 'Background Music'}</label>
+                    <select name="music_url" value={formData.music_url} onChange={(e) => setFormData(prev => ({...prev, music_url: e.target.value}))} className={`${inputClass} cursor-pointer appearance-none`}>
+                      <option value="">{lang === 'id' ? '-- Tanpa Musik Latar --' : '-- No Music --'}</option>
+                      <option value="romantic_1.mp3">A Thousand Years - Instrumental</option>
+                      <option value="romantic_2.mp3">Perfect - Cover Acoustic</option>
+                      <option value="romantic_3.mp3">Canon in D - Piano</option>
+                      <option value="romantic_4.mp3">Beautiful in White - Piano</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Submit Bar */}
+            <div className="flex justify-between items-center pt-4">
+              <p className="text-xs text-gray-400 dark:text-white/30">{lang === 'id' ? '* Semua perubahan akan disimpan secara permanen di database.' : '* All changes will be saved permanently to the database.'}</p>
+              <button
+                type="submit"
+                disabled={saving}
+                className="px-8 py-4 bg-[#C5A059] text-white rounded-xl font-semibold uppercase tracking-wider text-xs hover:bg-[#b08d4a] focus:ring-4 focus:ring-[#C5A059]/20 transition-all flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer shadow-md shadow-[#C5A059]/10"
+              >
+                {saving ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin mr-2" />
+                    {lang === 'id' ? 'Menyimpan...' : 'Saving...'}
+                  </>
+                ) : (
+                  <>
+                    <Save size={16} className="mr-2" />
+                    {lang === 'id' ? 'Simpan Perubahan' : 'Save Changes'}
+                  </>
+                )}
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+
+        {/* Right Column: Live Mockup Preview Panel (40% width) */}
+        <div className="hidden lg:block w-[375px] sticky top-8 shrink-0 space-y-4">
+          <div className="flex items-center justify-between px-2">
+            <span className="text-xs font-bold text-gray-400 dark:text-white/40 uppercase tracking-widest flex items-center gap-1.5">
+              <Eye size={14} className="text-[#C5A059]" />
+              {lang === 'id' ? 'Tampilan Live Undangan' : 'Live Invitation Preview'}
+            </span>
+            <span className="text-[10px] text-green-500 font-semibold bg-green-500/10 px-2 py-0.5 rounded-full border border-green-500/20 animate-pulse">
+              Interactive
+            </span>
+          </div>
+
+          <div className="w-[375px] h-[720px] rounded-[52px] border-[12px] border-zinc-950 dark:border-zinc-800 overflow-hidden shadow-2xl relative bg-[#f8fafd] dark:bg-zinc-900 flex flex-col ring-4 ring-[#C5A059]/10">
+            {/* iPhone Notch */}
+            <div className="absolute top-0 inset-x-0 h-6 bg-black z-[100] flex items-center justify-between px-6 text-[10px] text-white font-medium">
+              <span>9:41</span>
+              <div className="w-16 h-4 bg-black rounded-full absolute left-1/2 -translate-x-1/2 top-1" />
+              <div className="flex items-center gap-1">
+                <div className="w-2.5 h-1.5 border border-white rounded-[2px] relative" />
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* Tambahan & Wallpaper */}
-        <div className={`p-6 md:p-8 rounded-2xl ${themeMode === 'dark' ? 'bg-white/5 ring-1 ring-white/10' : 'bg-white shadow-sm ring-1 ring-gray-100'}`}>
-          <h2 className="text-xl font-serif text-gray-900 dark:text-white mb-6 border-b border-gray-100 dark:border-white/10 pb-4">{lang === 'id' ? 'Foto & Wallpaper Tema' : 'Photos & Theme Wallpaper'}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div>
-              <label className={labelClass}>{lang === 'id' ? 'Foto Sampul Undangan (Awal Masuk / Cover)' : 'Invitation Cover Photo'}</label>
-              {formData.cover_image && !coverFile && (
-                <img src={formData.cover_image} className="w-full h-32 object-cover rounded-xl mb-3 border border-gray-200 dark:border-white/10" alt="Cover" />
+            {/* Inner Live Content */}
+            <div className="flex-1 w-full overflow-y-auto no-scrollbar relative pt-6 bg-white dark:bg-zinc-950">
+              {ThemeComponent ? (
+                <React.Suspense fallback={
+                  <div className="h-full w-full flex flex-col items-center justify-center bg-gray-50 dark:bg-zinc-900">
+                    <Loader2 className="w-8 h-8 animate-spin text-[#C5A059] mb-2" />
+                    <span className="text-xs text-gray-400">{lang === 'id' ? 'Memuat Pratinjau...' : 'Loading Preview...'}</span>
+                  </div>
+                }>
+                  <ThemeComponent data={{
+                    ...formData,
+                    // Preview selected files in real-time
+                    cover_image: files.cover_image ? URL.createObjectURL(files.cover_image) : formData.cover_image,
+                    hero_image: files.hero_image ? URL.createObjectURL(files.hero_image) : formData.hero_image,
+                    groom_image: files.groom_image ? URL.createObjectURL(files.groom_image) : formData.groom_image,
+                    bride_image: files.bride_image ? URL.createObjectURL(files.bride_image) : formData.bride_image,
+                    gallery_1: files.gallery_1 ? URL.createObjectURL(files.gallery_1) : formData.gallery_1,
+                    gallery_2: files.gallery_2 ? URL.createObjectURL(files.gallery_2) : formData.gallery_2,
+                    gallery_3: files.gallery_3 ? URL.createObjectURL(files.gallery_3) : formData.gallery_3,
+                    gallery_4: files.gallery_4 ? URL.createObjectURL(files.gallery_4) : formData.gallery_4
+                  }} guestName={lang === 'id' ? 'Nama Tamu' : 'Guest Name'} />
+                </React.Suspense>
+              ) : (
+                <div className="h-full w-full flex items-center justify-center text-xs text-gray-400 bg-gray-50 dark:bg-zinc-900">
+                  {lang === 'id' ? 'Gagal memuat pratinjau tema' : 'Failed to load theme preview'}
+                </div>
               )}
-              <input type="file" accept="image/*" onChange={e => handleFileChange(e, 'cover')} className={`${inputClass} !py-2`} />
             </div>
-            <div>
-              <label className={labelClass}>{lang === 'id' ? 'Wallpaper Tema (Background Hero Section)' : 'Theme Wallpaper'}</label>
-              {formData.hero_image && !heroFile && (
-                <img src={formData.hero_image} className="w-full h-32 object-cover rounded-xl mb-3 border border-gray-200 dark:border-white/10" alt="Wallpaper" />
-              )}
-              <input type="file" accept="image/*" onChange={e => handleFileChange(e, 'hero')} className={`${inputClass} !py-2`} />
-            </div>
-          </div>
 
-          <h2 className="text-xl font-serif text-gray-900 dark:text-white mb-6 border-b border-gray-100 dark:border-white/10 pb-4">{lang === 'id' ? 'Cerita & Musik' : 'Story & Music'}</h2>
-          <div className="grid grid-cols-1 gap-6">
-            <div>
-              <label className={labelClass}>{lang === 'id' ? 'Kisah Cinta (Opsional)' : 'Love Story (Optional)'}</label>
-              <textarea name="story" value={formData.story} onChange={handleChange} className={`${inputClass} min-h-[120px]`} placeholder={lang === 'id' ? "Ceritakan singkat perjalanan cinta Anda..." : "Tell your love story briefly..."} />
-            </div>
-            <div>
-              <label className={labelClass}>{lang === 'id' ? 'Pilih Musik Latar' : 'Background Music'}</label>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{lang === 'id' ? 'Musik yang akan diputar otomatis ketika undangan dibuka' : 'Music that auto-plays when invitation is opened'}</p>
-              <select name="music_url" value={formData.music_url} onChange={(e) => setFormData(prev => ({...prev, music_url: e.target.value}))} className={`${inputClass} cursor-pointer appearance-none`}>
-                <option value="">{lang === 'id' ? '-- Tidak Memakai Musik --' : '-- No Music --'}</option>
-                <option value="romantic_1.mp3">A Thousand Years - Instrumental</option>
-                <option value="romantic_2.mp3">Perfect - Cover Acoustic</option>
-                <option value="romantic_3.mp3">Canon in D - Piano</option>
-                <option value="romantic_4.mp3">Beautiful in White - Piano</option>
-              </select>
+            {/* Simulated Home Indicator */}
+            <div className="absolute bottom-1 inset-x-0 h-1 z-[100] flex justify-center">
+              <div className="w-24 h-1 bg-black/60 dark:bg-white/30 rounded-full" />
             </div>
           </div>
         </div>
 
-        <div className="flex justify-end pt-4">
-          <button
-            type="submit"
-            disabled={saving}
-            className="px-8 py-4 bg-[#C5A059] text-white rounded-xl font-medium hover:bg-[#b08d4a] focus:ring-4 focus:ring-[#C5A059]/20 transition-all flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
-          >
-            {saving ? (
-              <>
-                <Loader2 size={20} className="animate-spin mr-2" />
-                Menyimpan...
-              </>
-            ) : (
-              <>
-                <Save size={20} className="mr-2" />
-                {lang === 'id' ? 'Simpan Data Undangan' : 'Save Invitation Data'}
-              </>
-            )}
-          </button>
-        </div>
-      </form>
+      </div>
 
+      {/* Map coordinates modal */}
       {showMapModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className={`w-full max-w-md p-6 rounded-2xl shadow-xl relative ${themeMode === 'dark' ? 'bg-zinc-900 border border-white/10' : 'bg-white'}`}>
+        <div className="fixed inset-0 z-[250] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className={`w-full max-w-md p-6 rounded-3xl shadow-2xl relative ${themeMode === 'dark' ? 'bg-zinc-900 border border-white/10' : 'bg-white'}`}>
             <button 
               onClick={() => setShowMapModal(false)}
-              className="absolute top-4 right-4 p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-gray-500 dark:text-white/50"
+              className="absolute top-4 right-4 p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-gray-500 dark:text-white/50 cursor-pointer"
             >
               <X size={20} />
             </button>
             <div className="mb-6 text-center">
-              <div className="w-16 h-16 bg-[#C5A059]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-[#C5A059]/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-[#C5A059]/20">
                 <MapPin size={32} className="text-[#C5A059]" />
               </div>
-              <h3 className="text-xl font-serif text-gray-900 dark:text-white mb-2">Ambil Lokasi Saat Ini</h3>
-              <p className="text-sm text-gray-500 dark:text-white/60">
-                Kami akan meminta akses lokasi pada browser Anda untuk membuat letak peta secara otomatis.
+              <h3 className="text-xl font-serif text-gray-900 dark:text-white mb-2">{lang === 'id' ? 'Ambil Lokasi Saat Ini' : 'Get Current Location'}</h3>
+              <p className="text-xs text-gray-500 dark:text-white/60 leading-relaxed">
+                {lang === 'id' 
+                  ? 'Kami akan meminta akses lokasi pada browser Anda untuk membuat letak peta koordinat Google Maps secara otomatis.' 
+                  : 'We will ask for your browser location access to generate Google Maps coordinates automatically.'}
               </p>
             </div>
             
             <button
               onClick={handleGetLocation}
               disabled={locLoading}
-              className="w-full py-4 bg-[#C5A059] text-white rounded-xl font-medium hover:bg-[#b08d4a] transition-all flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full py-4 bg-[#C5A059] text-white rounded-xl font-semibold uppercase tracking-wider text-xs hover:bg-[#b08d4a] transition-all flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer"
             >
               {locLoading ? (
-                <><Loader2 size={20} className="animate-spin mr-2" /> Mengambil Lokasi...</>
+                <><Loader2 size={16} className="animate-spin mr-2" /> {lang === 'id' ? 'Mengambil Lokasi...' : 'Retrieving Location...'}</>
               ) : (
-                'Izinkan & Ambil Lokasi'
+                lang === 'id' ? 'Izinkan & Ambil Lokasi' : 'Allow & Get Location'
               )}
             </button>
           </div>
         </div>
       )}
+      
     </div>
   );
 }

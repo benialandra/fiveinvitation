@@ -400,12 +400,14 @@ app.put("/api/orders/:orderCode", upload.fields([{ name: 'cover_image' }, { name
     const orderCode = req.params.orderCode;
     const { 
       groom_name, bride_name, groom_parents, bride_parents, 
-      akad_date, resepsi_date, location_name, maps_link, story, music_url, slug, cover_image, hero_image 
+      akad_date, resepsi_date, location_name, maps_link, story, music_url, slug, cover_image, hero_image,
+      customizations
     } = req.body;
 
     let updateData: any = {
       groom_name, bride_name, groom_parents, bride_parents, 
-      location_name, maps_link, story, music_url, slug, cover_image, hero_image
+      location_name, maps_link, story, music_url, slug, cover_image, hero_image,
+      customizations: customizations ? (typeof customizations === 'string' ? JSON.parse(customizations) : customizations) : null
     };
 
     updateData.akad_date = akad_date || null;

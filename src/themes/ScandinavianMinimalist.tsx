@@ -52,9 +52,12 @@ export default function ScandinavianMinimalist({ data, guestName, lang = 'id' }:
   
   const coverImage = data.cover_image || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80";
   const heroImage = data.hero_image || "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80";
+  const groomImg = data.groom_image || data.gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80";
+  const brideImg = data.bride_image || data.gallery_2 || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80";
   const gallery1 = data.gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80";
   const gallery2 = data.gallery_2 || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80";
   const gallery3 = data.gallery_3 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80";
+  const gallery4 = data.gallery_4 || "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80";
   const story = data.story || "In the simplicity of everyday life, we found an extraordinary love. A love built on quiet mornings, shared silence, and a deep understanding.";
 
   useEffect(() => {
@@ -215,16 +218,16 @@ export default function ScandinavianMinimalist({ data, guestName, lang = 'id' }:
             <section className="py-24 px-6 scandi-reveal">
                <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-16 justify-center">
                   <div className="flex flex-col items-center text-center">
-                     <div className="w-48 h-64 md:w-64 md:h-80 rounded-t-[10rem] overflow-hidden bg-[#EAE8E3] mb-8">
-                        <img src={gallery1} className="w-full h-full object-cover" alt={groom} />
-                     </div>
-                     <h3 className="text-3xl font-light mb-2">{groom}</h3>
-                     <p className="text-[#8B8881] text-xs uppercase tracking-widest">Putra dari<br/><span className="text-[#1A1A1A] font-medium">{data.groom_parents || 'Bpk. Hendra & Ibu Susi'}</span></p>
-                  </div>
-                  <div className="flex flex-col items-center text-center">
-                     <div className="w-48 h-64 md:w-64 md:h-80 rounded-t-[10rem] overflow-hidden bg-[#EAE8E3] mb-8">
-                        <img src={gallery2} className="w-full h-full object-cover" alt={bride} />
-                     </div>
+                      <div className="w-48 h-64 md:w-64 md:h-80 rounded-t-[10rem] overflow-hidden bg-[#EAE8E3] mb-8">
+                         <img src={groomImg} className="w-full h-full object-cover" alt={groom} />
+                      </div>
+                      <h3 className="text-3xl font-light mb-2">{groom}</h3>
+                      <p className="text-[#8B8881] text-xs uppercase tracking-widest">Putra dari<br/><span className="text-[#1A1A1A] font-medium">{data.groom_parents || 'Bpk. Hendra & Ibu Susi'}</span></p>
+                   </div>
+                   <div className="flex flex-col items-center text-center">
+                      <div className="w-48 h-64 md:w-64 md:h-80 rounded-t-[10rem] overflow-hidden bg-[#EAE8E3] mb-8">
+                         <img src={brideImg} className="w-full h-full object-cover" alt={bride} />
+                      </div>
                      <h3 className="text-3xl font-light mb-2">{bride}</h3>
                      <p className="text-[#8B8881] text-xs uppercase tracking-widest">Putri dari<br/><span className="text-[#1A1A1A] font-medium">{data.bride_parents || 'Bpk. Budi & Ibu Ani'}</span></p>
                   </div>
@@ -265,7 +268,7 @@ export default function ScandinavianMinimalist({ data, guestName, lang = 'id' }:
             <section className="py-24 px-6 md:px-12 max-w-6xl mx-auto scandi-reveal">
               <p className="text-[#8B8881] text-xs uppercase tracking-[0.3em] mb-12 text-center">{t.gallery}</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
-                {[heroImage, gallery1, gallery2, gallery3].map((img, i) => (
+                {[gallery1, gallery2, gallery3, gallery4].map((img, i) => (
                   <div key={i} className={`overflow-hidden bg-[#EAE8E3] rounded-[2rem] ${i === 0 || i === 3 ? 'aspect-[4/5]' : 'aspect-square'} relative group`}>
                     <div className="w-full h-[130%] -top-[15%] absolute">
                       <img src={img} alt="Gallery" className="w-full h-full object-cover scandi-parallax opacity-90 transition-opacity duration-700 group-hover:opacity-100" />

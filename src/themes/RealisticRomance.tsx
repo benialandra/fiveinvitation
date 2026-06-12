@@ -26,6 +26,8 @@ export default function RealisticRomance({ data, guestName }: { data?: any, gues
   const heroImg = data?.hero_image || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2000&auto=format&fit=crop";
   const gallery1 = data?.gallery_1 || "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1000&auto=format&fit=crop";
   const gallery2 = data?.gallery_2 || "https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=80&w=1000&auto=format&fit=crop";
+  const gallery3 = data?.gallery_3 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1000&auto=format&fit=crop";
+  const gallery4 = data?.gallery_4 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1000&auto=format&fit=crop";
   const bankName1 = data?.bank_name_1 || "BCA";
   const bankAccount1 = data?.bank_account_1 || "1234567890";
   const bankAccountName1 = data?.bank_account_name_1 || groom;
@@ -145,24 +147,18 @@ export default function RealisticRomance({ data, guestName }: { data?: any, gues
         {/* Gallery / Images */}
         <section className="py-12 overflow-hidden px-4 md:px-12 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <motion.div 
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1 }}
-              viewport={{ once: true }}
-              className="aspect-[3/4] rounded-t-full overflow-hidden"
-            >
-              <img src={gallery1} className="w-full h-full object-cover hover:scale-105 transition-transform duration-1000" alt="Prewedding 1" />
-            </motion.div>
-            <motion.div 
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, delay: 0.2 }}
-              viewport={{ once: true }}
-              className="aspect-[3/4] rounded-b-full overflow-hidden md:mt-24"
-            >
-              <img src={gallery2} className="w-full h-full object-cover hover:scale-105 transition-transform duration-1000" alt="Prewedding 2" />
-            </motion.div>
+            {[gallery1, gallery2, gallery3, gallery4].map((img, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: i * 0.1 }}
+                viewport={{ once: true }}
+                className={`aspect-[3/4] overflow-hidden ${i % 2 === 0 ? 'rounded-t-full' : 'rounded-b-full md:mt-24'}`}
+              >
+                <img src={img} className="w-full h-full object-cover hover:scale-105 transition-transform duration-1000" alt={`Prewedding ${i + 1}`} />
+              </motion.div>
+            ))}
           </div>
         </section>
 

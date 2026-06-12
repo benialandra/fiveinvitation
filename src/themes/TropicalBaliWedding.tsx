@@ -97,9 +97,12 @@ export default function TropicalBaliWedding({ data, guestName, lang = 'id' }: Th
   
   const coverImg = data.cover_image || "https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=2000&auto=format&fit=crop"; 
   const heroImg = data.hero_image || "https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=80&w=2000&auto=format&fit=crop"; 
+  const groomImg = data.groom_image || data.gallery_1 || "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=800&auto=format&fit=crop";
+  const brideImg = data.bride_image || data.gallery_2 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop";
   const gallery1 = data.gallery_1 || "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=800&auto=format&fit=crop";
   const gallery2 = data.gallery_2 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop";
   const gallery3 = data.gallery_3 || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop";
+  const gallery4 = data.gallery_4 || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=800&auto=format&fit=crop";
   
   const bankName1 = data.bank_name_1 || "BCA";
   const bankAccount1 = data.bank_account_1 || "0987654321";
@@ -228,7 +231,7 @@ export default function TropicalBaliWedding({ data, guestName, lang = 'id' }: Th
                     className="flex-1 text-center"
                   >
                      <div className="w-56 h-56 mx-auto rounded-[3rem] overflow-hidden shadow-xl mb-6 bg-[#8C9C84] rotate-3 hover:rotate-0 transition-all duration-500">
-                        <img src={gallery1} className="w-full h-full object-cover mix-blend-multiply opacity-90 hover:mix-blend-normal hover:opacity-100 transition-all duration-500" alt={groom} />
+                        <img src={groomImg} className="w-full h-full object-cover mix-blend-multiply opacity-90 hover:mix-blend-normal hover:opacity-100 transition-all duration-500" alt={groom} />
                      </div>
                      <h3 className="text-4xl font-light text-[#2E4A28] mb-2 italic">{groom}</h3>
                      <p className="text-[10px] font-sans font-bold tracking-widest text-[#8C9C84] uppercase mb-1">Putra Dari</p>
@@ -245,7 +248,7 @@ export default function TropicalBaliWedding({ data, guestName, lang = 'id' }: Th
                     className="flex-1 text-center"
                   >
                      <div className="w-56 h-56 mx-auto rounded-[3rem] overflow-hidden shadow-xl mb-6 bg-[#8C9C84] -rotate-3 hover:rotate-0 transition-all duration-500">
-                        <img src={gallery2} className="w-full h-full object-cover mix-blend-multiply opacity-90 hover:mix-blend-normal hover:opacity-100 transition-all duration-500" alt={bride} />
+                        <img src={brideImg} className="w-full h-full object-cover mix-blend-multiply opacity-90 hover:mix-blend-normal hover:opacity-100 transition-all duration-500" alt={bride} />
                      </div>
                      <h3 className="text-4xl font-light text-[#2E4A28] mb-2 italic">{bride}</h3>
                      <p className="text-[10px] font-sans font-bold tracking-widest text-[#8C9C84] uppercase mb-1">Putri Dari</p>
@@ -331,7 +334,7 @@ export default function TropicalBaliWedding({ data, guestName, lang = 'id' }: Th
             <section className="py-24 px-6 text-center">
                <h3 className="text-xs font-sans font-bold uppercase tracking-[0.3em] text-[#8C9C84] mb-12">{t.gallery}</h3>
                <div className="max-w-6xl mx-auto columns-2 md:columns-3 gap-6 space-y-6">
-                  {[heroImg, gallery1, gallery2, coverImg, gallery3].map((img, i) => (
+                  {[gallery1, gallery2, gallery3, gallery4].map((img, i) => (
                     <motion.div 
                       key={i} 
                       initial={{ opacity: 0, scale: 0.9 }}

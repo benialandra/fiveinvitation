@@ -33,7 +33,13 @@ export default function MasterTheme({
   message = "Terima kasih atas doa & restu Anda",
   config_json = defaultJSONConfig,
   hero_image,
-  cover_image
+  cover_image,
+  groom_image,
+  bride_image,
+  gallery_1,
+  gallery_2,
+  gallery_3,
+  gallery_4
 }: any) {
   
   const config = typeof config_json === 'string' ? JSON.parse(config_json) : (config_json || defaultJSONConfig);
@@ -106,16 +112,28 @@ export default function MasterTheme({
         );
       
       case 'couple':
+        const finalGroomImage = groom_image || gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=800";
+        const finalBrideImage = bride_image || gallery_2 || "https://images.unsplash.com/photo-1546822830-4663ec40a3dd?auto=format&fit=crop&q=80&w=800";
         return (
           <div key={index} className="py-24 px-6 max-w-4xl mx-auto text-center" style={{ backgroundColor: colors?.background }}>
             <h2 className="text-3xl md:text-5xl mb-12" style={titleStyle}>Mempelai</h2>
             <div className="flex flex-col md:flex-row justify-center items-center gap-12 md:gap-24">
-               <div>
+               <div className="flex flex-col items-center">
+                  {(groom_image || gallery_1) && (
+                    <div className="w-32 h-32 rounded-full overflow-hidden mb-4 border-2" style={{ borderColor: colors?.primary }}>
+                      <img src={finalGroomImage} alt="Groom" className="w-full h-full object-cover" />
+                    </div>
+                  )}
                   <h3 className="text-2xl font-bold mb-2" style={{ fontFamily: fonts?.heading }}>{finalGroom}</h3>
                   <p style={{ opacity: 0.8 }}>Putra dari Keluarga A</p>
                </div>
                <div style={{ color: colors?.primary, fontFamily: fonts?.heading, fontSize: '3rem' }}>&</div>
-               <div>
+               <div className="flex flex-col items-center">
+                  {(bride_image || gallery_2) && (
+                    <div className="w-32 h-32 rounded-full overflow-hidden mb-4 border-2" style={{ borderColor: colors?.primary }}>
+                      <img src={finalBrideImage} alt="Bride" className="w-full h-full object-cover" />
+                    </div>
+                  )}
                   <h3 className="text-2xl font-bold mb-2" style={{ fontFamily: fonts?.heading }}>{finalBride}</h3>
                   <p style={{ opacity: 0.8 }}>Putri dari Keluarga B</p>
                </div>
@@ -148,9 +166,10 @@ export default function MasterTheme({
         
       case 'gallery':
         const galleryImages = (gallery && gallery.length > 0) ? gallery : [
-           cover_image || "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200",
-           "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=1200",
-           "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&q=80&w=1200"
+           gallery_1 || cover_image || "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200",
+           gallery_2 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=1200",
+           gallery_3 || "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&q=80&w=1200",
+           gallery_4 || "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&q=80&w=1200"
         ];
         return (
           <div key={index} className="py-24 px-6 max-w-4xl mx-auto text-center" style={{ backgroundColor: colors?.background }}>

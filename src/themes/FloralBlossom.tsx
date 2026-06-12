@@ -62,9 +62,12 @@ export default function FloralBlossom({ data, guestName, lang = 'id' }: ThemePro
   
   const coverImg = data.cover_image || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop";
   const heroImg = data.hero_image || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1200&auto=format&fit=crop";
+  const groomImg = data.groom_image || data.gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800&auto=format&fit=crop";
+  const brideImg = data.bride_image || data.gallery_2 || "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=800&auto=format&fit=crop";
   const gallery1 = data.gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800&auto=format&fit=crop";
   const gallery2 = data.gallery_2 || "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=800&auto=format&fit=crop";
   const gallery3 = data.gallery_3 || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=800&auto=format&fit=crop";
+  const gallery4 = data.gallery_4 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop";
   
   const bankName1 = data.bank_name_1 || "BCA";
   const bankAccount1 = data.bank_account_1 || "1234567890";
@@ -224,7 +227,7 @@ export default function FloralBlossom({ data, guestName, lang = 'id' }: ThemePro
                     className="flex-1 text-center"
                   >
                      <div className="w-56 h-72 md:w-64 md:h-80 mx-auto rounded-full border-[12px] border-white shadow-xl mb-8 bg-rose-100 overflow-hidden relative">
-                        <img src={gallery1} className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt={groom} />
+                        <img src={groomImg} className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt={groom} />
                         <div className="absolute inset-0 bg-rose-900/10 mix-blend-overlay hover:bg-transparent transition-colors" />
                      </div>
                      <h3 className="text-4xl font-light text-rose-950 mb-2 italic">{groom}</h3>
@@ -241,7 +244,7 @@ export default function FloralBlossom({ data, guestName, lang = 'id' }: ThemePro
                     className="flex-1 text-center"
                   >
                      <div className="w-56 h-72 md:w-64 md:h-80 mx-auto rounded-full border-[12px] border-white shadow-xl mb-8 bg-rose-100 overflow-hidden relative">
-                        <img src={gallery2} className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt={bride} />
+                        <img src={brideImg} className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt={bride} />
                         <div className="absolute inset-0 bg-rose-900/10 mix-blend-overlay hover:bg-transparent transition-colors" />
                      </div>
                      <h3 className="text-4xl font-light text-rose-950 mb-2 italic">{bride}</h3>
@@ -333,8 +336,8 @@ export default function FloralBlossom({ data, guestName, lang = 'id' }: ThemePro
                     <Heart className="w-6 h-6 text-rose-400 mx-auto mb-4" />
                     <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-rose-800">{t.gallery}</h3>
                  </div>
-                 <div className="columns-1 md:columns-3 gap-6 space-y-6">
-                    {[heroImg, gallery1, gallery2, coverImg, gallery3].map((img, i) => (
+                 <div className="columns-1 md:columns-2 gap-6 space-y-6">
+                    {[gallery1, gallery2, gallery3, gallery4].map((img, i) => (
                        <motion.div 
                          key={i} 
                          initial={{ opacity: 0, y: 20 }}

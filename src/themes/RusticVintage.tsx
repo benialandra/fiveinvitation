@@ -50,9 +50,12 @@ export default function RusticVintage({ data, guestName, lang = 'id' }: ThemePro
   
   const coverImg = data.cover_image || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=2000&auto=format&fit=crop";
   const heroImg = data.hero_image || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=2000&auto=format&fit=crop";
+  const groomImg = data.groom_image || data.gallery_1 || "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1000&auto=format&fit=crop";
+  const brideImg = data.bride_image || data.gallery_2 || "https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=80&w=1000&auto=format&fit=crop";
   const gallery1 = data.gallery_1 || "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1000&auto=format&fit=crop";
   const gallery2 = data.gallery_2 || "https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=80&w=1000&auto=format&fit=crop";
   const gallery3 = data.gallery_3 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1000&auto=format&fit=crop";
+  const gallery4 = data.gallery_4 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1000&auto=format&fit=crop";
   
   const bankName1 = data.bank_name_1 || "Mandiri";
   const bankAccount1 = data.bank_account_1 || "1122334455";
@@ -184,7 +187,7 @@ export default function RusticVintage({ data, guestName, lang = 'id' }: ThemePro
                     className="text-center"
                   >
                      <div className="w-56 h-72 md:w-64 md:h-80 mx-auto bg-white p-3 border border-[#8b7355]/20 shadow-xl mb-8 -rotate-2 hover:rotate-0 transition-transform duration-500">
-                        <img src={gallery1} className="w-full h-full object-cover sepia-[0.1]" alt={groom} />
+                        <img src={groomImg} className="w-full h-full object-cover sepia-[0.1]" alt={groom} />
                      </div>
                      <h3 className="text-4xl italic text-[#5c4a3d] mb-4">{groom}</h3>
                      <p className="text-sm font-sans tracking-widest text-[#8b7355] uppercase mb-1">Putra Dari</p>
@@ -199,7 +202,7 @@ export default function RusticVintage({ data, guestName, lang = 'id' }: ThemePro
                     className="text-center md:mt-24"
                   >
                      <div className="w-56 h-72 md:w-64 md:h-80 mx-auto bg-white p-3 border border-[#8b7355]/20 shadow-xl mb-8 rotate-2 hover:rotate-0 transition-transform duration-500">
-                        <img src={gallery2} className="w-full h-full object-cover sepia-[0.1]" alt={bride} />
+                        <img src={brideImg} className="w-full h-full object-cover sepia-[0.1]" alt={bride} />
                      </div>
                      <h3 className="text-4xl italic text-[#5c4a3d] mb-4">{bride}</h3>
                      <p className="text-sm font-sans tracking-widest text-[#8b7355] uppercase mb-1">Putri Dari</p>
@@ -292,7 +295,7 @@ export default function RusticVintage({ data, guestName, lang = 'id' }: ThemePro
             <section className="py-24 px-6 max-w-6xl mx-auto text-center">
                <h3 className="text-xs uppercase tracking-[0.3em] text-[#8b7355] mb-12">{t.gallery}</h3>
                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                  {[heroImg, gallery1, gallery2, gallery3].map((img, i) => (
+                  {[gallery1, gallery2, gallery3, gallery4].map((img, i) => (
                     <motion.div 
                       key={i} 
                       initial={{ opacity: 0, scale: 0.9 }}

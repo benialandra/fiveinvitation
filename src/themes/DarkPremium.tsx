@@ -50,9 +50,12 @@ export default function DarkPremium({ data, guestName, lang = 'id' }: ThemeProps
   
   const coverImg = data.cover_image || "https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=2000&auto=format&fit=crop";
   const heroImg = data.hero_image || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2000&auto=format&fit=crop";
+  const groomImg = data.groom_image || data.gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800&auto=format&fit=crop";
+  const brideImg = data.bride_image || data.gallery_2 || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop";
   const gallery1 = data.gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800&auto=format&fit=crop";
   const gallery2 = data.gallery_2 || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop";
   const gallery3 = data.gallery_3 || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=800&auto=format&fit=crop";
+  const gallery4 = data.gallery_4 || "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?q=80&w=800&auto=format&fit=crop";
   const mapImg = data.map_image || "https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=800&auto=format&fit=crop";
   
   const bankName1 = data.bank_name_1 || "BCA";
@@ -199,7 +202,7 @@ export default function DarkPremium({ data, guestName, lang = 'id' }: ThemeProps
                      >
                         <div className="aspect-[4/5] w-full rounded-3xl overflow-hidden mb-8 relative">
                            <div className="absolute inset-0 bg-indigo-500/20 mix-blend-overlay group-hover:bg-transparent transition-colors duration-700 z-10" />
-                           <img src={gallery1} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" alt={groom} />
+                           <img src={groomImg} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" alt={groom} />
                         </div>
                         <h3 className="text-4xl font-bold tracking-tight text-white mb-2">{groom}</h3>
                         <p className="text-slate-400 text-sm">{data.groom_parents || 'Putra dari Bpk. Hendra & Ibu Susi'}</p>
@@ -214,7 +217,7 @@ export default function DarkPremium({ data, guestName, lang = 'id' }: ThemeProps
                      >
                         <div className="aspect-[4/5] w-full rounded-3xl overflow-hidden mb-8 relative">
                            <div className="absolute inset-0 bg-indigo-500/20 mix-blend-overlay group-hover:bg-transparent transition-colors duration-700 z-10" />
-                           <img src={gallery2} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" alt={bride} />
+                           <img src={brideImg} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" alt={bride} />
                         </div>
                         <h3 className="text-4xl font-bold tracking-tight text-white mb-2">{bride}</h3>
                         <p className="text-slate-400 text-sm">{data.bride_parents || 'Putri dari Bpk. Budi & Ibu Ani'}</p>
@@ -322,7 +325,7 @@ export default function DarkPremium({ data, guestName, lang = 'id' }: ThemeProps
                <div className="max-w-6xl mx-auto">
                   <p className="text-indigo-400 font-mono text-xs uppercase tracking-widest mb-12 text-center">{t.gallery}</p>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                     {[gallery1, gallery2, heroImg, gallery3].map((img, i) => (
+                     {[gallery1, gallery2, gallery3, gallery4].map((img, i) => (
                         <motion.div 
                           key={i} 
                           initial={{ opacity: 0, y: 20 }}

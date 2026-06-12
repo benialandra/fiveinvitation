@@ -27,6 +27,8 @@ export default function OceanBreeze({ data, guestName, lang = 'id' }: { data?: a
   const heroImg = data?.hero_image || "https://images.unsplash.com/photo-1519046904884-53103b34b206?q=80&w=2000&auto=format&fit=crop"; 
   const gallery1 = data?.gallery_1 || "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1000&auto=format&fit=crop";
   const gallery2 = data?.gallery_2 || "https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?q=80&w=1000&auto=format&fit=crop";
+  const gallery3 = data?.gallery_3 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1000&auto=format&fit=crop";
+  const gallery4 = data?.gallery_4 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1000&auto=format&fit=crop";
   const bankName1 = data?.bank_name_1 || "BCA";
   const bankAccount1 = data?.bank_account_1 || "0987654321";
   const bankAccountName1 = data?.bank_account_name_1 || groom;
@@ -248,14 +250,18 @@ export default function OceanBreeze({ data, guestName, lang = 'id' }: { data?: a
                <p className="text-[#208496] font-medium tracking-widest uppercase text-sm">Captured by the sea</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <motion.img 
-                initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
-                src={gallery1} className="w-full aspect-[4/5] object-cover rounded-[3rem] shadow-xl border-4 border-white" alt="Gallery 1" 
-              />
-              <motion.img 
-                initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
-                src={gallery2} className="w-full aspect-[4/5] object-cover rounded-[3rem] shadow-xl border-4 border-white md:mt-16" alt="Gallery 2" 
-              />
+              {[gallery1, gallery2, gallery3, gallery4].map((img, i) => (
+                <motion.img 
+                  key={i}
+                  initial={{ opacity: 0, scale: 0.95 }} 
+                  whileInView={{ opacity: 1, scale: 1 }} 
+                  viewport={{ once: true }} 
+                  transition={{ delay: i * 0.1 }}
+                  src={img} 
+                  className={`w-full aspect-[4/5] object-cover rounded-[3rem] shadow-xl border-4 border-white ${i % 2 !== 0 ? 'md:mt-16' : ''}`} 
+                  alt={`Gallery ${i + 1}`} 
+                />
+              ))}
             </div>
           </div>
         </section>

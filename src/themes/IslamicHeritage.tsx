@@ -16,6 +16,12 @@ export default function IslamicHeritage({ data, guestName, lang = 'id' }: ThemeP
       date={data?.akad_date ? new Date(data.akad_date).toLocaleDateString() : "12 Dec 2026"}
       hero_image={data?.hero_image || "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?q=80&w=800&auto=format&fit=crop"}
       cover_image={data?.cover_image || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=2000"}
+      groom_image={data?.groom_image}
+      bride_image={data?.bride_image}
+      gallery_1={data?.gallery_1}
+      gallery_2={data?.gallery_2}
+      gallery_3={data?.gallery_3}
+      gallery_4={data?.gallery_4}
       guestName={guestName}
       lang={lang}
       config_json={data?.config_json}

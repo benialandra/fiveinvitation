@@ -253,7 +253,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
   const heroImage = data?.hero_image || "https://images.unsplash.com/photo-1543615468-197e41b9d4ec?q=80&w=1500&auto=format&fit=crop";
 
   return (
-    <div className="bg-[#f0f4f8] min-h-screen text-slate-800 dark:text-white font-sans selection:bg-blue-200 selection:text-slate-900 overflow-x-hidden">
+    <div className="bg-[#f0f4f8] dark:bg-slate-900 min-h-screen text-slate-800 dark:text-slate-100 font-sans selection:bg-blue-200 selection:text-slate-900 overflow-x-hidden transition-colors duration-500">
       <Snowfall />
       <FloatingFlowers />
       
@@ -270,7 +270,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0 }}
             onClick={toggleAudio}
-            className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-white dark:bg-slate-800/20 backdrop-blur-md border border-white/50 text-slate-700 dark:text-slate-200 shadow-xl hover:bg-white dark:bg-slate-800/40 transition-all duration-300"
+            className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-white dark:bg-slate-800 backdrop-blur-md border border-white/50 text-slate-700 dark:text-slate-200 shadow-xl hover:bg-white dark:hover:bg-slate-800/40 transition-all duration-300"
           >
             {isPlaying ? <Volume2 size={24} /> : <VolumeX size={24} />}
           </motion.button>
@@ -309,7 +309,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.6, duration: 1 }}
-                  className="mt-8 mb-12 p-6 rounded-2xl bg-white dark:bg-slate-800/10 backdrop-blur-md border border-white/20 w-full max-w-sm"
+                  className="mt-8 mb-12 p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 w-full max-w-sm"
                 >
                   <p className="text-sm text-slate-300 mb-2">Dear Mr/Mrs/Ms,</p>
                   <p className="text-2xl font-serif text-white">{guestName}</p>
@@ -321,9 +321,9 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1, duration: 1 }}
                 onClick={handleOpen}
-                className="group flex items-center gap-3 px-8 py-4 bg-white dark:bg-slate-800 text-slate-900 rounded-full font-medium tracking-wider hover:bg-blue-50 transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.3)]"
+                className="group flex items-center gap-3 px-8 py-4 bg-white text-slate-900 rounded-full font-medium tracking-wider hover:bg-blue-50 transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.3)]"
               >
-                <Heart size={18} className="text-slate-400 dark:text-slate-400 group-hover:text-red-400 transition-colors duration-300" />
+                <Heart size={18} className="text-slate-400 group-hover:text-red-400 transition-colors duration-300" />
                 <span>Open Invitation</span>
               </motion.button>
             </div>
@@ -333,20 +333,24 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
 
       {/* Main Content (Visible after Opening) */}
       {isOpen && (
-        <main className="relative z-10 bg-[#f8fafd]">
+        <main className="relative z-10 bg-[#f8fafd] dark:bg-slate-900 transition-colors duration-500">
           
           {/* Hero Parallax Section */}
           <section className="relative h-screen flex items-center justify-center overflow-hidden">
             <motion.div style={{ y: yHero, opacity: opacityHero }} className="absolute inset-0 z-0">
               <img src={heroImage} alt="Hero" className="w-full h-full object-cover object-top opacity-90" />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/50 to-[#f8fafd]" />
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/50 dark:via-slate-900/50 to-[#f8fafd] dark:to-slate-900" />
             </motion.div>
 
             <div className="relative z-10 text-center px-4 mt-32">
               <FadeIn>
-                <p className="tracking-[0.4em] text-slate-500 dark:text-slate-400 dark:text-slate-400 uppercase text-xs md:text-sm mb-4 font-semibold">We Are Getting Married</p>
+                <p className="tracking-[0.4em] text-slate-500 dark:text-slate-400 uppercase text-xs md:text-sm mb-4 font-semibold">We Are Getting Married</p>
                 <h2 className="text-6xl md:text-8xl font-serif text-slate-800 dark:text-white mb-6 drop-shadow-sm" style={{ fontFamily: '"Playfair Display", serif' }}>
-                  {brideName} <br className="md:hidden" /><span className="text-blue-300 mx-4 italic font-light">&amp;</span><br className="md:hidden" /> {groomName}
+                  {brideName} <br className="md:hidden" />
+                  <span className="text-blue-400 mx-3 font-light text-2xl md:text-4xl">&amp;</span>
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-slate-700 to-slate-900 dark:from-slate-100 dark:to-white">
+                    {groomName}
+                  </span>
                 </h2>
                 <p className="text-lg text-slate-600 dark:text-slate-300 font-serif italic mb-12">{weddingDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
               </FadeIn>
@@ -354,7 +358,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
               <motion.div 
                 animate={{ y: [0, 10, 0] }} 
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute bottom-12 left-1/2 -translate-x-1/2 text-slate-400 dark:text-slate-400"
+                className="absolute bottom-12 left-1/2 -translate-x-1/2 text-slate-400"
               >
                 <ChevronDown size={32} />
               </motion.div>
@@ -362,7 +366,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
           </section>
 
           {/* Couple Section */}
-          <section className="py-24 px-6 relative">
+          <section className="py-24 px-6 bg-white dark:bg-slate-800 relative transition-colors duration-500">
             <div className="max-w-4xl mx-auto text-center">
               <FadeIn>
                 <div className="flex justify-center mb-6 text-blue-300">
@@ -376,20 +380,20 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
 
               <div className="grid md:grid-cols-2 gap-16 md:gap-8 items-center">
                 <FadeIn delay={0.2}>
-                  <div className="relative w-48 h-64 md:w-64 md:h-80 mx-auto mb-6 rounded-[2rem] overflow-hidden p-2 bg-white dark:bg-slate-800/50 border border-white backdrop-blur-sm shadow-xl">
+                  <div className="relative w-48 h-64 md:w-64 md:h-80 mx-auto mb-6 rounded-[2rem] overflow-hidden p-2 bg-white dark:bg-slate-700 border border-white backdrop-blur-sm shadow-xl">
                     <img src="https://images.unsplash.com/photo-1546822830-4663ec40a3dd?q=80&w=600&auto=format&fit=crop" alt="Bride" className="w-full h-full object-cover rounded-[1.5rem]" />
                   </div>
                   <h4 className="text-3xl font-serif text-slate-800 dark:text-white mb-2">{brideName}</h4>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-400 mb-4 uppercase tracking-widest">The Bride</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 uppercase tracking-widest">The Bride</p>
                   <p className="text-slate-600 dark:text-slate-300 text-sm">Daughter of {brideParents}</p>
                 </FadeIn>
 
                 <FadeIn delay={0.4}>
-                  <div className="relative w-48 h-64 md:w-64 md:h-80 mx-auto mb-6 rounded-[2rem] overflow-hidden p-2 bg-white dark:bg-slate-800/50 border border-white backdrop-blur-sm shadow-xl">
+                  <div className="relative w-48 h-64 md:w-64 md:h-80 mx-auto mb-6 rounded-[2rem] overflow-hidden p-2 bg-white dark:bg-slate-700 border border-white backdrop-blur-sm shadow-xl">
                     <img src={data?.groom_image || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=600&auto=format&fit=crop"} alt="Groom" className="w-full h-full object-cover rounded-[1.5rem]" />
                   </div>
                   <h4 className="text-3xl font-serif text-slate-800 dark:text-white mb-2">{groomName}</h4>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-400 mb-4 uppercase tracking-widest">The Groom</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 uppercase tracking-widest">The Groom</p>
                   <p className="text-slate-600 dark:text-slate-300 text-sm">Son of {groomParents}</p>
                 </FadeIn>
               </div>
@@ -412,7 +416,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
                     { label: 'Secs', value: timeLeft.seconds },
                   ].map((item, idx) => (
                     <div key={idx} className="flex flex-col items-center">
-                      <div className="w-16 h-16 md:w-24 md:h-24 bg-white dark:bg-slate-800/10 backdrop-blur-md border border-white/20 rounded-2xl flex items-center justify-center mb-3 shadow-lg">
+                      <div className="w-16 h-16 md:w-24 md:h-24 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl flex items-center justify-center mb-3 shadow-lg">
                         <span className="text-2xl md:text-4xl font-light font-serif">{item.value}</span>
                       </div>
                       <span className="text-xs md:text-sm uppercase tracking-wider text-slate-300">{item.label}</span>
@@ -424,22 +428,22 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
           </section>
 
           {/* Event Details Section */}
-          <section className="py-24 px-6 bg-gradient-to-b from-[#f8fafd] to-white relative">
+          <section className="py-24 px-6 bg-gradient-to-b from-[#f8fafd] dark:from-slate-900 to-white dark:to-slate-800 relative transition-colors duration-500">
             <div className="max-w-5xl mx-auto">
               <FadeIn>
                 <div className="text-center mb-16">
                   <h3 className="text-3xl md:text-5xl font-serif text-slate-800 dark:text-white mb-4">Wedding Events</h3>
-                  <p className="text-slate-500 dark:text-slate-400 dark:text-slate-400">We invite you to celebrate with us</p>
+                  <p className="text-slate-500 dark:text-slate-400">We invite you to celebrate with us</p>
                 </div>
               </FadeIn>
 
               <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
                 {/* Akad / Ceremony */}
                 <FadeIn delay={0.2}>
-                  <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 md:p-12 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] border border-slate-100 dark:border-slate-700 relative overflow-hidden group hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] transition-shadow">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110" />
+                  <div className="bg-white dark:bg-slate-700 rounded-3xl p-8 md:p-12 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] border border-slate-100 dark:border-slate-600 relative overflow-hidden group hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] transition-shadow">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 dark:bg-slate-600 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110" />
                     <div className="relative z-10 text-center">
-                      <div className="w-16 h-16 bg-blue-50 text-blue-400 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
+                      <div className="w-16 h-16 bg-blue-50 dark:bg-slate-800 text-blue-400 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
                         <Heart size={28} />
                       </div>
                       <h4 className="text-2xl font-serif text-slate-800 dark:text-white mb-2">Holy Matrimony</h4>
@@ -447,16 +451,16 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
                       
                       <div className="space-y-4 text-sm text-slate-600 dark:text-slate-300 mb-8">
                         <div className="flex items-center justify-center gap-3">
-                          <Clock size={16} className="text-slate-400 dark:text-slate-400" />
+                          <Clock size={16} className="text-slate-400" />
                           <span>{weddingDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
                         </div>
                         <div className="flex items-center justify-center gap-3">
-                          <MapPin size={16} className="text-slate-400 dark:text-slate-400" />
+                          <MapPin size={16} className="text-slate-400" />
                           <span>{locationName}</span>
                         </div>
                       </div>
 
-                      <a href={data?.maps_link_url || "#"} className="inline-block px-6 py-3 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 text-slate-700 dark:text-slate-200 rounded-xl text-sm font-medium transition-colors border border-slate-200 dark:border-slate-700">
+                      <a href={data?.maps_link_url || "#"} className="inline-block px-6 py-3 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-xl text-sm font-medium transition-colors border border-slate-200 dark:border-slate-600">
                         View Location
                       </a>
                     </div>
@@ -465,10 +469,10 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
 
                 {/* Reception */}
                 <FadeIn delay={0.4}>
-                  <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 md:p-12 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] border border-slate-100 dark:border-slate-700 relative overflow-hidden group hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] transition-shadow">
+                  <div className="bg-white dark:bg-slate-700 rounded-3xl p-8 md:p-12 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] border border-slate-100 dark:border-slate-600 relative overflow-hidden group hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] transition-shadow">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 dark:bg-slate-800 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110" />
                     <div className="relative z-10 text-center">
-                      <div className="w-16 h-16 bg-slate-50 dark:bg-slate-800 text-slate-400 dark:text-slate-400 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
+                      <div className="w-16 h-16 bg-slate-50 dark:bg-slate-800 text-slate-400 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
                         <Music2 size={28} />
                       </div>
                       <h4 className="text-2xl font-serif text-slate-800 dark:text-white mb-2">Wedding Reception</h4>
@@ -476,16 +480,16 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
                       
                       <div className="space-y-4 text-sm text-slate-600 dark:text-slate-300 mb-8">
                         <div className="flex items-center justify-center gap-3">
-                          <Clock size={16} className="text-slate-400 dark:text-slate-400" />
+                          <Clock size={16} className="text-slate-400" />
                           <span>{resepsiDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
                         </div>
                         <div className="flex items-center justify-center gap-3">
-                          <MapPin size={16} className="text-slate-400 dark:text-slate-400" />
+                          <MapPin size={16} className="text-slate-400" />
                           <span>{locationName}</span>
                         </div>
                       </div>
 
-                      <a href={data?.maps_link_url || "#"} className="inline-block px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-sm font-medium transition-colors shadow-md">
+                      <a href={data?.maps_link_url || "#"} className="inline-block px-6 py-3 bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 text-white rounded-xl text-sm font-medium transition-colors shadow-md">
                         View Location
                       </a>
                     </div>
@@ -495,7 +499,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
 
               {/* Map embedded */}
               <FadeIn delay={0.6}>
-                <div className="mt-16 bg-white dark:bg-slate-800 p-2 rounded-3xl shadow-lg border border-slate-100 dark:border-slate-700 overflow-hidden">
+                <div className="mt-16 bg-white dark:bg-slate-700 p-2 rounded-3xl shadow-lg border border-slate-100 dark:border-slate-600 overflow-hidden">
                   <iframe 
                     src={mapsLink}
                     width="100%" 
@@ -512,7 +516,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
           </section>
 
           {/* Love Story Timeline */}
-          <section className="py-24 px-6 relative bg-[#f8fafd]">
+          <section className="py-24 px-6 relative bg-white dark:bg-slate-800 transition-colors duration-500">
             <div className="max-w-3xl mx-auto">
               <FadeIn>
                 <h3 className="text-3xl md:text-5xl font-serif text-center text-slate-800 dark:text-white mb-16">Our Journey</h3>
@@ -578,7 +582,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
                   
                   <div className="text-center mt-6 mb-10">
                     <h3 className="text-3xl font-serif text-slate-800 dark:text-white mb-2">RSVP & Wishes</h3>
-                    <p className="text-slate-500 dark:text-slate-400 dark:text-slate-400 text-sm">Kindly confirm your attendance</p>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm">Kindly confirm your attendance</p>
                   </div>
 
                   <AnimatePresence mode="wait">
@@ -656,7 +660,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
                           <Heart size={40} className="fill-current animate-pulse" />
                         </div>
                         <h4 className="text-2xl font-serif text-slate-800 dark:text-white mb-2">Thank You!</h4>
-                        <p className="text-slate-500 dark:text-slate-400 dark:text-slate-400">Your RSVP and wishes have been sent successfully.</p>
+                        <p className="text-slate-500 dark:text-slate-400">Your RSVP and wishes have been sent successfully.</p>
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -711,7 +715,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
                   <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-8 rounded-[2rem] text-center h-full flex flex-col items-center justify-center shadow-sm hover:shadow-md transition-shadow">
                     <QrCode size={32} className="text-blue-400 mb-4" />
                     <p className="font-bold text-slate-800 dark:text-white mb-2">QRIS Payment</p>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-400 mb-6">Scan QR code using any e-wallet</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">Scan QR code using any e-wallet</p>
                     <div className="w-32 h-32 bg-white dark:bg-slate-800 p-2 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-center mx-auto">
                       <img src={qrisImage} alt="QRIS" className="w-full h-full opacity-80 object-contain" />
                     </div>

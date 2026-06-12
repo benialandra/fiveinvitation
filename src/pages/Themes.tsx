@@ -142,31 +142,28 @@ export default function Themes() {
           </div>
         ) : (
           <motion.div 
-            layout
             variants={{
                hidden: { opacity: 0 },
-               show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+               show: { opacity: 1, transition: { staggerChildren: 0.05 } }
             }}
             initial="hidden"
             animate="show"
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
           >
-            <AnimatePresence mode="popLayout">
+            <AnimatePresence>
               {filteredThemes.slice(0, visibleCount).map((theme) => (
                 <motion.div 
-                  layout
                   key={theme.id}
                   initial="hidden"
                   animate="show"
-                  exit={{ opacity: 0, scale: 0.98, filter: 'blur(5px)' }}
+                  exit={{ opacity: 0, scale: 0.98 }}
                   variants={{
-                    hidden: { opacity: 0, y: 20, scale: 0.98, filter: 'blur(5px)' },
-                    show: { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }
+                    hidden: { opacity: 0, y: 15, scale: 0.98 },
+                    show: { opacity: 1, y: 0, scale: 1 }
                   }}
                   transition={{ 
-                    duration: 0.8, 
-                    ease: [0.16, 1, 0.3, 1],
-                    layout: { type: "tween", duration: 0.8, ease: [0.16, 1, 0.3, 1] }
+                    duration: 0.4, 
+                    ease: "easeOut"
                   }}
                   className="group bg-white dark:bg-black/40 rounded-2xl border border-black/5 dark:border-white/5 overflow-hidden flex flex-col hover:shadow-xl dark:hover:shadow-[#C5A059]/10 transition-all duration-300"
                 >

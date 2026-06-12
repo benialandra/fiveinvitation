@@ -62,7 +62,7 @@ const SampleMotif70 = React.lazy(() => import('./SampleMotif70'));
 const CleanVanilla = React.lazy(() => import('./CleanVanilla'));
 const FloralBliss = React.lazy(() => import('./FloralBliss'));
 const WinterRomance = React.lazy(() => import('./WinterRomance'));
-const SampleMotif8 = React.lazy(() => import('./SampleMotif8'));
+const AutumnSunset = React.lazy(() => import('./AutumnSunset'));
 const SampleMotif9 = React.lazy(() => import('./SampleMotif9'));
 const SampleMotif10 = React.lazy(() => import('./SampleMotif10'));
 const SampleMotif11 = React.lazy(() => import('./SampleMotif11'));
@@ -494,12 +494,12 @@ export const THEME_REGISTRY: ThemeMeta[] = [
     thumbnail: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=80&w=300&auto=format&fit=crop',
     component: SampleMotif9
   },{
-    id: 'mockup-theme-8',
-    name: 'Sample Motif 8',
-    category: 'Minimalist',
+    id: 'autumn-sunset',
+    name: 'Autumn Sunset',
+    category: 'Premium',
     price: 160000,
-    thumbnail: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=80&w=300&auto=format&fit=crop',
-    component: SampleMotif8
+    thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=300&auto=format&fit=crop',
+    component: AutumnSunset
   },{
     id: 'winter-romance',
     name: 'Winter Romance',

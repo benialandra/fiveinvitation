@@ -70,7 +70,7 @@ export default function FakeSalesNotification() {
             </div>
           </div>
         </div>
-      ), { id: 'fake-order-toast', duration: 5000, position: 'bottom-center' });
+      ), { id: 'fake-order-toast', duration: 5000, position: 'top-right' });
       
       // Force dismiss after 5 seconds to prevent it getting stuck if user touches it (which pauses the timer)
       setTimeout(() => toast.dismiss('fake-order-toast'), 5000);

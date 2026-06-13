@@ -287,7 +287,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
             className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-slate-900 text-white overflow-hidden"
           >
             <div className="absolute inset-0 z-0">
-              <img src={bgImage} alt="Cover Background" className="w-full h-full object-cover opacity-50" />
+              <img loading="lazy" src={bgImage} alt="Cover Background" className="w-full h-full object-cover opacity-50" />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/30 to-slate-900/80" />
             </div>
 
@@ -381,7 +381,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
               <div className="grid md:grid-cols-2 gap-16 md:gap-8 items-center">
                 <FadeIn delay={0.2}>
                   <div className="relative w-48 h-64 md:w-64 md:h-80 mx-auto mb-6 rounded-[2rem] overflow-hidden p-2 bg-white dark:bg-slate-700 border border-white backdrop-blur-sm shadow-xl">
-                    <img src={data?.bride_image || data?.gallery_2 || "https://images.unsplash.com/photo-1546822830-4663ec40a3dd?q=60&w=600&auto=format&fit=crop&fm=webp&q=60"} alt="Bride" className="w-full h-full object-cover rounded-[1.5rem]" />
+                    <img loading="lazy" src={data?.bride_image || data?.gallery_2 || "https://images.unsplash.com/photo-1546822830-4663ec40a3dd?q=60&w=600&auto=format&fit=crop&fm=webp&q=60"} alt="Bride" className="w-full h-full object-cover rounded-[1.5rem]" />
                   </div>
                   <h4 className="text-3xl font-serif text-slate-800 dark:text-white mb-2">{brideName}</h4>
                   <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 uppercase tracking-widest">The Bride</p>
@@ -390,7 +390,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
 
                 <FadeIn delay={0.4}>
                   <div className="relative w-48 h-64 md:w-64 md:h-80 mx-auto mb-6 rounded-[2rem] overflow-hidden p-2 bg-white dark:bg-slate-700 border border-white backdrop-blur-sm shadow-xl">
-                    <img src={data?.groom_image || data?.gallery_1 || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=60&w=600&auto=format&fit=crop&fm=webp&q=60"} alt="Groom" className="w-full h-full object-cover rounded-[1.5rem]" />
+                    <img loading="lazy" src={data?.groom_image || data?.gallery_1 || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=60&w=600&auto=format&fit=crop&fm=webp&q=60"} alt="Groom" className="w-full h-full object-cover rounded-[1.5rem]" />
                   </div>
                   <h4 className="text-3xl font-serif text-slate-800 dark:text-white mb-2">{groomName}</h4>
                   <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 uppercase tracking-widest">The Groom</p>
@@ -403,7 +403,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
           {/* Countdown Section */}
           <section className="py-20 relative bg-slate-900 text-white overflow-hidden">
             <div className="absolute inset-0">
-              <img src="https://images.unsplash.com/photo-1478265409131-1f65c88f965c?q=60&w=2000&auto=format&fit=crop&fm=webp&q=60" alt="Bg" className="w-full h-full object-cover opacity-20" />
+              <img loading="lazy" src="https://images.unsplash.com/photo-1478265409131-1f65c88f965c?q=60&w=2000&auto=format&fit=crop&fm=webp&q=60" alt="Bg" className="w-full h-full object-cover opacity-20" />
             </div>
             <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
               <FadeIn>
@@ -560,7 +560,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
                 {finalGallery.map((src, idx) => (
                   <FadeIn key={idx} delay={idx * 0.1}>
                     <div className="break-inside-avoid relative group rounded-2xl overflow-hidden cursor-pointer shadow-sm">
-                      <img src={src} alt={`Gallery ${idx + 1}`} className="w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                      <img loading="lazy" src={src} alt={`Gallery ${idx + 1}`} className="w-full object-cover transition-transform duration-700 group-hover:scale-110" />
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
                          <Heart className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" size={32} />
                       </div>
@@ -717,7 +717,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
                     <p className="font-bold text-slate-800 dark:text-white mb-2">QRIS Payment</p>
                     <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">Scan QR code using any e-wallet</p>
                     <div className="w-32 h-32 bg-white dark:bg-slate-800 p-2 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-center mx-auto">
-                      <img src={qrisImage} alt="QRIS" className="w-full h-full opacity-80 object-contain" />
+                      <img loading="lazy" src={qrisImage} alt="QRIS" className="w-full h-full opacity-80 object-contain" />
                     </div>
                   </div>
                 </FadeIn>

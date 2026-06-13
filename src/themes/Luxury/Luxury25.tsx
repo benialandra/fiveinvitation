@@ -87,7 +87,7 @@ export default function RealisticRomance({ data, guestName }: { data?: any, gues
             className="fixed inset-0 z-50 bg-[#FCFBF8] flex flex-col items-center justify-center p-8 text-center"
           >
             <div className="absolute inset-0 opacity-70">
-              <img src={coverImg} className="w-full h-full object-cover" alt="Cover background" />
+              <img loading="lazy" src={coverImg} className="w-full h-full object-cover" alt="Cover background" />
               <div className="absolute inset-0 bg-white/30 backdrop-blur-[2px]" />
             </div>
             
@@ -158,7 +158,7 @@ export default function RealisticRomance({ data, guestName }: { data?: any, gues
                 viewport={{ once: true }}
                 className={`aspect-[3/4] overflow-hidden ${i % 2 === 0 ? 'rounded-t-full' : 'rounded-b-full md:mt-24'}`}
               >
-                <img src={img} className="w-full h-full object-cover hover:scale-105 transition-transform duration-1000" alt={`Prewedding ${i + 1}`} />
+                <img loading="lazy" src={img} className="w-full h-full object-cover hover:scale-105 transition-transform duration-1000" alt={`Prewedding ${i + 1}`} />
               </motion.div>
             ))}
           </div>

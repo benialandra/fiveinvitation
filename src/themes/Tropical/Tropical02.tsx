@@ -231,7 +231,7 @@ export default function TropicalBaliWedding({ data, guestName, lang = 'id' }: Th
                     className="flex-1 text-center"
                   >
                      <div className="w-56 h-56 mx-auto rounded-[3rem] overflow-hidden shadow-xl mb-6 bg-[#8C9C84] rotate-3 hover:rotate-0 transition-all duration-500">
-                        <img src={groomImg} className="w-full h-full object-cover mix-blend-multiply opacity-90 hover:mix-blend-normal hover:opacity-100 transition-all duration-500" alt={groom} />
+                        <img loading="lazy" src={groomImg} className="w-full h-full object-cover mix-blend-multiply opacity-90 hover:mix-blend-normal hover:opacity-100 transition-all duration-500" alt={groom} />
                      </div>
                      <h3 className="text-4xl font-light text-[#2E4A28] mb-2 italic">{groom}</h3>
                      <p className="text-[10px] font-sans font-bold tracking-widest text-[#8C9C84] uppercase mb-1">Putra Dari</p>
@@ -248,7 +248,7 @@ export default function TropicalBaliWedding({ data, guestName, lang = 'id' }: Th
                     className="flex-1 text-center"
                   >
                      <div className="w-56 h-56 mx-auto rounded-[3rem] overflow-hidden shadow-xl mb-6 bg-[#8C9C84] -rotate-3 hover:rotate-0 transition-all duration-500">
-                        <img src={brideImg} className="w-full h-full object-cover mix-blend-multiply opacity-90 hover:mix-blend-normal hover:opacity-100 transition-all duration-500" alt={bride} />
+                        <img loading="lazy" src={brideImg} className="w-full h-full object-cover mix-blend-multiply opacity-90 hover:mix-blend-normal hover:opacity-100 transition-all duration-500" alt={bride} />
                      </div>
                      <h3 className="text-4xl font-light text-[#2E4A28] mb-2 italic">{bride}</h3>
                      <p className="text-[10px] font-sans font-bold tracking-widest text-[#8C9C84] uppercase mb-1">Putri Dari</p>
@@ -343,7 +343,7 @@ export default function TropicalBaliWedding({ data, guestName, lang = 'id' }: Th
                       transition={{ duration: 0.8, delay: i * 0.1 }}
                       className={`overflow-hidden shadow-lg ${i % 2 === 0 ? 'rounded-[3rem] rounded-tl-none' : 'rounded-[3rem] rounded-br-none'}`}
                     >
-                       <img src={img} className="w-full h-auto object-cover hover:scale-110 transition-transform duration-700" alt="Gallery" />
+                       <img loading="lazy" src={img} className="w-full h-auto object-cover hover:scale-110 transition-transform duration-700" alt="Gallery" />
                     </motion.div>
                   ))}
                </div>

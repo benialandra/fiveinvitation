@@ -47,7 +47,12 @@ export default function Preview() {
     );
   }
 
-  const parsedConfig = typeof theme?.config_json === 'string' ? JSON.parse(theme.config_json) : (theme?.config_json || {});
+  let parsedConfig: any = {};
+  try {
+    parsedConfig = typeof theme?.config_json === 'string' && theme.config_json.trim() ? JSON.parse(theme.config_json) : (theme?.config_json || {});
+  } catch (e) {
+    console.warn("Invalid config_json in Preview", e);
+  }
   const customGallery = parsedConfig.gallery || [];
 
   // We should pass sample data to the theme

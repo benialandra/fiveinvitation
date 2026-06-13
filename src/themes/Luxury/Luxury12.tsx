@@ -427,7 +427,7 @@ export default function MagicalFairytale({ data, guestName, lang = 'id' }: Theme
           >
             {/* Background Ambient Star Light & Fairytale Castle */}
             <div className="absolute inset-0 z-0">
-              <img src={coverImage} alt="Fairytale Castle Background" className="w-full h-full object-cover opacity-25 scale-105 filter blur-xs" />
+              <img loading="lazy" src={coverImage} alt="Fairytale Castle Background" className="w-full h-full object-cover opacity-25 scale-105 filter blur-xs" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#080a1d] via-[#0b0f2d]/90 to-[#070814]/90" />
               {/* Dynamic pixie-dust light glow */}
               <div className="absolute top-1/4 left-1/3 w-[600px] h-[600px] bg-gradient-to-br from-[#e2c974]/10 via-transparent to-transparent rounded-full blur-[140px] animate-pulse" />
@@ -473,7 +473,7 @@ export default function MagicalFairytale({ data, guestName, lang = 'id' }: Theme
                 <div className="absolute inset-0 rounded-t-[10rem] border-2 border-dashed border-[#e2c974]/20 animate-[spin_120s_linear_infinite]" />
                 {/* Arch Portrait wrapper */}
                 <div className="absolute inset-2 rounded-t-[9.5rem] overflow-hidden bg-[#1b1236] border border-[#e2c974]/30">
-                  <img src={coverImage} alt="Royal Portrait" className="w-full h-full object-cover transition-transform duration-[8000ms] ease-out group-hover:scale-105" />
+                  <img loading="lazy" src={coverImage} alt="Royal Portrait" className="w-full h-full object-cover transition-transform duration-[8000ms] ease-out group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#080a1d]/60 via-transparent to-transparent" />
                 </div>
               </motion.div>
@@ -539,7 +539,7 @@ export default function MagicalFairytale({ data, guestName, lang = 'id' }: Theme
             
             {/* Cinematic Castle Parallax Background */}
             <motion.div style={{ y: yHero, opacity: opacityHero }} className="absolute inset-0 z-0">
-              <img src={heroImage} alt="Magical Fairytale Palace" className="w-full h-full object-cover object-center scale-105" />
+              <img loading="lazy" src={heroImage} alt="Magical Fairytale Palace" className="w-full h-full object-cover object-center scale-105" />
               <div className="absolute inset-0 bg-gradient-to-b from-[#080a1d]/60 via-[#0b0f2d]/50 to-[#080a1d]" />
             </motion.div>
 
@@ -673,7 +673,7 @@ export default function MagicalFairytale({ data, guestName, lang = 'id' }: Theme
                   {/* Elegant Royal Arch Portrait Frame */}
                   <div className="relative w-52 h-72 md:w-60 md:h-80 mb-8 overflow-hidden rounded-t-[10rem] border-2 border-[#e2c974]/35 shadow-2xl p-1.5 bg-[#080a1d]">
                     <div className="w-full h-full rounded-t-[9.5rem] overflow-hidden">
-                      <img src={brideImage} className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" alt={brideName} />
+                      <img loading="lazy" src={brideImage} className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" alt={brideName} />
                     </div>
                   </div>
 
@@ -707,7 +707,7 @@ export default function MagicalFairytale({ data, guestName, lang = 'id' }: Theme
                   {/* Elegant Royal Arch Portrait Frame */}
                   <div className="relative w-52 h-72 md:w-60 md:h-80 mb-8 overflow-hidden rounded-t-[10rem] border-2 border-[#e2c974]/35 shadow-2xl p-1.5 bg-[#080a1d]">
                     <div className="w-full h-full rounded-t-[9.5rem] overflow-hidden">
-                      <img src={groomImage} className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" alt={groomName} />
+                      <img loading="lazy" src={groomImage} className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" alt={groomName} />
                     </div>
                   </div>
 
@@ -986,7 +986,7 @@ export default function MagicalFairytale({ data, guestName, lang = 'id' }: Theme
                     transition={{ duration: 0.8, delay: idx * 0.1 }}
                     className="break-inside-avoid relative group rounded-2xl overflow-hidden cursor-pointer shadow-xl border border-[#e2c974]/10"
                   >
-                    <img src={src} alt={`Gallery Portrait ${idx + 1}`} className="w-full object-cover transition-transform duration-750 group-hover:scale-105" />
+                    <img loading="lazy" src={src} alt={`Gallery Portrait ${idx + 1}`} className="w-full object-cover transition-transform duration-750 group-hover:scale-105" />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#080a1d]/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                       <p className="text-white text-xs font-serif italic flex items-center gap-1.5">
                         <Heart size={12} className="fill-current text-[#e2c974]" />

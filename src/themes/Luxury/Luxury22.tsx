@@ -320,13 +320,13 @@ export default function RoyalGoldLuxury({ data, guestName }: { data?: any, guest
               <div className="flex flex-col gap-6 md:gap-8">
                 <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUpVariant} className="overflow-hidden relative group aspect-[4/5] border border-[#D4AF37]/30 bg-white p-2">
                   <div className="w-full h-full overflow-hidden relative">
-                    <img src={gal1} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[10%]" alt="Gallery 1" />
+                    <img loading="lazy" src={gal1} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[10%]" alt="Gallery 1" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   </div>
                 </motion.div>
                 <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUpVariant} className="overflow-hidden relative group aspect-[4/3] border border-[#D4AF37]/30 bg-white p-2">
                   <div className="w-full h-full overflow-hidden relative">
-                    <img src={gal2} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[10%]" alt="Gallery 2" />
+                    <img loading="lazy" src={gal2} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[10%]" alt="Gallery 2" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   </div>
                 </motion.div>
@@ -335,13 +335,13 @@ export default function RoyalGoldLuxury({ data, guestName }: { data?: any, guest
               <div className="flex flex-col gap-6 md:gap-8 md:mt-16">
                 <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUpVariant} className="overflow-hidden relative group aspect-[4/3] border border-[#D4AF37]/30 bg-white p-2">
                   <div className="w-full h-full overflow-hidden relative">
-                    <img src={gal3} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[10%]" alt="Gallery 3" />
+                    <img loading="lazy" src={gal3} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[10%]" alt="Gallery 3" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   </div>
                 </motion.div>
                 <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUpVariant} className="overflow-hidden relative group aspect-[4/5] border border-[#D4AF37]/30 bg-white p-2">
                   <div className="w-full h-full overflow-hidden relative">
-                    <img src={gal4} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[10%]" alt="Gallery 4" />
+                    <img loading="lazy" src={gal4} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 grayscale-[10%]" alt="Gallery 4" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   </div>
                 </motion.div>

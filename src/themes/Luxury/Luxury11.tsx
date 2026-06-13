@@ -16,7 +16,7 @@ interface ThemeProps {
 }
 
 // Custom performant Canvas Particle System for falling autumn leaves
-const FallingLeaves = () => {
+const FallingLeaves = React.memo(() => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -137,7 +137,7 @@ const FallingLeaves = () => {
   }, []);
 
   return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-[45]" />;
-};
+});
 
 export default function AutumnSunset({ data, guestName, lang = 'id' }: ThemeProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -340,7 +340,7 @@ export default function AutumnSunset({ data, guestName, lang = 'id' }: ThemeProp
           >
             {/* Background Ambient Sunset Light */}
             <div className="absolute inset-0 z-0">
-              <img src={coverImage} alt="Autumn Forest Background" className="w-full h-full object-cover opacity-20 scale-105 filter blur-xs" />
+              <img loading="lazy" src={coverImage} alt="Autumn Forest Background" className="w-full h-full object-cover opacity-20 scale-105 filter blur-xs" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#120804] via-[#1c0f08]/90 to-[#120804]/90" />
               {/* Dynamic light shaft simulation */}
               <div className="absolute -top-40 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-[#df9f28]/15 via-transparent to-transparent rounded-full blur-[120px] animate-pulse" />
@@ -385,7 +385,7 @@ export default function AutumnSunset({ data, guestName, lang = 'id' }: ThemeProp
                 <div className="absolute inset-3 rounded-full border border-[#df9f28]/50" />
                 {/* Portrait wrapper */}
                 <div className="absolute inset-5 rounded-full overflow-hidden bg-[#2d1b10] border border-[#3d2417]">
-                  <img src={coverImage} alt="Couple Portrait" className="w-full h-full object-cover transition-transform duration-[8000ms] ease-out group-hover:scale-110" />
+                  <img loading="lazy" src={coverImage} alt="Couple Portrait" className="w-full h-full object-cover transition-transform duration-[8000ms] ease-out group-hover:scale-110" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#120804]/60 via-transparent to-[#120804]/20" />
                 </div>
               </motion.div>
@@ -450,7 +450,7 @@ export default function AutumnSunset({ data, guestName, lang = 'id' }: ThemeProp
           <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
             {/* Cinematic Sunset Parallax Background */}
             <motion.div style={{ y: yHero, opacity: opacityHero }} className="absolute inset-0 z-0">
-              <img src={heroImage} alt="Hero Couple Cover" className="w-full h-full object-cover object-center scale-105" />
+              <img loading="lazy" src={heroImage} alt="Hero Couple Cover" className="w-full h-full object-cover object-center scale-105" />
               <div className="absolute inset-0 bg-gradient-to-b from-[#120804]/70 via-[#120804]/50 to-[#120804]" />
             </motion.div>
 
@@ -574,7 +574,7 @@ export default function AutumnSunset({ data, guestName, lang = 'id' }: ThemeProp
                   {/* Elegant Arch Portrait Frame */}
                   <div className="relative w-52 h-72 md:w-60 md:h-80 mb-8 overflow-hidden rounded-t-[10rem] border-2 border-[#df9f28]/35 shadow-2xl p-1.5 bg-[#1e0f08]">
                     <div className="w-full h-full rounded-t-[9.5rem] overflow-hidden">
-                      <img src={brideImage} className="w-full h-full object-cover grayscale-20 hover:grayscale-0 transition-all duration-700" alt={brideName} />
+                      <img loading="lazy" src={brideImage} className="w-full h-full object-cover grayscale-20 hover:grayscale-0 transition-all duration-700" alt={brideName} />
                     </div>
                   </div>
 
@@ -609,7 +609,7 @@ export default function AutumnSunset({ data, guestName, lang = 'id' }: ThemeProp
                   {/* Elegant Arch Portrait Frame */}
                   <div className="relative w-52 h-72 md:w-60 md:h-80 mb-8 overflow-hidden rounded-t-[10rem] border-2 border-[#df9f28]/35 shadow-2xl p-1.5 bg-[#1e0f08]">
                     <div className="w-full h-full rounded-t-[9.5rem] overflow-hidden">
-                      <img src={groomImage} className="w-full h-full object-cover grayscale-20 hover:grayscale-0 transition-all duration-700" alt={groomName} />
+                      <img loading="lazy" src={groomImage} className="w-full h-full object-cover grayscale-20 hover:grayscale-0 transition-all duration-700" alt={groomName} />
                     </div>
                   </div>
 
@@ -885,7 +885,7 @@ export default function AutumnSunset({ data, guestName, lang = 'id' }: ThemeProp
                     transition={{ duration: 0.8, delay: idx * 0.1 }}
                     className="break-inside-avoid relative group rounded-2xl overflow-hidden cursor-pointer shadow-xl border border-[#df9f28]/10"
                   >
-                    <img src={src} alt={`Gallery Portrait ${idx + 1}`} className="w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <img loading="lazy" src={src} alt={`Gallery Portrait ${idx + 1}`} className="w-full object-cover transition-transform duration-700 group-hover:scale-105" />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#120804]/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                       <p className="text-white text-xs font-serif italic flex items-center gap-1.5">
                         <Heart size={12} className="fill-current text-[#df9f28]" />

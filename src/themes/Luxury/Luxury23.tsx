@@ -105,7 +105,7 @@ export default function GlassmorphismElegance({ data, guestName }: { data?: any,
             className="fixed inset-0 z-50 flex flex-col items-center justify-center p-6 text-center"
           >
             <div className="absolute inset-0 z-0">
-              <img src={coverImg} className="w-full h-full object-cover grayscale opacity-40" alt="Cover background" />
+              <img loading="lazy" src={coverImg} className="w-full h-full object-cover grayscale opacity-40" alt="Cover background" />
               <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" />
             </div>
             
@@ -165,7 +165,7 @@ export default function GlassmorphismElegance({ data, guestName }: { data?: any,
                className="flex flex-col items-center bg-white/5 backdrop-blur-lg border border-white/10 p-10 rounded-[3rem]"
              >
                 <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-white/10 mb-8 p-2">
-                  <img src={groomImg} className="w-full h-full object-cover rounded-full" alt="Groom" />
+                  <img loading="lazy" src={groomImg} className="w-full h-full object-cover rounded-full" alt="Groom" />
                 </div>
                 <h3 className="text-3xl font-bold mb-2">{groom}</h3>
                 <p className="text-slate-400 text-sm uppercase tracking-widest text-center">Son of<br/><span className="text-white font-medium">{data?.groom_parents || 'Bpk. Hendra & Ibu Susi'}</span></p>
@@ -179,7 +179,7 @@ export default function GlassmorphismElegance({ data, guestName }: { data?: any,
                className="flex flex-col items-center bg-white/5 backdrop-blur-lg border border-white/10 p-10 rounded-[3rem]"
              >
                 <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-white/10 mb-8 p-2">
-                  <img src={brideImg} className="w-full h-full object-cover rounded-full" alt="Bride" />
+                  <img loading="lazy" src={brideImg} className="w-full h-full object-cover rounded-full" alt="Bride" />
                 </div>
                <h3 className="text-3xl font-bold mb-2">{bride}</h3>
                <p className="text-slate-400 text-sm uppercase tracking-widest text-center">Daughter of<br/><span className="text-white font-medium">{data?.bride_parents || 'Bpk. Budi & Ibu Ani'}</span></p>

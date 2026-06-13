@@ -1165,7 +1165,16 @@ export default function Admin() {
                     newUploadedUrls.push(data.publicUrl);
                  }
 
-                 let parsedConfig = typeof editingTheme.config_json === 'string' ? JSON.parse(editingTheme.config_json) : (editingTheme.config_json || {});
+                 let parsedConfig: any = {};
+                 try {
+                   if (typeof editingTheme.config_json === 'string' && editingTheme.config_json.trim()) {
+                     parsedConfig = JSON.parse(editingTheme.config_json);
+                   } else if (typeof editingTheme.config_json === 'object' && editingTheme.config_json !== null) {
+                     parsedConfig = editingTheme.config_json;
+                   }
+                 } catch (e) {
+                   console.warn("Invalid config_json format", e);
+                 }
                  const combinedGallery = [...existingGallery, ...newUploadedUrls];
                  if (combinedGallery.length > 0) {
                     parsedConfig.gallery = combinedGallery;

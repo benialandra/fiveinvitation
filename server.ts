@@ -225,14 +225,28 @@ app.post("/api/admin/themes/seed", requireAdmin, async (req, res) => {
   }
 });
 
+import NodeCache from "node-cache";
+const themeCache = new NodeCache({ stdTTL: 3600, checkperiod: 600 }); // Cache for 1 hour
+
 // Fetch all Themes Endpoint
 app.get("/api/themes", async (req, res) => {
   try {
     if (supabaseUrl === 'https://mock.supabase.co') return res.json([]);
+    
+    // Check Cache
+    const cachedThemes = themeCache.get("all_themes");
+    if (cachedThemes) {
+      return res.json(cachedThemes);
+    }
+    
     const { data, error } = await supabase.from('themes').select('*').order('created_at', { ascending: false });
     if (error) {
        console.error("Supabase fetch error:", error);
        return res.json([]);
+    }
+    
+    if (data) {
+       themeCache.set("all_themes", data);
     }
     res.json(data || []);
   } catch (err) {
@@ -294,6 +308,7 @@ app.post("/api/admin/themes", requireAdmin, upload.fields([{ name: 'zipFile', ma
     }]).select().single();
     
     if (error) throw error;
+    themeCache.del("all_themes");
     return res.json({ success: true, theme: data });
   } catch (err: any) {
     console.error("Failed to create theme:", err);
@@ -354,6 +369,8 @@ app.put("/api/admin/themes/:id", requireAdmin, upload.fields([{ name: 'thumbnail
     const { data: dbData, error } = await supabase.from('themes').update(updatePayload).eq('id', id).select();
     
     if (error) throw error;
+    
+    themeCache.del("all_themes");
     
     const returnedTheme = dbData && dbData.length > 0 ? dbData[0] : { id, ...updatePayload };
     return res.json({ success: true, thumbnail: finalThumbnail, theme: returnedTheme });

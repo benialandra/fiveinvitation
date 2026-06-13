@@ -90,7 +90,7 @@ export default function CinematicLoveStory({ data, guestName, lang = 'id' }: The
               className="fixed inset-0 z-[100] flex flex-col items-center justify-center p-6 bg-[#050201]"
             >
               <div className="absolute inset-0">
-                <img src={coverImg} alt="Cinematic Cover" className="w-full h-full object-cover opacity-30 mix-blend-luminosity" />
+                <img loading="lazy" src={coverImg} alt="Cinematic Cover" className="w-full h-full object-cover opacity-30 mix-blend-luminosity" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0A0503] via-[#0A0503]/50 to-transparent" />
               </div>
               
@@ -224,7 +224,7 @@ export default function CinematicLoveStory({ data, guestName, lang = 'id' }: The
                       
                       <div className="w-full h-full overflow-hidden relative">
                         <div className="absolute inset-0 bg-[#E58D57] mix-blend-color opacity-20 z-10 transition-opacity duration-700 group-hover:opacity-0" />
-                        <img src={item.img} alt={item.title} className="w-full h-full object-cover ken-burns-img grayscale group-hover:grayscale-0 transition-all duration-1000" />
+                        <img loading="lazy" src={item.img} alt={item.title} className="w-full h-full object-cover ken-burns-img grayscale group-hover:grayscale-0 transition-all duration-1000" />
                       </div>
                     </div>
                     <div className="w-full md:w-1/2 text-center md:text-left">
@@ -248,7 +248,7 @@ export default function CinematicLoveStory({ data, guestName, lang = 'id' }: The
                 {[gallery1, gallery2, gallery3, gallery4].map((img, i) => (
                   <div key={i} className="w-full h-[50vh] md:h-[70vh] relative overflow-hidden group">
                     <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors duration-700 z-10" />
-                    <img src={img} alt="Scene" className="w-full h-full object-cover ken-burns-img" />
+                    <img loading="lazy" src={img} alt="Scene" className="w-full h-full object-cover ken-burns-img" />
                     <div className="absolute bottom-8 left-8 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
                       <p className="text-[#E58D57] font-mono text-xs tracking-widest">SCENE. {String(i+1).padStart(2, '0')}</p>
                     </div>

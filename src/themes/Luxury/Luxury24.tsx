@@ -308,7 +308,7 @@ export default function FairytaleCastle({ data, guestName }: { data?: any, guest
                     transition={{ delay: i * 0.1 }}
                     className="p-4 bg-white/5 backdrop-blur-md rounded-[2rem] border border-white/10"
                   >
-                     <img src={img} className="w-full aspect-[4/3] object-cover rounded-[1.5rem]" alt={`Memory ${i + 1}`} />
+                     <img loading="lazy" src={img} className="w-full aspect-[4/3] object-cover rounded-[1.5rem]" alt={`Memory ${i + 1}`} />
                   </motion.div>
                 ))}
               </div>

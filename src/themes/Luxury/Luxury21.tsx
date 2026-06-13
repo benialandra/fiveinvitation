@@ -288,7 +288,7 @@ export default function UltraPremiumInteractive({ data, guestName }: { data?: an
                 onMouseLeave={() => handleMouseLeave(tiltRef)}
               >
                 <div ref={tiltRef} className="w-full h-full relative transition-transform duration-200 ease-out transform-style-3d">
-                  <img src={gal1} alt="Gallery 1" className="w-full h-full object-cover filter grayscale hover:grayscale-0 transition-all duration-700" />
+                  <img loading="lazy" src={gal1} alt="Gallery 1" className="w-full h-full object-cover filter grayscale hover:grayscale-0 transition-all duration-700" />
                   <div className="absolute inset-0 border border-[#D4AF37]/50 m-4 pointer-events-none transform translate-z-[50px]" />
                 </div>
               </div>
@@ -296,7 +296,7 @@ export default function UltraPremiumInteractive({ data, guestName }: { data?: an
               {/* Photo 2 */}
               <div className="relative aspect-[4/3] md:mt-24 group perspective-[1000px]">
                 <div className="w-full h-full relative transition-transform duration-200 ease-out transform-style-3d hover:rotate-y-12 hover:rotate-x-12">
-                  <img src={gal2} alt="Gallery 2" className="w-full h-full object-cover filter grayscale hover:grayscale-0 transition-all duration-700" />
+                  <img loading="lazy" src={gal2} alt="Gallery 2" className="w-full h-full object-cover filter grayscale hover:grayscale-0 transition-all duration-700" />
                   <div className="absolute inset-0 border border-[#D4AF37]/50 m-4 pointer-events-none transform translate-z-[50px]" />
                 </div>
               </div>
@@ -304,7 +304,7 @@ export default function UltraPremiumInteractive({ data, guestName }: { data?: an
               {/* Photo 3 */}
               <div className="relative aspect-[4/3] md:-mt-12 group perspective-[1000px]">
                 <div className="w-full h-full relative transition-transform duration-200 ease-out transform-style-3d hover:rotate-y-12 hover:rotate-x-12">
-                  <img src={gal3} alt="Gallery 3" className="w-full h-full object-cover filter grayscale hover:grayscale-0 transition-all duration-700" />
+                  <img loading="lazy" src={gal3} alt="Gallery 3" className="w-full h-full object-cover filter grayscale hover:grayscale-0 transition-all duration-700" />
                   <div className="absolute inset-0 border border-[#D4AF37]/50 m-4 pointer-events-none transform translate-z-[50px]" />
                 </div>
               </div>
@@ -312,7 +312,7 @@ export default function UltraPremiumInteractive({ data, guestName }: { data?: an
               {/* Photo 4 */}
               <div className="relative aspect-[3/4] md:mt-12 group perspective-[1000px]">
                 <div className="w-full h-full relative transition-transform duration-200 ease-out transform-style-3d hover:rotate-y-12 hover:rotate-x-12">
-                  <img src={gal4} alt="Gallery 4" className="w-full h-full object-cover filter grayscale hover:grayscale-0 transition-all duration-700" />
+                  <img loading="lazy" src={gal4} alt="Gallery 4" className="w-full h-full object-cover filter grayscale hover:grayscale-0 transition-all duration-700" />
                   <div className="absolute inset-0 border border-[#D4AF37]/50 m-4 pointer-events-none transform translate-z-[50px]" />
                 </div>
               </div>

@@ -237,7 +237,7 @@ export default function JapaneseSakuraGarden({ data, guestName, lang = 'id' }: T
                <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16 md:gap-32">
                   <div className="text-center">
                      <div className="w-56 h-56 mx-auto rounded-full overflow-hidden border-8 border-white shadow-xl mb-6 bg-[#FFB7C5]/10">
-                        <img src={groomImg} className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt={groom} />
+                        <img loading="lazy" src={groomImg} className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt={groom} />
                      </div>
                      <h3 className="text-3xl font-light text-[#4A4A4A] mb-2" style={{ fontFamily: '"Noto Serif JP", serif' }}>{groom}</h3>
                      <p className="text-[10px] font-bold tracking-widest text-[#FFB7C5] uppercase mb-1">Putra Dari</p>
@@ -246,7 +246,7 @@ export default function JapaneseSakuraGarden({ data, guestName, lang = 'id' }: T
 
                   <div className="text-center md:mt-24">
                      <div className="w-56 h-56 mx-auto rounded-full overflow-hidden border-8 border-white shadow-xl mb-6 bg-[#FFB7C5]/10">
-                        <img src={brideImg} className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt={bride} />
+                        <img loading="lazy" src={brideImg} className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt={bride} />
                      </div>
                      <h3 className="text-3xl font-light text-[#4A4A4A] mb-2" style={{ fontFamily: '"Noto Serif JP", serif' }}>{bride}</h3>
                      <p className="text-[10px] font-bold tracking-widest text-[#FFB7C5] uppercase mb-1">Putri Dari</p>
@@ -312,7 +312,7 @@ export default function JapaneseSakuraGarden({ data, guestName, lang = 'id' }: T
                <div className="max-w-6xl mx-auto columns-2 md:columns-3 gap-4 space-y-4">
                   {[gallery1, gallery2, gallery3, gallery4].map((img, i) => (
                     <div key={i} className="break-inside-avoid rounded-[2rem] overflow-hidden border-4 border-white shadow-lg relative group">
-                       <img src={img} className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700" alt="Gallery" />
+                       <img loading="lazy" src={img} className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700" alt="Gallery" />
                     </div>
                   ))}
                </div>

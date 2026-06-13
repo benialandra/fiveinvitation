@@ -170,7 +170,7 @@ export default function ElegantGold({ data, guestName, lang = 'id' }: ThemeProps
                     className="flex-1 text-center"
                   >
                      <div className="w-56 h-72 mx-auto border border-amber-900/40 p-2 mb-8 rounded-t-full">
-                        <img src={groomImg} className="w-full h-full object-cover rounded-t-full opacity-80 hover:opacity-100 transition-opacity" alt={groom} />
+                        <img loading="lazy" src={groomImg} className="w-full h-full object-cover rounded-t-full opacity-80 hover:opacity-100 transition-opacity" alt={groom} />
                      </div>
                      <h3 className="text-4xl font-light text-amber-300 mb-2">{groom}</h3>
                      <p className="text-xs text-white/50 uppercase tracking-widest font-sans">Putra dari<br/><span className="text-white mt-1 block">{data.groom_parents || 'Bpk. Hendra & Ibu Susi'}</span></p>
@@ -186,7 +186,7 @@ export default function ElegantGold({ data, guestName, lang = 'id' }: ThemeProps
                     className="flex-1 text-center"
                   >
                      <div className="w-56 h-72 mx-auto border border-amber-900/40 p-2 mb-8 rounded-t-full">
-                        <img src={brideImg} className="w-full h-full object-cover rounded-t-full opacity-80 hover:opacity-100 transition-opacity" alt={bride} />
+                        <img loading="lazy" src={brideImg} className="w-full h-full object-cover rounded-t-full opacity-80 hover:opacity-100 transition-opacity" alt={bride} />
                      </div>
                      <h3 className="text-4xl font-light text-amber-300 mb-2">{bride}</h3>
                      <p className="text-xs text-white/50 uppercase tracking-widest font-sans">Putri dari<br/><span className="text-white mt-1 block">{data.bride_parents || 'Bpk. Budi & Ibu Ani'}</span></p>
@@ -267,7 +267,7 @@ export default function ElegantGold({ data, guestName, lang = 'id' }: ThemeProps
                          transition={{ duration: 0.8, delay: i * 0.1 }}
                          className={`rounded-2xl overflow-hidden border border-amber-900/30 aspect-square`}
                        >
-                          <img src={img} className="w-full h-full object-cover opacity-70 hover:opacity-100 hover:scale-105 transition-all duration-700" alt="Gallery" />
+                          <img loading="lazy" src={img} className="w-full h-full object-cover opacity-70 hover:opacity-100 hover:scale-105 transition-all duration-700" alt="Gallery" />
                        </motion.div>
                     ))}
                  </div>

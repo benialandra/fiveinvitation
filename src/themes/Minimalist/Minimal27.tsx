@@ -219,14 +219,14 @@ export default function ScandinavianMinimalist({ data, guestName, lang = 'id' }:
                <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-16 justify-center">
                   <div className="flex flex-col items-center text-center">
                       <div className="w-48 h-64 md:w-64 md:h-80 rounded-t-[10rem] overflow-hidden bg-[#EAE8E3] mb-8">
-                         <img src={groomImg} className="w-full h-full object-cover" alt={groom} />
+                         <img loading="lazy" src={groomImg} className="w-full h-full object-cover" alt={groom} />
                       </div>
                       <h3 className="text-3xl font-light mb-2">{groom}</h3>
                       <p className="text-[#8B8881] text-xs uppercase tracking-widest">Putra dari<br/><span className="text-[#1A1A1A] font-medium">{data.groom_parents || 'Bpk. Hendra & Ibu Susi'}</span></p>
                    </div>
                    <div className="flex flex-col items-center text-center">
                       <div className="w-48 h-64 md:w-64 md:h-80 rounded-t-[10rem] overflow-hidden bg-[#EAE8E3] mb-8">
-                         <img src={brideImg} className="w-full h-full object-cover" alt={bride} />
+                         <img loading="lazy" src={brideImg} className="w-full h-full object-cover" alt={bride} />
                       </div>
                      <h3 className="text-3xl font-light mb-2">{bride}</h3>
                      <p className="text-[#8B8881] text-xs uppercase tracking-widest">Putri dari<br/><span className="text-[#1A1A1A] font-medium">{data.bride_parents || 'Bpk. Budi & Ibu Ani'}</span></p>
@@ -271,7 +271,7 @@ export default function ScandinavianMinimalist({ data, guestName, lang = 'id' }:
                 {[gallery1, gallery2, gallery3, gallery4].map((img, i) => (
                   <div key={i} className={`overflow-hidden bg-[#EAE8E3] rounded-[2rem] ${i === 0 || i === 3 ? 'aspect-[4/5]' : 'aspect-square'} relative group`}>
                     <div className="w-full h-[130%] -top-[15%] absolute">
-                      <img src={img} alt="Gallery" className="w-full h-full object-cover scandi-parallax opacity-90 transition-opacity duration-700 group-hover:opacity-100" />
+                      <img loading="lazy" src={img} alt="Gallery" className="w-full h-full object-cover scandi-parallax opacity-90 transition-opacity duration-700 group-hover:opacity-100" />
                     </div>
                   </div>
                 ))}

@@ -227,7 +227,7 @@ export default function FloralBlossom({ data, guestName, lang = 'id' }: ThemePro
                     className="flex-1 text-center"
                   >
                      <div className="w-56 h-72 md:w-64 md:h-80 mx-auto rounded-full border-[12px] border-white shadow-xl mb-8 bg-rose-100 overflow-hidden relative">
-                        <img src={groomImg} className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt={groom} />
+                        <img loading="lazy" src={groomImg} className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt={groom} />
                         <div className="absolute inset-0 bg-rose-900/10 mix-blend-overlay hover:bg-transparent transition-colors" />
                      </div>
                      <h3 className="text-4xl font-light text-rose-950 mb-2 italic">{groom}</h3>
@@ -244,7 +244,7 @@ export default function FloralBlossom({ data, guestName, lang = 'id' }: ThemePro
                     className="flex-1 text-center"
                   >
                      <div className="w-56 h-72 md:w-64 md:h-80 mx-auto rounded-full border-[12px] border-white shadow-xl mb-8 bg-rose-100 overflow-hidden relative">
-                        <img src={brideImg} className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt={bride} />
+                        <img loading="lazy" src={brideImg} className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt={bride} />
                         <div className="absolute inset-0 bg-rose-900/10 mix-blend-overlay hover:bg-transparent transition-colors" />
                      </div>
                      <h3 className="text-4xl font-light text-rose-950 mb-2 italic">{bride}</h3>
@@ -346,7 +346,7 @@ export default function FloralBlossom({ data, guestName, lang = 'id' }: ThemePro
                          transition={{ duration: 0.8, delay: i * 0.1 }}
                          className="rounded-2xl overflow-hidden break-inside-avoid border-4 border-white shadow-lg"
                        >
-                          <img src={img} className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700" alt="Gallery" />
+                          <img loading="lazy" src={img} className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700" alt="Gallery" />
                        </motion.div>
                     ))}
                  </div>

@@ -140,7 +140,7 @@ export default function MinimalistMonochrome({ data, guestName, lang = 'id' }: T
              <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-16">
                 <div className="flex-1 text-center md:text-right">
                    <div className="w-48 h-64 md:w-64 md:h-80 mx-auto md:ml-auto md:mr-0 border border-gray-200 p-2 mb-8">
-                      <img src={groomImg} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt={groom} />
+                      <img loading="lazy" src={groomImg} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt={groom} />
                    </div>
                    <h3 className="text-3xl font-light mb-2">{groom}</h3>
                    <p className="text-xs text-gray-500 uppercase tracking-widest">Putra dari<br/><span className="font-bold text-black">{data.groom_parents || 'Bpk. Hendra & Ibu Susi'}</span></p>
@@ -148,7 +148,7 @@ export default function MinimalistMonochrome({ data, guestName, lang = 'id' }: T
                 <div className="text-4xl font-light text-gray-200">&</div>
                 <div className="flex-1 text-center md:text-left">
                    <div className="w-48 h-64 md:w-64 md:h-80 mx-auto md:mr-auto md:ml-0 border border-gray-200 p-2 mb-8">
-                      <img src={brideImg} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt={bride} />
+                      <img loading="lazy" src={brideImg} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt={bride} />
                    </div>
                    <h3 className="text-3xl font-light mb-2">{bride}</h3>
                    <p className="text-xs text-gray-500 uppercase tracking-widest">Putri dari<br/><span className="font-bold text-black">{data.bride_parents || 'Bpk. Budi & Ibu Ani'}</span></p>
@@ -229,7 +229,7 @@ export default function MinimalistMonochrome({ data, guestName, lang = 'id' }: T
             <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
                {[gallery1, gallery2, gallery3, gallery4].map((img, i) => (
                   <div key={i} className="aspect-square border border-gray-200 p-2">
-                     <img src={img} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Gallery" />
+                     <img loading="lazy" src={img} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Gallery" />
                   </div>
                ))}
             </div>

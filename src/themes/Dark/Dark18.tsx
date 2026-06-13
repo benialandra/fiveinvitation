@@ -202,7 +202,7 @@ export default function DarkPremium({ data, guestName, lang = 'id' }: ThemeProps
                      >
                         <div className="aspect-[4/5] w-full rounded-3xl overflow-hidden mb-8 relative">
                            <div className="absolute inset-0 bg-indigo-500/20 mix-blend-overlay group-hover:bg-transparent transition-colors duration-700 z-10" />
-                           <img src={groomImg} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" alt={groom} />
+                           <img loading="lazy" src={groomImg} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" alt={groom} />
                         </div>
                         <h3 className="text-4xl font-bold tracking-tight text-white mb-2">{groom}</h3>
                         <p className="text-slate-400 text-sm">{data.groom_parents || 'Putra dari Bpk. Hendra & Ibu Susi'}</p>
@@ -217,7 +217,7 @@ export default function DarkPremium({ data, guestName, lang = 'id' }: ThemeProps
                      >
                         <div className="aspect-[4/5] w-full rounded-3xl overflow-hidden mb-8 relative">
                            <div className="absolute inset-0 bg-indigo-500/20 mix-blend-overlay group-hover:bg-transparent transition-colors duration-700 z-10" />
-                           <img src={brideImg} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" alt={bride} />
+                           <img loading="lazy" src={brideImg} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" alt={bride} />
                         </div>
                         <h3 className="text-4xl font-bold tracking-tight text-white mb-2">{bride}</h3>
                         <p className="text-slate-400 text-sm">{data.bride_parents || 'Putri dari Bpk. Budi & Ibu Ani'}</p>
@@ -304,7 +304,7 @@ export default function DarkPremium({ data, guestName, lang = 'id' }: ThemeProps
                    transition={{ duration: 1.2 }}
                    className="h-full min-h-[500px] rounded-3xl overflow-hidden relative border border-slate-800"
                  >
-                   <img src={mapImg} className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-luminosity hover:mix-blend-normal transition-all duration-700" alt="Location Map" />
+                   <img loading="lazy" src={mapImg} className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-luminosity hover:mix-blend-normal transition-all duration-700" alt="Location Map" />
                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
                    
                    <div className="absolute bottom-0 left-0 w-full p-8 md:p-12">
@@ -335,7 +335,7 @@ export default function DarkPremium({ data, guestName, lang = 'id' }: ThemeProps
                           className={`rounded-2xl overflow-hidden border border-slate-800 relative group ${i === 2 ? 'col-span-2 row-span-2' : 'aspect-square'}`}
                         >
                            <div className="absolute inset-0 bg-indigo-500/20 mix-blend-overlay group-hover:bg-transparent transition-colors duration-700 z-10" />
-                           <img src={img} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" alt="Gallery" />
+                           <img loading="lazy" src={img} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" alt="Gallery" />
                         </motion.div>
                      ))}
                   </div>

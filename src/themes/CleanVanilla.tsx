@@ -15,7 +15,7 @@ export default function CleanVanilla({ data, guestName, lang = 'id' }: ThemeProp
       bride={data?.bride_name || "Bride"} 
       date={data?.akad_date ? new Date(data.akad_date).toLocaleDateString() : "12 Dec 2026"}
       hero_image={data?.hero_image || "https://elglmntxhbxrysewliqb.supabase.co/storage/v1/object/public/fiveinvitation-bucket/uploads/1780461197556_Screenshot2024-11-29205020.png"}
-      cover_image={data?.cover_image || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=2000"}
+      cover_image={data?.cover_image || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=60&w=2000&fm=webp&q=60"}
       groom_image={data?.groom_image}
       bride_image={data?.bride_image}
       gallery_1={data?.gallery_1}

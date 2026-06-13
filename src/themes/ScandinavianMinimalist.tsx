@@ -50,14 +50,14 @@ export default function ScandinavianMinimalist({ data, guestName, lang = 'id' }:
   const akadDateStr = data.akad_date || '2026-10-24T10:00:00';
   const resepsiDateStr = data.resepsi_date || '2026-10-24T18:00:00';
   
-  const coverImage = data.cover_image || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80";
-  const heroImage = data.hero_image || "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80";
-  const groomImg = data.groom_image || data.gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80";
-  const brideImg = data.bride_image || data.gallery_2 || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80";
-  const gallery1 = data.gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80";
-  const gallery2 = data.gallery_2 || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80";
-  const gallery3 = data.gallery_3 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80";
-  const gallery4 = data.gallery_4 || "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80";
+  const coverImage = data.cover_image || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=60&fm=webp&q=60";
+  const heroImage = data.hero_image || "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=60&fm=webp&q=60";
+  const groomImg = data.groom_image || data.gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=60&fm=webp&q=60";
+  const brideImg = data.bride_image || data.gallery_2 || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=60&fm=webp&q=60";
+  const gallery1 = data.gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=60&fm=webp&q=60";
+  const gallery2 = data.gallery_2 || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=60&fm=webp&q=60";
+  const gallery3 = data.gallery_3 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=60&fm=webp&q=60";
+  const gallery4 = data.gallery_4 || "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=60&fm=webp&q=60";
   const story = data.story || "In the simplicity of everyday life, we found an extraordinary love. A love built on quiet mornings, shared silence, and a deep understanding.";
 
   useEffect(() => {

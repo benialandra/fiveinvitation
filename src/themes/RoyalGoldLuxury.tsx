@@ -107,14 +107,14 @@ export default function RoyalGoldLuxury({ data, guestName }: { data?: any, guest
   const [rsvpGuestCount, setRsvpGuestCount] = useState('1');
 
   const loveStory = data?.story || "In the grand tapestry of life, our threads have finally intertwined, creating a bond that is eternal and true.";
-  const coverImg = data?.cover_image || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2000&auto=format&fit=crop";
-  const heroImg = data?.hero_image || "https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=80&w=2000&auto=format&fit=crop";
+  const coverImg = data?.cover_image || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=60&w=2000&auto=format&fit=crop&fm=webp&q=60";
+  const heroImg = data?.hero_image || "https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=60&w=2000&auto=format&fit=crop&fm=webp&q=60";
   
   // Need 4 gallery images, fallback to defaults
-  const gal1 = data?.gallery_1 || "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=800&auto=format&fit=crop";
-  const gal2 = data?.gallery_2 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop";
-  const gal3 = data?.gallery_3 || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop";
-  const gal4 = data?.gallery_4 || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=800&auto=format&fit=crop";
+  const gal1 = data?.gallery_1 || "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=60&w=800&auto=format&fit=crop&fm=webp&q=60";
+  const gal2 = data?.gallery_2 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=60&w=800&auto=format&fit=crop&fm=webp&q=60";
+  const gal3 = data?.gallery_3 || "https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=800&auto=format&fit=crop&fm=webp&q=60";
+  const gal4 = data?.gallery_4 || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=60&w=800&auto=format&fit=crop&fm=webp&q=60";
 
   const bankName1 = data?.bank_name_1 || "Bank Central Asia";
   const bankAccount1 = data?.bank_account_1 || "1234567890";

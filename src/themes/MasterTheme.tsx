@@ -227,8 +227,8 @@ export default function MasterTheme({
         );
       
       case 'couple':
-        const finalGroomImage = data?.groom_image || groom_image || gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=800";
-        const finalBrideImage = data?.bride_image || bride_image || gallery_2 || "https://images.unsplash.com/photo-1546822830-4663ec40a3dd?auto=format&fit=crop&q=80&w=800";
+        const finalGroomImage = data?.groom_image || groom_image || gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=60&w=800&fm=webp&q=60";
+        const finalBrideImage = data?.bride_image || bride_image || gallery_2 || "https://images.unsplash.com/photo-1546822830-4663ec40a3dd?auto=format&fit=crop&q=60&w=800&fm=webp&q=60";
         return (
           <div key={index} className="py-24 px-6 max-w-4xl mx-auto text-center" style={{ backgroundColor: colors?.background }}>
             <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
@@ -304,10 +304,10 @@ export default function MasterTheme({
         
       case 'gallery':
         const galleryImages = [
-           data?.gallery_1 || gallery_1 || cover_image || "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=1200",
-           data?.gallery_2 || gallery_2 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=1200",
-           data?.gallery_3 || gallery_3 || "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&q=80&w=1200",
-           data?.gallery_4 || gallery_4 || "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&q=80&w=1200"
+           data?.gallery_1 || gallery_1 || cover_image || "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=60&w=1200&fm=webp&q=60",
+           data?.gallery_2 || gallery_2 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=60&w=1200&fm=webp&q=60",
+           data?.gallery_3 || gallery_3 || "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&q=60&w=1200&fm=webp&q=60",
+           data?.gallery_4 || gallery_4 || "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&q=60&w=1200&fm=webp&q=60"
         ].filter(Boolean);
         
         return (

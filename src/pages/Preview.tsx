@@ -4,6 +4,7 @@ import { THEME_REGISTRY } from '../themes/registry';
 import MasterTheme from '../themes/MasterTheme';
 import { supabase } from '../lib/supabase';
 import { ArrowLeft, Loader2, Smartphone, Tablet, Monitor } from 'lucide-react';
+import { LazyMotion, domAnimation } from 'framer-motion';
 
 export default function Preview() {
   const { themeId } = useParams();
@@ -15,22 +16,22 @@ export default function Preview() {
   const color = searchParams.get('color');
 
   useEffect(() => {
+    const controller = new AbortController();
     const fetchTheme = async () => {
        try {
-         const { data } = await supabase.from('themes').select('*').eq('id', themeId).single();
+         const { data } = await supabase.from('themes').select('*').eq('id', themeId).abortSignal(controller.signal).maybeSingle();
          if (data) {
-             // Merge with registry component if it exists
              const registryTheme = THEME_REGISTRY.find(t => t.id === themeId);
              setTheme({ ...registryTheme, ...data, thumbnail: data.thumbnail || registryTheme?.thumbnail });
          }
-       } catch (err) {
-         console.error(err);
-         // If fetch fails, we retain the initial state from THEME_REGISTRY
+       } catch (err: any) {
+         if (err.name !== 'AbortError') console.error(err);
        } finally {
          setLoading(false);
        }
     };
     fetchTheme();
+    return () => controller.abort();
   }, [themeId]);
 
   if (loading) {
@@ -66,8 +67,8 @@ export default function Preview() {
       location_name: "Grand Ballroom Hotel Mulia, Jl. Asia Afrika, Senayan, Jakarta",
       maps_link: "https://maps.google.com",
       story: "Kami bertemu di bangku kuliah, menjalin persahabatan, hingga akhirnya memutuskan untuk hidup bersama dalam ikatan suci.",
-      cover_image: theme?.thumbnail || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200",
-      hero_image: (customGallery.length > 0 ? customGallery[0] : null) || theme?.thumbnail || "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=1200",
+      cover_image: theme?.thumbnail || "https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=1200&fm=webp&q=60",
+      hero_image: (customGallery.length > 0 ? customGallery[0] : null) || theme?.thumbnail || "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=60&w=1200&fm=webp&q=60",
       gallery_1: customGallery[0] || null,
       gallery_2: customGallery[1] || null,
       gallery_3: customGallery[2] || null,
@@ -84,7 +85,9 @@ export default function Preview() {
      if (ThemeComponent) {
         content = (
           <React.Suspense fallback={<div className="h-full min-h-[500px] flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-[#C5A059]" /></div>}>
-            <ThemeComponent {...sampleProps} />
+            <LazyMotion features={domAnimation}>
+              <ThemeComponent {...sampleProps} />
+            </LazyMotion>
           </React.Suspense>
         );
      } else {

@@ -20,10 +20,10 @@ export default function GlassmorphismElegance({ data, guestName }: { data?: any,
   const [newMessage, setNewMessage] = useState('');
 
   const loveStory = data?.story || "We found each other in the most unexpected way, and our journey has been nothing short of magical.";
-  const coverImg = data?.cover_image || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=2000&auto=format&fit=crop";
-  const heroImg = data?.hero_image || "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=80&w=2000&auto=format&fit=crop";
-  const groomImg = data?.groom_image || data?.gallery_1 || "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=1000&auto=format&fit=crop";
-  const brideImg = data?.bride_image || data?.gallery_2 || "https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1000&auto=format&fit=crop";
+  const coverImg = data?.cover_image || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=60&w=2000&auto=format&fit=crop&fm=webp&q=60";
+  const heroImg = data?.hero_image || "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=60&w=2000&auto=format&fit=crop&fm=webp&q=60";
+  const groomImg = data?.groom_image || data?.gallery_1 || "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=60&w=1000&auto=format&fit=crop&fm=webp&q=60";
+  const brideImg = data?.bride_image || data?.gallery_2 || "https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=60&w=1000&auto=format&fit=crop&fm=webp&q=60";
   const bankName1 = data?.bank_name_1 || "BCA";
   const bankAccount1 = data?.bank_account_1 || "0987654321";
   const bankAccountName1 = data?.bank_account_name_1 || groom;

@@ -180,12 +180,12 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
 
   // Gallery
   const defaultGallery = [
-    "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=600&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=600&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=600&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=600&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?q=80&w=600&auto=format&fit=crop"
+    "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=60&w=600&auto=format&fit=crop&fm=webp&q=60",
+    "https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=600&auto=format&fit=crop&fm=webp&q=60",
+    "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=60&w=600&auto=format&fit=crop&fm=webp&q=60",
+    "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=60&w=600&auto=format&fit=crop&fm=webp&q=60",
+    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=60&w=600&auto=format&fit=crop&fm=webp&q=60",
+    "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?q=60&w=600&auto=format&fit=crop&fm=webp&q=60"
   ];
   
   const gallery = [
@@ -249,8 +249,8 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
   };
 
   // Content constants
-  const bgImage = data?.cover_image || "https://images.unsplash.com/photo-1483982258113-b72862e6cff6?q=80&w=2000&auto=format&fit=crop";
-  const heroImage = data?.hero_image || "https://images.unsplash.com/photo-1543615468-197e41b9d4ec?q=80&w=1500&auto=format&fit=crop";
+  const bgImage = data?.cover_image || "https://images.unsplash.com/photo-1483982258113-b72862e6cff6?q=60&w=2000&auto=format&fit=crop&fm=webp&q=60";
+  const heroImage = data?.hero_image || "https://images.unsplash.com/photo-1543615468-197e41b9d4ec?q=60&w=1500&auto=format&fit=crop&fm=webp&q=60";
 
   return (
     <div className="bg-[#f0f4f8] dark:bg-slate-900 min-h-screen text-slate-800 dark:text-slate-100 font-sans selection:bg-blue-200 selection:text-slate-900 overflow-x-hidden transition-colors duration-500">
@@ -381,7 +381,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
               <div className="grid md:grid-cols-2 gap-16 md:gap-8 items-center">
                 <FadeIn delay={0.2}>
                   <div className="relative w-48 h-64 md:w-64 md:h-80 mx-auto mb-6 rounded-[2rem] overflow-hidden p-2 bg-white dark:bg-slate-700 border border-white backdrop-blur-sm shadow-xl">
-                    <img src={data?.bride_image || data?.gallery_2 || "https://images.unsplash.com/photo-1546822830-4663ec40a3dd?q=80&w=600&auto=format&fit=crop"} alt="Bride" className="w-full h-full object-cover rounded-[1.5rem]" />
+                    <img src={data?.bride_image || data?.gallery_2 || "https://images.unsplash.com/photo-1546822830-4663ec40a3dd?q=60&w=600&auto=format&fit=crop&fm=webp&q=60"} alt="Bride" className="w-full h-full object-cover rounded-[1.5rem]" />
                   </div>
                   <h4 className="text-3xl font-serif text-slate-800 dark:text-white mb-2">{brideName}</h4>
                   <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 uppercase tracking-widest">The Bride</p>
@@ -390,7 +390,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
 
                 <FadeIn delay={0.4}>
                   <div className="relative w-48 h-64 md:w-64 md:h-80 mx-auto mb-6 rounded-[2rem] overflow-hidden p-2 bg-white dark:bg-slate-700 border border-white backdrop-blur-sm shadow-xl">
-                    <img src={data?.groom_image || data?.gallery_1 || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=600&auto=format&fit=crop"} alt="Groom" className="w-full h-full object-cover rounded-[1.5rem]" />
+                    <img src={data?.groom_image || data?.gallery_1 || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=60&w=600&auto=format&fit=crop&fm=webp&q=60"} alt="Groom" className="w-full h-full object-cover rounded-[1.5rem]" />
                   </div>
                   <h4 className="text-3xl font-serif text-slate-800 dark:text-white mb-2">{groomName}</h4>
                   <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 uppercase tracking-widest">The Groom</p>
@@ -403,7 +403,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
           {/* Countdown Section */}
           <section className="py-20 relative bg-slate-900 text-white overflow-hidden">
             <div className="absolute inset-0">
-              <img src="https://images.unsplash.com/photo-1478265409131-1f65c88f965c?q=80&w=2000&auto=format&fit=crop" alt="Bg" className="w-full h-full object-cover opacity-20" />
+              <img src="https://images.unsplash.com/photo-1478265409131-1f65c88f965c?q=60&w=2000&auto=format&fit=crop&fm=webp&q=60" alt="Bg" className="w-full h-full object-cover opacity-20" />
             </div>
             <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
               <FadeIn>
@@ -727,7 +727,7 @@ export default function WinterRomance({ data, guestName, lang = 'id' }: ThemePro
 
           {/* Footer */}
           <footer className="py-12 bg-slate-900 text-center text-slate-400 dark:text-slate-400 relative overflow-hidden">
-            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1478265409131-1f65c88f965c?q=80&w=2000&auto=format&fit=crop')] opacity-10 bg-cover bg-center" />
+            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1478265409131-1f65c88f965c?q=60&w=2000&auto=format&fit=crop&fm=webp&q=60')] opacity-10 bg-cover bg-center" />
             <FadeIn className="relative z-10">
               <h2 className="text-3xl font-serif text-white mb-6" style={{ fontFamily: '"Playfair Display", serif' }}>
                 {brideName} <span className="text-blue-300 mx-2 italic font-light">&amp;</span> {groomName}

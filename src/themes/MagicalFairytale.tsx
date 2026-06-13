@@ -248,15 +248,15 @@ export default function MagicalFairytale({ data, guestName, lang = 'id' }: Theme
   const locationName = data?.location_name || "The Royal Glasshouse Palace, Jakarta";
   const mapsLink = data?.maps_link || "https://maps.app.goo.gl/u1L8tHqD57mQvX3f9";
 
-  const coverImage = data?.cover_image || "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200&auto=format&fit=crop";
-  const heroImage = data?.hero_image || "https://images.unsplash.com/photo-1518005020951-eccb494ad742?q=80&w=1200&auto=format&fit=crop";
-  const groomImage = data?.groom_image || data?.gallery_1 || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=600&auto=format&fit=crop";
-  const brideImage = data?.bride_image || data?.gallery_2 || "https://images.unsplash.com/photo-1546822830-4663ec40a3dd?q=80&w=600&auto=format&fit=crop";
+  const coverImage = data?.cover_image || "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=60&w=1200&auto=format&fit=crop&fm=webp&q=60";
+  const heroImage = data?.hero_image || "https://images.unsplash.com/photo-1518005020951-eccb494ad742?q=60&w=1200&auto=format&fit=crop&fm=webp&q=60";
+  const groomImage = data?.groom_image || data?.gallery_1 || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=60&w=600&auto=format&fit=crop&fm=webp&q=60";
+  const brideImage = data?.bride_image || data?.gallery_2 || "https://images.unsplash.com/photo-1546822830-4663ec40a3dd?q=60&w=600&auto=format&fit=crop&fm=webp&q=60";
   
-  const gallery1 = data?.gallery_1 || "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=600&auto=format&fit=crop";
-  const gallery2 = data?.gallery_2 || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop";
-  const gallery3 = data?.gallery_3 || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=600&auto=format&fit=crop";
-  const gallery4 = data?.gallery_4 || "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?q=80&w=600&auto=format&fit=crop";
+  const gallery1 = data?.gallery_1 || "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=60&w=600&auto=format&fit=crop&fm=webp&q=60";
+  const gallery2 = data?.gallery_2 || "https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=600&auto=format&fit=crop&fm=webp&q=60";
+  const gallery3 = data?.gallery_3 || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=60&w=600&auto=format&fit=crop&fm=webp&q=60";
+  const gallery4 = data?.gallery_4 || "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?q=60&w=600&auto=format&fit=crop&fm=webp&q=60";
 
   const weddingDate = new Date(dateStr);
   const currentLocale = lang === 'en' ? localeEn : localeId;
@@ -735,7 +735,7 @@ export default function MagicalFairytale({ data, guestName, lang = 'id' }: Theme
           </section>
 
           {/* 4. COUNTDOWN TIMER */}
-          <section className="py-24 px-6 relative overflow-hidden bg-[url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200&auto=format&fit=crop')] bg-cover bg-center">
+          <section className="py-24 px-6 relative overflow-hidden bg-[url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=60&w=1200&auto=format&fit=crop&fm=webp&q=60')] bg-cover bg-center">
             {/* Dark magic overlay */}
             <div className="absolute inset-0 bg-gradient-to-r from-[#080a1d]/95 via-[#1b1236]/90 to-[#080a1d]/95" />
 
@@ -1261,7 +1261,7 @@ export default function MagicalFairytale({ data, guestName, lang = 'id' }: Theme
 
           {/* 10. CLOSING FOOTER */}
           <footer className="py-24 bg-[#070814] text-center text-[#d1d5db]/55 border-t border-[#e2c974]/10 relative overflow-hidden">
-            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1200&auto=format&fit=crop')] opacity-5 scale-105 bg-cover bg-center" />
+            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=60&w=1200&auto=format&fit=crop&fm=webp&q=60')] opacity-5 scale-105 bg-cover bg-center" />
             
             <motion.div 
               initial={{ opacity: 0, y: 20 }}

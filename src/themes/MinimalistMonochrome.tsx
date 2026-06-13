@@ -40,14 +40,14 @@ export default function MinimalistMonochrome({ data, guestName, lang = 'id' }: T
 
   const groom = data.groom_name || 'Alvaro';
   const bride = data.bride_name || 'Biana';
-  const coverImage = data.cover_image || "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=1200&auto=format&fit=crop";
-  const heroImage = data.hero_image || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1200&auto=format&fit=crop";
-  const groomImg = data.groom_image || data.gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800&auto=format&fit=crop";
-  const brideImg = data.bride_image || data.gallery_2 || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop";
-  const gallery1 = data.gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800&auto=format&fit=crop";
-  const gallery2 = data.gallery_2 || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop";
-  const gallery3 = data.gallery_3 || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=800&auto=format&fit=crop";
-  const gallery4 = data.gallery_4 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1200&auto=format&fit=crop";
+  const coverImage = data.cover_image || "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=60&w=1200&auto=format&fit=crop&fm=webp&q=60";
+  const heroImage = data.hero_image || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=60&w=1200&auto=format&fit=crop&fm=webp&q=60";
+  const groomImg = data.groom_image || data.gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=60&w=800&auto=format&fit=crop&fm=webp&q=60";
+  const brideImg = data.bride_image || data.gallery_2 || "https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=800&auto=format&fit=crop&fm=webp&q=60";
+  const gallery1 = data.gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=60&w=800&auto=format&fit=crop&fm=webp&q=60";
+  const gallery2 = data.gallery_2 || "https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=800&auto=format&fit=crop&fm=webp&q=60";
+  const gallery3 = data.gallery_3 || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=60&w=800&auto=format&fit=crop&fm=webp&q=60";
+  const gallery4 = data.gallery_4 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=60&w=1200&auto=format&fit=crop&fm=webp&q=60";
   const story = data.story || "We started as strangers, became friends, and realized we couldn't live without each other.";
   const akadDateStr = data.akad_date || '2026-12-31T08:00:00';
 

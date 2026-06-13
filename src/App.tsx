@@ -5,7 +5,10 @@ import ErrorBoundary from './components/ErrorBoundary';
 import Home from './pages/Home';
 import Layout from './layouts/Layout';
 import { Loader2 } from 'lucide-react';
-import FakeSalesNotification from './components/FakeSalesNotification';
+import { LazyMotion, domAnimation } from 'framer-motion';
+
+// Lazy-loaded components to reduce initial bundle size
+const FakeSalesNotification = React.lazy(() => import('./components/FakeSalesNotification'));
 
 // Lazy-loaded pages for code splitting — reduces initial bundle by ~300KB+
 const Themes = React.lazy(() => import('./pages/Themes'));
@@ -79,36 +82,40 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-      <BrowserRouter>
-        <FakeSalesNotification />
-        <Toaster position="top-center" />
-        <Suspense fallback={<PageLoader />}>
-          <Routes>
-            {/* Core public app with layout */}
-            <Route element={<Layout />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/themes" element={<Themes />} />
-              <Route path="/order/:themeId" element={<Order />} />
-              <Route path="/track" element={<TrackRedirect />} />
-              <Route path="/track/:orderCode" element={<Track />} />
-              <Route path="/edit-order/:orderCode" element={<EditOrder />} />
-              <Route path="/socials" element={<Socials />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/privacy" element={<Privacy />} />
+      <LazyMotion features={domAnimation}>
+        <BrowserRouter>
+          <Suspense fallback={null}>
+            <FakeSalesNotification />
+          </Suspense>
+          <Toaster position="top-center" />
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              {/* Core public app with layout */}
+              <Route element={<Layout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/themes" element={<Themes />} />
+                <Route path="/order/:themeId" element={<Order />} />
+                <Route path="/track" element={<TrackRedirect />} />
+                <Route path="/track/:orderCode" element={<Track />} />
+                <Route path="/edit-order/:orderCode" element={<EditOrder />} />
+                <Route path="/socials" element={<Socials />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/privacy" element={<Privacy />} />
+                
+                {/* 404 catch-all within layout */}
+                <Route path="*" element={<NotFound />} />
+              </Route>
               
-              {/* 404 catch-all within layout */}
-              <Route path="*" element={<NotFound />} />
-            </Route>
-            
-            {/* Render invitation and preview independently without the main navigation layout */}
-            <Route path="/invitation/:slug" element={<Invitation />} />
-            <Route path="/preview/:themeId" element={<Preview />} />
-            
-            {/* Admin route */}
-            <Route path="/secure-admin-login" element={<Admin />} />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
+              {/* Render invitation and preview independently without the main navigation layout */}
+              <Route path="/invitation/:slug" element={<Invitation />} />
+              <Route path="/preview/:themeId" element={<Preview />} />
+              
+              {/* Admin route */}
+              <Route path="/secure-admin-login" element={<Admin />} />
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </LazyMotion>
     </ErrorBoundary>
   );
 }

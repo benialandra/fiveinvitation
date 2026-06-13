@@ -14,8 +14,8 @@ export default function FloralBliss({ data, guestName, lang = 'id' }: ThemeProps
       groom={data?.groom_name || "Groom"} 
       bride={data?.bride_name || "Bride"} 
       date={data?.akad_date ? new Date(data.akad_date).toLocaleDateString() : "12 Dec 2026"}
-      hero_image={data?.hero_image || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=800&auto=format&fit=crop"}
-      cover_image={data?.cover_image || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=2000"}
+      hero_image={data?.hero_image || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=60&w=800&auto=format&fit=crop&fm=webp&q=60"}
+      cover_image={data?.cover_image || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=60&w=2000&fm=webp&q=60"}
       groom_image={data?.groom_image}
       bride_image={data?.bride_image}
       gallery_1={data?.gallery_1}

@@ -23,12 +23,12 @@ export default function OceanBreeze({ data, guestName, lang = 'id' }: { data?: a
   const [newMessage, setNewMessage] = useState('');
 
   const loveStory = data?.story || "Like the ocean waves crashing onto the shore, our love is a constant, beautiful force of nature.";
-  const coverImg = data?.cover_image || "https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=80&w=2000&auto=format&fit=crop"; // Better to use a beach cover
-  const heroImg = data?.hero_image || "https://images.unsplash.com/photo-1519046904884-53103b34b206?q=80&w=2000&auto=format&fit=crop"; 
-  const gallery1 = data?.gallery_1 || "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1000&auto=format&fit=crop";
-  const gallery2 = data?.gallery_2 || "https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?q=80&w=1000&auto=format&fit=crop";
-  const gallery3 = data?.gallery_3 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1000&auto=format&fit=crop";
-  const gallery4 = data?.gallery_4 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1000&auto=format&fit=crop";
+  const coverImg = data?.cover_image || "https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=60&w=2000&auto=format&fit=crop&fm=webp&q=60"; // Better to use a beach cover
+  const heroImg = data?.hero_image || "https://images.unsplash.com/photo-1519046904884-53103b34b206?q=60&w=2000&auto=format&fit=crop&fm=webp&q=60"; 
+  const gallery1 = data?.gallery_1 || "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=60&w=1000&auto=format&fit=crop&fm=webp&q=60";
+  const gallery2 = data?.gallery_2 || "https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?q=60&w=1000&auto=format&fit=crop&fm=webp&q=60";
+  const gallery3 = data?.gallery_3 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=60&w=1000&auto=format&fit=crop&fm=webp&q=60";
+  const gallery4 = data?.gallery_4 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=60&w=1000&auto=format&fit=crop&fm=webp&q=60";
   const bankName1 = data?.bank_name_1 || "BCA";
   const bankAccount1 = data?.bank_account_1 || "0987654321";
   const bankAccountName1 = data?.bank_account_name_1 || groom;

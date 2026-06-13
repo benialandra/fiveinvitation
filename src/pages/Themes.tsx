@@ -196,7 +196,7 @@ export default function Themes() {
                   <div className="w-full aspect-[4/5] bg-gray-100 dark:bg-gray-900 overflow-hidden relative group/image active:scale-[0.98] transition-transform duration-200 cursor-pointer">
                     <Link to={`/preview/${theme.id}`} className="block w-full h-full">
                       <img 
-                        src={theme.thumbnail || 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=300&auto=format&fit=crop'} 
+                        src={theme.thumbnail || 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60'} 
                         alt={theme.name}
                         loading="lazy"
                         decoding="async"

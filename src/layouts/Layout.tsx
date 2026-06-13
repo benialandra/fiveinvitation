@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import { Moon, Sun, MessageCircle, X, Mail, ArrowUp, Menu } from 'lucide-react';
-import { motion, useScroll, useSpring, AnimatePresence } from 'framer-motion';
+import {  m, useScroll, useSpring, AnimatePresence  } from 'framer-motion';
 import CookieConsent from '../components/CookieConsent';
 
 export default function Layout() {
@@ -125,7 +125,7 @@ export default function Layout() {
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
-        <motion.div 
+        <m.div 
            className="absolute bottom-0 left-0 right-0 h-[2px] origin-left gold-gradient" 
            style={{ scaleX }}
         />
@@ -134,7 +134,7 @@ export default function Layout() {
       {/* Mobile navigation drawer */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
@@ -152,7 +152,7 @@ export default function Layout() {
                 {lang === 'id' ? 'Sosial Media' : 'Socials'}
               </Link>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 
@@ -165,7 +165,7 @@ export default function Layout() {
       {/* CS & Workflow Modal */}
       <AnimatePresence>
         {csOpen && (
-          <motion.div
+          <m.div
             key="cs-backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -174,7 +174,7 @@ export default function Layout() {
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
             onClick={(e) => { if (e.target === e.currentTarget) setCsOpen(false); }}
           >
-             <motion.div
+             <m.div
                key="cs-modal"
                initial={{ opacity: 0, scale: 0.92, y: 20 }}
                animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -198,7 +198,7 @@ export default function Layout() {
                          { step: 2, title: lang === 'id' ? 'Pembayaran Instan' : 'Instant Payment', desc: lang === 'id' ? 'Selesaikan pembayaran dengan aman melalui berbagai metode yang tersedia.' : 'Complete your payment securely through various available methods.' },
                          { step: 3, title: lang === 'id' ? 'Undangan Terbit' : 'Invitation Published', desc: lang === 'id' ? 'Link undangan Anda langsung aktif dan siap disebar.' : 'Your link is instantly active and ready to share.' },
                        ].map(({ step, title, desc }, i, arr) => (
-                         <motion.div
+                         <m.div
                            key={step}
                            initial={{ opacity: 0, x: -10 }}
                            animate={{ opacity: 1, x: 0 }}
@@ -209,7 +209,7 @@ export default function Layout() {
                              <span className="w-7 h-7 rounded-full bg-[#C5A059]/10 border border-[#C5A059]/40 flex items-center justify-center text-xs text-[#C5A059] font-bold shrink-0">{step}</span>
                              {i < arr.length - 1 && (
                                <svg className="w-1 h-8 my-1 overflow-visible">
-                                 <motion.line
+                                 <m.line
                                    x1="2" y1="0" x2="2" y2="32"
                                    stroke="#C5A059"
                                    strokeWidth="1"
@@ -225,7 +225,7 @@ export default function Layout() {
                              <p className="text-sm font-semibold text-gray-900 dark:text-white">{title}</p>
                              <p className="text-xs text-gray-500 dark:text-white/50 mt-0.5">{desc}</p>
                            </div>
-                         </motion.div>
+                         </m.div>
                        ))}
                     </div>
                  </div>
@@ -239,8 +239,8 @@ export default function Layout() {
                      <Mail size={16} /> Email Support
                   </a>
                </div>
-             </motion.div>
-          </motion.div>
+             </m.div>
+          </m.div>
         )}
       </AnimatePresence>
 
@@ -248,7 +248,7 @@ export default function Layout() {
       <div className="fixed bottom-6 right-6 flex flex-col gap-4 z-50">
         <AnimatePresence>
           {showScrollTop && (
-            <motion.button
+            <m.button
                key="scroll-top"
                initial={{ opacity: 0, scale: 0.5, y: 10 }}
                animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -258,10 +258,10 @@ export default function Layout() {
                className="w-14 h-14 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-full shadow-xl flex items-center justify-center hover:scale-105 transition-transform"
             >
                <ArrowUp size={24} />
-            </motion.button>
+            </m.button>
           )}
         </AnimatePresence>
-        <motion.button 
+        <m.button 
            whileHover={{ scale: 1.08 }}
            whileTap={{ scale: 0.95 }}
            onClick={() => setCsOpen(true)}
@@ -269,7 +269,7 @@ export default function Layout() {
         >
            <div className="absolute inset-0 bg-white/20 rounded-full animate-ping opacity-75"></div>
            <MessageCircle size={24} className="relative z-10" />
-        </motion.button>
+        </m.button>
       </div>
       <CookieConsent lang={lang} />
     </div>

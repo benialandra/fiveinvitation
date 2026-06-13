@@ -117,7 +117,7 @@ export default function Order() {
        imgs.unshift(mainImg);
     }
     if (imgs.length === 0) {
-       imgs.push("https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=800");
+       imgs.push("https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=60&w=800&fm=webp&q=60");
     }
     return imgs;
   })();

@@ -1050,7 +1050,7 @@ export default function Admin() {
                       name: fd.get('name') as string,
                       category: fd.get('category') as string,
                       price: Number(fd.get('price')),
-                      thumbnail: uploadedUrls[0] || 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1000&auto=format&fit=crop',
+                      thumbnail: uploadedUrls[0] || 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=60&w=1000&auto=format&fit=crop&fm=webp&q=60',
                       sales: 0,
                       config_json: parsedConfig
                    };

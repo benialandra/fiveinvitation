@@ -48,14 +48,14 @@ export default function RusticVintage({ data, guestName, lang = 'id' }: ThemePro
   const resepsiDateStr = data.resepsi_date || '2026-12-31T11:00:00';
   const loveStory = data.story || "Cinta tidak berupa tatapan satu sama lain, tetapi memandang ke luar bersama ke arah yang sama.";
   
-  const coverImg = data.cover_image || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=2000&auto=format&fit=crop";
-  const heroImg = data.hero_image || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=2000&auto=format&fit=crop";
-  const groomImg = data.groom_image || data.gallery_1 || "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1000&auto=format&fit=crop";
-  const brideImg = data.bride_image || data.gallery_2 || "https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=80&w=1000&auto=format&fit=crop";
-  const gallery1 = data.gallery_1 || "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1000&auto=format&fit=crop";
-  const gallery2 = data.gallery_2 || "https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=80&w=1000&auto=format&fit=crop";
-  const gallery3 = data.gallery_3 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1000&auto=format&fit=crop";
-  const gallery4 = data.gallery_4 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1000&auto=format&fit=crop";
+  const coverImg = data.cover_image || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=60&w=2000&auto=format&fit=crop&fm=webp&q=60";
+  const heroImg = data.hero_image || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=60&w=2000&auto=format&fit=crop&fm=webp&q=60";
+  const groomImg = data.groom_image || data.gallery_1 || "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=60&w=1000&auto=format&fit=crop&fm=webp&q=60";
+  const brideImg = data.bride_image || data.gallery_2 || "https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=60&w=1000&auto=format&fit=crop&fm=webp&q=60";
+  const gallery1 = data.gallery_1 || "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=60&w=1000&auto=format&fit=crop&fm=webp&q=60";
+  const gallery2 = data.gallery_2 || "https://images.unsplash.com/photo-1544078754-0a3791001a1c?q=60&w=1000&auto=format&fit=crop&fm=webp&q=60";
+  const gallery3 = data.gallery_3 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=60&w=1000&auto=format&fit=crop&fm=webp&q=60";
+  const gallery4 = data.gallery_4 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=60&w=1000&auto=format&fit=crop&fm=webp&q=60";
   
   const bankName1 = data.bank_name_1 || "Mandiri";
   const bankAccount1 = data.bank_account_1 || "1122334455";

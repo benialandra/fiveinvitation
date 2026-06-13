@@ -22,14 +22,14 @@ export default function CinematicLoveStory({ data, guestName, lang = 'id' }: The
   const date = data?.akad_date ? new Date(data.akad_date).toLocaleDateString() : "14 February 2027";
   const location = data?.location_name || "Grand Cinema Theater, LA";
 
-  const coverImg = data?.cover_image || "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&q=80";
-  const groomImg = data?.groom_image || data?.gallery_1 || "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&q=80";
-  const brideImg = data?.bride_image || data?.gallery_2 || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80";
+  const coverImg = data?.cover_image || "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&q=60&fm=webp&q=60";
+  const groomImg = data?.groom_image || data?.gallery_1 || "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&q=60&fm=webp&q=60";
+  const brideImg = data?.bride_image || data?.gallery_2 || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=60&fm=webp&q=60";
 
-  const gallery1 = data?.gallery_1 || "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80";
-  const gallery2 = data?.gallery_2 || "https://images.unsplash.com/photo-1544078755-9eeceba196a8?auto=format&fit=crop&q=80";
-  const gallery3 = data?.gallery_3 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80";
-  const gallery4 = data?.gallery_4 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80";
+  const gallery1 = data?.gallery_1 || "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=60&fm=webp&q=60";
+  const gallery2 = data?.gallery_2 || "https://images.unsplash.com/photo-1544078755-9eeceba196a8?auto=format&fit=crop&q=60&fm=webp&q=60";
+  const gallery3 = data?.gallery_3 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=60&fm=webp&q=60";
+  const gallery4 = data?.gallery_4 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=60&fm=webp&q=60";
 
   // Video background source (using a placeholder romantic cinematic video)
   const videoBg = "https://player.vimeo.com/external/494241777.sd.mp4?s=d0092f69e98418012bb298d022b72cfefab83fba&profile_id=165&oauth2_token_id=57447761";
@@ -257,7 +257,7 @@ export default function CinematicLoveStory({ data, guestName, lang = 'id' }: The
 
             {/* Event Details */}
             <section className="py-32 px-6 cinematic-section relative">
-              <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1485001564903-56e6a54d46ce?auto=format&fit=crop&q=80')] bg-cover bg-fixed opacity-5 grayscale" />
+              <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1485001564903-56e6a54d46ce?auto=format&fit=crop&q=60&fm=webp&q=60')] bg-cover bg-fixed opacity-5 grayscale" />
               
               <div className="max-w-4xl mx-auto text-center relative z-10">
                 <p className="text-[#E58D57] text-sm uppercase tracking-[0.4em] mb-4">Act III</p>

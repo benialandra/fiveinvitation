@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
-import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
+import {  m, useScroll, useTransform, useInView, AnimatePresence  } from 'framer-motion';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { Star, Quote, Search, PenTool, Zap, ArrowRight } from 'lucide-react';
 
@@ -37,16 +37,16 @@ function useAnimatedCounter(target: number, duration = 2000) {
 import { useRipple } from '../hooks/useRipple';
 
 const RECENT_ORDERS = [
-  { id: 1, names: "Beni & Deti", theme: "Elegant Minimalist", image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=300" },
-  { id: 2, names: "Andi & Rina", theme: "Floral Romance", image: "https://images.unsplash.com/photo-1478146896981-b80fe463b330?auto=format&fit=crop&q=80&w=300" },
-  { id: 3, names: "Dimas & Putri", theme: "Classic Gold", image: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=300" },
-  { id: 4, names: "Reza & Maya", theme: "Modern Dark", image: "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80&w=300" },
-  { id: 5, names: "Budi & Siska", theme: "Rustic Earth", image: "https://images.unsplash.com/photo-1522383225653-ed111181a951?auto=format&fit=crop&q=80&w=300" },
-  { id: 6, names: "Kevin & Laura", theme: "Ocean Blue", image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&q=80&w=300" },
-  { id: 7, names: "Rizky & Dina", theme: "Vintage Lace", image: "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&q=80&w=300" },
-  { id: 8, names: "Arif & Nisa", theme: "Tropical Vibe", image: "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=80&w=300" },
-  { id: 9, names: "Ivan & Bella", theme: "Minimalist White", image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=300" },
-  { id: 10, names: "Fajar & Tari", theme: "Luxury Gold", image: "https://images.unsplash.com/photo-1478146896981-b80fe463b330?auto=format&fit=crop&q=80&w=300" },
+  { id: 1, names: "Beni & Deti", theme: "Elegant Minimalist", image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=60&w=300&fm=webp&q=60" },
+  { id: 2, names: "Andi & Rina", theme: "Floral Romance", image: "https://images.unsplash.com/photo-1478146896981-b80fe463b330?auto=format&fit=crop&q=60&w=300&fm=webp&q=60" },
+  { id: 3, names: "Dimas & Putri", theme: "Classic Gold", image: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=60&w=300&fm=webp&q=60" },
+  { id: 4, names: "Reza & Maya", theme: "Modern Dark", image: "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=60&w=300&fm=webp&q=60" },
+  { id: 5, names: "Budi & Siska", theme: "Rustic Earth", image: "https://images.unsplash.com/photo-1522383225653-ed111181a951?auto=format&fit=crop&q=60&w=300&fm=webp&q=60" },
+  { id: 6, names: "Kevin & Laura", theme: "Ocean Blue", image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&q=60&w=300&fm=webp&q=60" },
+  { id: 7, names: "Rizky & Dina", theme: "Vintage Lace", image: "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&q=60&w=300&fm=webp&q=60" },
+  { id: 8, names: "Arif & Nisa", theme: "Tropical Vibe", image: "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&q=60&w=300&fm=webp&q=60" },
+  { id: 9, names: "Ivan & Bella", theme: "Minimalist White", image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=60&w=300&fm=webp&q=60" },
+  { id: 10, names: "Fajar & Tari", theme: "Luxury Gold", image: "https://images.unsplash.com/photo-1478146896981-b80fe463b330?auto=format&fit=crop&q=60&w=300&fm=webp&q=60" },
 ];
 
 const TESTIMONIALS = [
@@ -56,11 +56,11 @@ const TESTIMONIALS = [
 ];
 
 const ABOUT_IMAGES = [
-  "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=800",
-  "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=800",
-  "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=800",
-  "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=80&w=800",
-  "https://images.unsplash.com/photo-1478146896981-b80fe463b330?auto=format&fit=crop&q=80&w=800"
+  "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=60&w=800&fm=webp&q=60",
+  "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=60&w=800&fm=webp&q=60",
+  "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=60&w=800&fm=webp&q=60",
+  "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=60&w=800&fm=webp&q=60",
+  "https://images.unsplash.com/photo-1478146896981-b80fe463b330?auto=format&fit=crop&q=60&w=800&fm=webp&q=60"
 ];
 
 export default function Home() {
@@ -107,7 +107,7 @@ export default function Home() {
       {/* Hero Section */}
       <div ref={heroRef} className="min-h-[calc(100vh-80px)] grid grid-cols-1 lg:grid-cols-12 gap-0 relative">
         <div className="col-span-1 lg:col-span-6 flex flex-col justify-center px-6 lg:pl-24 xl:pl-32 lg:pr-8 py-12 lg:py-0 z-10">
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0 }}
@@ -115,9 +115,9 @@ export default function Home() {
             >
               <span className="w-8 h-[1px] bg-[#C5A059]"></span>
               <span className="text-xs uppercase tracking-[0.4em] font-medium">Premium Digital Invitation</span>
-            </motion.div>
+            </m.div>
             
-            <motion.h1 
+            <m.h1 
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.15 }}
@@ -125,9 +125,9 @@ export default function Home() {
             >
               {lang === 'id' ? 'Abadikan Momen' : 'Capture Your'} <br/>
               <span className="italic font-normal">{lang === 'id' ? 'Terindah Anda' : 'Precious Moments'}</span>
-            </motion.h1>
+            </m.h1>
             
-            <motion.p 
+            <m.p 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.3 }}
@@ -136,9 +136,9 @@ export default function Home() {
               {lang === 'id' 
                 ? 'Platform undangan digital premium. Buat undangan eksklusif dengan mudah, proses instan, dan siap dibagikan dalam hitungan menit.'
                 : 'Premium digital invitation platform. Create exclusive invitations easily, instant processing, and ready to share in minutes.'}
-            </motion.p>
+            </m.p>
             
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.45 }}
@@ -163,13 +163,13 @@ export default function Home() {
                 {lang === 'id' ? 'Lihat Demo Tema' : 'View Theme Demos'}
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
               </button>
-            </motion.div>
+            </m.div>
           </div>
 
         <div className="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-[#C5A059]/10 to-transparent pointer-events-none hidden lg:block"></div>
         
         <div className="col-span-1 lg:col-span-6 relative flex items-center justify-center p-6 pb-24 lg:pb-6 lg:pr-24 xl:pr-32 lg:pl-8 mt-8 lg:mt-0">
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0, scale: 0.9, y: 40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 80, damping: 25, delay: 0.2 }}
@@ -196,7 +196,13 @@ export default function Home() {
                   className={`absolute top-0 left-0 w-full h-full p-3 transition-all duration-700 ease-out ${originClass[idx]} ${themeMode === 'dark' ? 'bg-[#111] shadow-[0_10px_30px_rgba(0,0,0,0.8)]' : 'bg-white shadow-xl'} rounded-[32px] transform ${idleTransforms[idx]} ${hoverTransforms[idx]} ${zIndexes[idx]} hover:!z-[60]`}
                 >
                     <div className="w-full h-full border border-black/5 dark:border-white/5 rounded-[24px] overflow-hidden relative flex flex-col items-center justify-center text-center p-8">
-                        <div className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110" style={{ backgroundImage: `url(${order.image})` }}></div>
+                        <img 
+  src={order.image} 
+  alt={order.names}
+  fetchPriority={idx === 0 ? "high" : "auto"}
+  loading={idx === 0 ? "eager" : "lazy"}
+  className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
+/>
                         <div className="absolute inset-0 bg-black/40 transition-colors duration-1000 group-hover:bg-black/50"></div>
                         <div className="relative z-10 transform transition-transform duration-500 group-hover:-translate-y-2">
                             <p className="font-serif text-white/80 text-sm italic mb-2 uppercase tracking-widest">The Wedding of</p>
@@ -208,7 +214,7 @@ export default function Home() {
                 </div>
               );
             })}
-          </motion.div>
+          </m.div>
           
         </div>
       </div>
@@ -229,7 +235,7 @@ export default function Home() {
                {/* SVG animated arrow connecting steps on desktop */}
                <div className="hidden md:block absolute top-[60px] left-[15%] right-[15%] h-[2px] pointer-events-none z-0">
                  <svg className="w-full h-[50px] overflow-visible" viewBox="0 0 100 20" preserveAspectRatio="none">
-                   <motion.path
+                   <m.path
                      d="M0,0 Q50,20 100,0"
                      fill="none"
                      stroke="url(#gradient-line)"
@@ -255,7 +261,7 @@ export default function Home() {
                   { icon: PenTool, label: lang === 'id' ? '2. Isi Detail Acara' : '2. Fill Event Details', desc: lang === 'id' ? 'Lengkapi informasi acara pernikahan Anda. Tanpa perlu mendaftar akun, prosesnya instan.' : 'Complete your wedding event information. No account registration needed, instant process.' },
                   { icon: Zap, label: lang === 'id' ? '3. Aktif & Bagikan' : '3. Active & Share', desc: lang === 'id' ? 'Selesaikan pembayaran dan tautan undangan Anda siap dibagikan seketika.' : 'Complete payment and your invitation link is ready to share instantly.' },
                ].map(({ icon: Icon, label, desc }, i) => (
-                 <motion.div
+                 <m.div
                    key={i}
                    initial={{ opacity: 0, y: 30 }}
                    whileInView={{ opacity: 1, y: 0 }}
@@ -263,16 +269,16 @@ export default function Home() {
                    transition={{ delay: i * 0.15, type: 'spring', stiffness: 100, damping: 20 }}
                    className="bg-gray-50 dark:bg-black/40 p-8 rounded-[32px] border border-black/5 dark:border-white/5 relative flex flex-col items-center text-center group hover:bg-white dark:hover:bg-white/5 hover:border-[#C5A059]/50 transition-all duration-300"
                  >
-                   <motion.div
+                   <m.div
                      whileHover={{ scale: 1.15, rotate: 5 }}
                      transition={{ type: 'spring', stiffness: 300, damping: 15 }}
                      className="w-16 h-16 rounded-full bg-white dark:bg-[#111] shadow-xl flex items-center justify-center mb-8 border border-black/5 dark:border-white/10 group-hover:bg-[#C5A059] group-hover:text-white transition-all text-[#C5A059] z-10"
                    >
                      <Icon width={24} height={24} />
-                   </motion.div>
+                   </m.div>
                    <h3 className="text-xl font-serif text-gray-900 dark:text-white mb-4">{label}</h3>
                    <p className="text-gray-500 dark:text-gray-400 text-sm leading-loose">{desc}</p>
-                 </motion.div>
+                 </m.div>
                ))}
             </div>
          </div>
@@ -282,7 +288,7 @@ export default function Home() {
       <div className="py-24 bg-white dark:bg-[#0A0A0B] relative z-10 border-t border-black/5 dark:border-white/5">
          <div className="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
-               <motion.div 
+               <m.div 
                  initial={{ opacity: 0, y: 20 }}
                  whileInView={{ opacity: 1, y: 0 }}
                  viewport={{ once: true }}
@@ -290,7 +296,7 @@ export default function Home() {
                >
                  <span className="w-8 h-[1px] bg-[#C5A059]"></span>
                  <span className="text-xs uppercase tracking-[0.4em] font-medium">{lang === 'id' ? 'Tentang Kami' : 'About Us'}</span>
-               </motion.div>
+               </m.div>
                <h2 className="font-serif text-3xl md:text-5xl text-gray-900 dark:text-white mb-6 leading-tight">
                   {lang === 'id' ? 'Merangkai Cerita Cinta Anda dengan Elegan' : 'Crafting Your Love Story Elegantly'}
                </h2>
@@ -317,7 +323,7 @@ export default function Home() {
                
                <div className="w-full h-[500px] relative rounded-[32px] shadow-2xl overflow-visible group-hover:scale-[1.02] transition-transform duration-500">
                  <AnimatePresence mode="wait">
-                   <motion.img 
+                   <m.img 
                      key={aboutImgIndex}
                      src={ABOUT_IMAGES[aboutImgIndex]} 
                      alt="Wedding Couple" 
@@ -342,7 +348,7 @@ export default function Home() {
 
       {/* Recent Orders Section */}
       <div className="py-20 lg:py-24 bg-gray-50 dark:bg-black/20 border-t border-black/5 dark:border-white/5 relative z-10 overflow-hidden">
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -355,7 +361,7 @@ export default function Home() {
           <p className="text-gray-500 dark:text-white/60">
              {lang === 'id' ? 'Bergabunglah dengan mereka yang telah membagikan momen bahagia dengan cara yang elegan.' : 'Join those who have shared their happy moments in an elegant way.'}
           </p>
-        </motion.div>
+        </m.div>
         
         {/* Marquee Container */}
         <div className="w-full relative py-4 flex flex-col gap-6 [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)] md:[mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]">
@@ -368,7 +374,7 @@ export default function Home() {
                    
                    {/* Main Card */}
                    <div className="absolute inset-0 rounded-[24px] overflow-hidden shadow-lg transition-transform duration-500 group-hover:-translate-y-4">
-                      <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style={{ backgroundImage: `url(${order.image})` }}></div>
+                      <img src={order.image} loading="lazy" alt={order.names} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                       <div className="absolute bottom-0 left-0 w-full p-5 text-left text-white">
                          <p className="text-xs uppercase tracking-widest text-[#C5A059] mb-1 font-semibold">{order.theme}</p>
@@ -388,7 +394,7 @@ export default function Home() {
                    
                    {/* Main Card */}
                    <div className="absolute inset-0 rounded-[24px] overflow-hidden shadow-lg transition-transform duration-500 group-hover:-translate-y-4">
-                      <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style={{ backgroundImage: `url(${order.image})` }}></div>
+                      <img src={order.image} loading="lazy" alt={order.names} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                       <div className="absolute bottom-0 left-0 w-full p-5 text-left text-white">
                          <p className="text-xs uppercase tracking-widest text-[#C5A059] mb-1 font-semibold">{order.theme}</p>
@@ -404,7 +410,7 @@ export default function Home() {
       {/* Testimonials Section */}
       <div className="py-24 px-6 lg:px-12 relative z-10">
          <div className="max-w-7xl mx-auto">
-             <motion.div
+             <m.div
                initial={{ opacity: 0, y: 20 }}
                whileInView={{ opacity: 1, y: 0 }}
                viewport={{ once: true }}
@@ -415,7 +421,7 @@ export default function Home() {
                  <h2 className="font-serif text-3xl md:text-4xl text-gray-900 dark:text-white mb-4 text-center">
                     {lang === 'id' ? 'Apa Kata Mereka?' : 'What They Say?'}
                  </h2>
-             </motion.div>
+             </m.div>
              
              {/* Testimonial Marquee / Sliding */}
              <div className="w-full overflow-hidden relative pb-10 [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)] md:[mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
@@ -446,7 +452,7 @@ export default function Home() {
       {/* Contact & Footer Section */}
       <footer className="bg-[#0A0A0B] text-white py-16 border-t border-white/10">
         <div className="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-4 gap-12">
-           <motion.div
+           <m.div
              initial={{ opacity: 0, y: 20 }}
              whileInView={{ opacity: 1, y: 0 }}
              viewport={{ once: true }}
@@ -470,7 +476,7 @@ export default function Home() {
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fillRule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clipRule="evenodd" /></svg>
                  </a>
               </div>
-           </motion.div>
+           </m.div>
            
            <div>
               <h4 className="font-serif text-lg mb-6">{lang === 'id' ? 'Tautan Cepat' : 'Quick Links'}</h4>

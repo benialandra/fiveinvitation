@@ -41,10 +41,10 @@ export default function IslamicElegant({ data, guestName }: { data?: any, guestN
   const [newMessage, setNewMessage] = useState('');
 
   const loveStory = data?.story || "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang. (Ar-Rum: 21)";
-  const coverImg = data?.cover_image || "https://images.unsplash.com/photo-1585036156171-384164a8c675?q=80&w=2000&auto=format&fit=crop"; 
-  const heroImg = data?.hero_image || "https://images.unsplash.com/photo-1564507592227-0b0f5c06a33b?q=80&w=2000&auto=format&fit=crop"; 
-  const gallery1 = data?.gallery_1 || "https://images.unsplash.com/photo-1564507592227-0b0f5c06a33b?q=80&w=800&auto=format&fit=crop";
-  const gallery2 = data?.gallery_2 || "https://images.unsplash.com/photo-1585036156171-384164a8c675?q=80&w=800&auto=format&fit=crop";
+  const coverImg = data?.cover_image || "https://images.unsplash.com/photo-1585036156171-384164a8c675?q=60&w=2000&auto=format&fit=crop&fm=webp&q=60"; 
+  const heroImg = data?.hero_image || "https://images.unsplash.com/photo-1564507592227-0b0f5c06a33b?q=60&w=2000&auto=format&fit=crop&fm=webp&q=60"; 
+  const gallery1 = data?.gallery_1 || "https://images.unsplash.com/photo-1564507592227-0b0f5c06a33b?q=60&w=800&auto=format&fit=crop&fm=webp&q=60";
+  const gallery2 = data?.gallery_2 || "https://images.unsplash.com/photo-1585036156171-384164a8c675?q=60&w=800&auto=format&fit=crop&fm=webp&q=60";
   
   const bankName1 = data?.bank_name_1 || "BSI";
   const bankAccount1 = data?.bank_account_1 || "0987654321";

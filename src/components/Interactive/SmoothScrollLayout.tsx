@@ -37,8 +37,15 @@ export default function SmoothScrollLayout({ children }: SmoothScrollLayoutProps
     // Disable core GSAP lag smoothing to prevent conflicts with Lenis
     gsap.ticker.lagSmoothing(0);
 
+    // Watch for DOM mutations/resizes (e.g. when invitation overlay opens and overflow is removed)
+    const resizeObserver = new ResizeObserver(() => {
+      lenis.resize();
+    });
+    resizeObserver.observe(document.body);
+
     return () => {
       // Cleanup
+      resizeObserver.disconnect();
       gsap.ticker.remove((time) => {
         lenis.raf(time * 1000);
       });

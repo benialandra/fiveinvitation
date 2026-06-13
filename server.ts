@@ -771,9 +771,32 @@ async function setupServer() {
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), "dist");
-    app.use(express.static(distPath));
-    app.get("*", (req, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
+    app.use(express.static(distPath, { index: false })); // Disable default index.html serving
+    app.get("*", async (req, res) => {
+      try {
+        let html = fs.readFileSync(path.join(distPath, "index.html"), "utf-8");
+        const match = req.path.match(/^\/([^\/]+)$/);
+        const ignoreList = ['admin', 'order', 'track', 'preview', 'themes', 'privacy-policy', 'terms-of-service', 'api'];
+        if (match && !ignoreList.includes(match[1])) {
+           const slug = match[1];
+           if (supabaseUrl !== 'https://mock.supabase.co') {
+             const { data: orderData } = await supabase.from('orders').select('groom_name, bride_name, cover_image').eq('slug', slug).single();
+             if (orderData) {
+                 html = html.replace(/<title>.*?<\/title>/, `<title>Undangan Pernikahan ${orderData.groom_name} & ${orderData.bride_name}</title>`);
+                 html = html.replace(/<meta property="og:title" content=".*?" \/>/, `<meta property="og:title" content="Undangan Pernikahan ${orderData.groom_name} & ${orderData.bride_name}" />`);
+                 if (orderData.cover_image) {
+                     const appUrl = process.env.VITE_APP_URL || "https://fiveinvitation.com";
+                     const fullImage = orderData.cover_image.startsWith('http') ? orderData.cover_image : `${appUrl}${orderData.cover_image}`;
+                     html = html.replace(/<meta property="og:image" content=".*?" \/>/, `<meta property="og:image" content="${fullImage}" />`);
+                     html = html.replace(/<meta name="twitter:image" content=".*?" \/>/, `<meta name="twitter:image" content="${fullImage}" />`);
+                 }
+             }
+           }
+        }
+        res.send(html);
+      } catch (err) {
+        res.sendFile(path.join(distPath, "index.html"));
+      }
     });
   }
 

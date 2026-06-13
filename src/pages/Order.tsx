@@ -324,64 +324,12 @@ export default function Order() {
               
               <form onSubmit={handleSubmit} className="space-y-8 flex flex-col">
                 
-                {/* 1. Verifikasi Email */}
-                <div className="space-y-4">
-                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                    1. Validasi Kontak {otpVerified && <CheckCircle2 className="text-green-500 w-5 h-5" />}
-                  </h2>
-                  <div className="flex gap-4">
-                    <div className="flex-1">
-                      <FloatingInput
-                        id="email"
-                        label="Email Pemesan"
-                        type="email"
-                        required
-                        disabled={otpVerified || otpSent}
-                        value={formData.email}
-                        onChange={e => setFormData({...formData, email: e.target.value})}
-                      />
-                    </div>
-                    {!otpVerified && (
-                      <button 
-                        type="button" 
-                        onClick={handleSendOTP}
-                        disabled={otpLoading || otpSent || !formData.email}
-                        className="px-6 rounded-xl bg-black dark:bg-white text-white dark:text-black font-semibold text-sm hover:opacity-90 disabled:opacity-50"
-                      >
-                        {otpLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : (otpSent ? 'Terkirim' : 'Kirim OTP')}
-                      </button>
-                    )}
-                  </div>
-
-                  <AnimatePresence>
-                    {otpSent && !otpVerified && (
-                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="flex gap-4 pt-2">
-                        <div className="flex-1">
-                          <FloatingInput
-                            id="otp" label="Masukkan 4 Digit OTP" required
-                            value={otp} onChange={e => setOtp(e.target.value)}
-                          />
-                        </div>
-                        <button 
-                          type="button" onClick={handleVerifyOTP} disabled={otpLoading || !otp}
-                          className="px-6 rounded-xl bg-[#C5A059] text-white font-semibold text-sm hover:opacity-90"
-                        >
-                          Verifikasi
-                        </button>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                {/* Tampilkan sisa form hanya jika email sudah terverifikasi */}
-                <AnimatePresence>
-                  {otpVerified && (
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
+                <div className="space-y-8">
                       
-                      {/* 2. Kustomisasi Tema */}
+                      {/* 1. Kustomisasi Tema */}
                       <div className="space-y-4 pt-6 border-t border-black/5 dark:border-white/5">
                         <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                          2. Kustomisasi Tema <span className="text-xs bg-[#C5A059] text-white px-2 py-0.5 rounded-full">Opsional</span>
+                          1. Kustomisasi Tema <span className="text-xs bg-[#C5A059] text-white px-2 py-0.5 rounded-full">Opsional</span>
                         </h2>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -426,7 +374,7 @@ export default function Order() {
 
                       {/* 3. Data Mempelai */}
                       <div className="space-y-4 pt-6 border-t border-black/5 dark:border-white/5">
-                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">3. Data Mempelai</h2>
+                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">2. Data Mempelai</h2>
                         <div className="grid grid-cols-2 gap-4">
                           <FloatingInput
                             id="groom" label="Nama Panggilan Pria" required
@@ -441,12 +389,55 @@ export default function Order() {
 
                       {/* 4. Data Acara */}
                       <div className="space-y-4 pt-6 border-t border-black/5 dark:border-white/5">
-                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">4. Data Acara</h2>
+                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">3. Data Acara</h2>
                         <FloatingInput
                           id="akad_date" label="Tanggal Akad" type="datetime-local" required
                           min={new Date().toISOString().slice(0, 16)}
                           value={formData.akad_date} onChange={e => setFormData({...formData, akad_date: e.target.value})}
                         />
+                      </div>
+
+                      {/* 4. Verifikasi Email */}
+                      <div className="space-y-4 pt-6 border-t border-black/5 dark:border-white/5">
+                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                          4. Validasi Kontak {otpVerified && <CheckCircle2 className="text-green-500 w-5 h-5" />}
+                        </h2>
+                        <div className="flex gap-4">
+                          <div className="flex-1">
+                            <FloatingInput
+                              id="email" label="Email Pemesan" type="email" required
+                              disabled={otpVerified || otpSent} value={formData.email}
+                              onChange={e => setFormData({...formData, email: e.target.value})}
+                            />
+                          </div>
+                          {!otpVerified && (
+                            <button 
+                              type="button" onClick={handleSendOTP} disabled={otpLoading || otpSent || !formData.email}
+                              className="px-6 rounded-xl bg-black dark:bg-white text-white dark:text-black font-semibold text-sm hover:opacity-90 disabled:opacity-50"
+                            >
+                              {otpLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : (otpSent ? 'Terkirim' : 'Kirim OTP')}
+                            </button>
+                          )}
+                        </div>
+
+                        <AnimatePresence>
+                          {otpSent && !otpVerified && (
+                            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="flex gap-4 pt-2">
+                              <div className="flex-1">
+                                <FloatingInput
+                                  id="otp" label="Masukkan 4 Digit OTP" required
+                                  value={otp} onChange={e => setOtp(e.target.value)}
+                                />
+                              </div>
+                              <button 
+                                type="button" onClick={handleVerifyOTP} disabled={otpLoading || !otp}
+                                className="px-6 rounded-xl bg-[#C5A059] text-white font-semibold text-sm hover:opacity-90"
+                              >
+                                Verifikasi
+                              </button>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </div>
                       
                       {/* Submit */}
@@ -467,9 +458,7 @@ export default function Order() {
                           </AnimatePresence>
                         </motion.button>
                       </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                </div>
               </form>
            </div>
         </div>

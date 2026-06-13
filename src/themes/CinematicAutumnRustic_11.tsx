@@ -1,5 +1,5 @@
 import React from 'react';
-import { Hero, BrideGroom, Countdown, Story, Gallery, RSVP, Gift } from '../../components/Theme';
+import { Hero, BrideGroom, Countdown, Story, Gallery, RSVP, Gift } from '../components/Theme';
 
 export default function CinematicAutumnRustic_11({ data, lang = 'id' }: any) {
   return (

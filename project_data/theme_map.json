@@ -1,0 +1,582 @@
+[
+  {
+    "id": "mockup-theme-27",
+    "name": "Cinematic Ocean Depth 5",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-26",
+    "name": "Cinematic Spring Blossom 4",
+    "category": "Floral"
+  },
+  {
+    "id": "mockup-theme-25",
+    "name": "Cinematic Winter Frost 2",
+    "category": "Floral"
+  },
+  {
+    "id": "mockup-theme-24",
+    "name": "Cinematic Spring Blossom 3",
+    "category": "Dark"
+  },
+  {
+    "id": "mockup-theme-23",
+    "name": "Cinematic Spring Blossom 2",
+    "category": "Elegant"
+  },
+  {
+    "id": "mockup-theme-22",
+    "name": "Cinematic Regal Purple 2",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-21",
+    "name": "Cinematic Midnight Gold 1",
+    "category": "Dark"
+  },
+  {
+    "id": "mockup-theme-20",
+    "name": "Cinematic Forest Mint 3",
+    "category": "Floral"
+  },
+  {
+    "id": "mockup-theme-19",
+    "name": "Cinematic Regal Purple 1",
+    "category": "Floral"
+  },
+  {
+    "id": "mockup-theme-18",
+    "name": "Cinematic Ocean Depth 4",
+    "category": "Elegant"
+  },
+  {
+    "id": "mockup-theme-17",
+    "name": "Cinematic Ocean Depth 3",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-16",
+    "name": "Cinematic Ocean Depth 2",
+    "category": "Floral"
+  },
+  {
+    "id": "islamic-heritage",
+    "name": "Islamic Heritage",
+    "category": "Islamic"
+  },
+  {
+    "id": "mockup-theme-96",
+    "name": "Cinematic Midnight Gold 7",
+    "category": "Dark"
+  },
+  {
+    "id": "mockup-theme-34",
+    "name": "Cinematic Regal Purple 4",
+    "category": "Elegant"
+  },
+  {
+    "id": "mockup-theme-95",
+    "name": "Cinematic Forest Mint 12",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-94",
+    "name": "Cinematic Regal Purple 15",
+    "category": "Elegant"
+  },
+  {
+    "id": "mockup-theme-93",
+    "name": "Cinematic Regal Purple 14",
+    "category": "Elegant"
+  },
+  {
+    "id": "mockup-theme-92",
+    "name": "Cinematic Ocean Depth 12",
+    "category": "Islamic"
+  },
+  {
+    "id": "mockup-theme-91",
+    "name": "Cinematic Spring Blossom 16",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-90",
+    "name": "Cinematic Rose Gold 8",
+    "category": "Islamic"
+  },
+  {
+    "id": "mockup-theme-89",
+    "name": "Cinematic Spring Blossom 15",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-88",
+    "name": "Cinematic Regal Purple 13",
+    "category": "Elegant"
+  },
+  {
+    "id": "mockup-theme-87",
+    "name": "Cinematic Forest Mint 11",
+    "category": "Dark"
+  },
+  {
+    "id": "mockup-theme-86",
+    "name": "Cinematic Ocean Depth 11",
+    "category": "Elegant"
+  },
+  {
+    "id": "mockup-theme-85",
+    "name": "Cinematic Ocean Depth 10",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-84",
+    "name": "Cinematic Autumn Rustic 8",
+    "category": "Islamic"
+  },
+  {
+    "id": "mockup-theme-83",
+    "name": "Cinematic Spring Blossom 14",
+    "category": "Floral"
+  },
+  {
+    "id": "mockup-theme-100",
+    "name": "Cinematic Winter Frost 1",
+    "category": "Floral"
+  },
+  {
+    "id": "mockup-theme-82",
+    "name": "Cinematic Forest Mint 10",
+    "category": "Floral"
+  },
+  {
+    "id": "mockup-theme-81",
+    "name": "Cinematic Forest Mint 9",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-80",
+    "name": "Cinematic Midnight Gold 6",
+    "category": "Floral"
+  },
+  {
+    "id": "mockup-theme-79",
+    "name": "Cinematic Winter Frost 10",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-78",
+    "name": "Cinematic Regal Purple 12",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-77",
+    "name": "Cinematic Winter Frost 9",
+    "category": "Dark"
+  },
+  {
+    "id": "mockup-theme-76",
+    "name": "Cinematic Autumn Rustic 7",
+    "category": "Floral"
+  },
+  {
+    "id": "mockup-theme-75",
+    "name": "Cinematic Regal Purple 11",
+    "category": "Islamic"
+  },
+  {
+    "id": "mockup-theme-74",
+    "name": "Cinematic Spring Blossom 13",
+    "category": "Dark"
+  },
+  {
+    "id": "mockup-theme-73",
+    "name": "Cinematic Winter Frost 8",
+    "category": "Elegant"
+  },
+  {
+    "id": "mockup-theme-72",
+    "name": "Cinematic Winter Frost 7",
+    "category": "Islamic"
+  },
+  {
+    "id": "classic-white",
+    "name": "Classic White",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-99",
+    "name": "Cinematic Winter Frost 11",
+    "category": "Floral"
+  },
+  {
+    "id": "mockup-theme-98",
+    "name": "Cinematic Midnight Gold 8",
+    "category": "Islamic"
+  },
+  {
+    "id": "mockup-theme-97",
+    "name": "Cinematic Spring Blossom 17",
+    "category": "Elegant"
+  },
+  {
+    "id": "mockup-theme-15",
+    "name": "Cinematic Forest Mint 2",
+    "category": "Islamic"
+  },
+  {
+    "id": "mockup-theme-71",
+    "name": "Cinematic Forest Mint 8",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-14",
+    "name": "Cinematic Autumn Rustic 1",
+    "category": "Elegant"
+  },
+  {
+    "id": "mockup-theme-13",
+    "name": "Cinematic Forest Mint 1",
+    "category": "Floral"
+  },
+  {
+    "id": "mockup-theme-12",
+    "name": "Cinematic Ocean Depth 1",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-11",
+    "name": "Cinematic Rose Gold 1",
+    "category": "Dark"
+  },
+  {
+    "id": "mockup-theme-10",
+    "name": "Cinematic Spring Blossom 1",
+    "category": "Islamic"
+  },
+  {
+    "id": "mockup-theme-9",
+    "name": "Cinematic Autumn Rustic 9",
+    "category": "Minimalist"
+  },
+  {
+    "id": "autumn-sunset",
+    "name": "Autumn Sunset",
+    "category": "Premium"
+  },
+  {
+    "id": "magical-fairytale",
+    "name": "Magical Fairytale",
+    "category": "Premium"
+  },
+  {
+    "id": "winter-romance",
+    "name": "Winter Romance",
+    "category": "Premium"
+  },
+  {
+    "id": "floral-bliss",
+    "name": "Floral Bliss",
+    "category": "Floral"
+  },
+  {
+    "id": "minimalist",
+    "name": "Clean Vanilla",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-70",
+    "name": "Cinematic Spring Blossom 12",
+    "category": "Elegant"
+  },
+  {
+    "id": "mockup-theme-69",
+    "name": "Cinematic Forest Mint 7",
+    "category": "Dark"
+  },
+  {
+    "id": "mockup-theme-68",
+    "name": "Cinematic Midnight Gold 5",
+    "category": "Dark"
+  },
+  {
+    "id": "mockup-theme-67",
+    "name": "Cinematic Spring Blossom 11",
+    "category": "Dark"
+  },
+  {
+    "id": "mockup-theme-66",
+    "name": "Cinematic Rose Gold 7",
+    "category": "Elegant"
+  },
+  {
+    "id": "mockup-theme-65",
+    "name": "Cinematic Winter Frost 6",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-64",
+    "name": "Cinematic Spring Blossom 10",
+    "category": "Floral"
+  },
+  {
+    "id": "mockup-theme-63",
+    "name": "Cinematic Rose Gold 6",
+    "category": "Floral"
+  },
+  {
+    "id": "mockup-theme-62",
+    "name": "Cinematic Regal Purple 10",
+    "category": "Floral"
+  },
+  {
+    "id": "mockup-theme-61",
+    "name": "Cinematic Rose Gold 5",
+    "category": "Dark"
+  },
+  {
+    "id": "mockup-theme-60",
+    "name": "Cinematic Ocean Depth 9",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-59",
+    "name": "Cinematic Regal Purple 9",
+    "category": "Islamic"
+  },
+  {
+    "id": "mockup-theme-58",
+    "name": "Cinematic Winter Frost 5",
+    "category": "Dark"
+  },
+  {
+    "id": "mockup-theme-57",
+    "name": "Cinematic Midnight Gold 4",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-56",
+    "name": "Cinematic Regal Purple 8",
+    "category": "Dark"
+  },
+  {
+    "id": "mockup-theme-55",
+    "name": "Cinematic Spring Blossom 9",
+    "category": "Islamic"
+  },
+  {
+    "id": "mockup-theme-54",
+    "name": "Cinematic Regal Purple 7",
+    "category": "Floral"
+  },
+  {
+    "id": "mockup-theme-53",
+    "name": "Cinematic Autumn Rustic 6",
+    "category": "Dark"
+  },
+  {
+    "id": "mockup-theme-52",
+    "name": "Cinematic Ocean Depth 8",
+    "category": "Dark"
+  },
+  {
+    "id": "mockup-theme-51",
+    "name": "Cinematic Regal Purple 6",
+    "category": "Floral"
+  },
+  {
+    "id": "mockup-theme-50",
+    "name": "Cinematic Winter Frost 4",
+    "category": "Islamic"
+  },
+  {
+    "id": "mockup-theme-49",
+    "name": "Cinematic Rose Gold 4",
+    "category": "Floral"
+  },
+  {
+    "id": "mockup-theme-48",
+    "name": "Cinematic Autumn Rustic 5",
+    "category": "Floral"
+  },
+  {
+    "id": "mockup-theme-47",
+    "name": "Cinematic Spring Blossom 8",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-46",
+    "name": "Cinematic Autumn Rustic 4",
+    "category": "Floral"
+  },
+  {
+    "id": "mockup-theme-45",
+    "name": "Cinematic Rose Gold 3",
+    "category": "Dark"
+  },
+  {
+    "id": "mockup-theme-44",
+    "name": "Cinematic Midnight Gold 3",
+    "category": "Islamic"
+  },
+  {
+    "id": "mockup-theme-43",
+    "name": "Cinematic Spring Blossom 7",
+    "category": "Islamic"
+  },
+  {
+    "id": "mockup-theme-42",
+    "name": "Cinematic Midnight Gold 2",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-41",
+    "name": "Cinematic Forest Mint 6",
+    "category": "Elegant"
+  },
+  {
+    "id": "mockup-theme-40",
+    "name": "Cinematic Spring Blossom 6",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-39",
+    "name": "Cinematic Ocean Depth 7",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-38",
+    "name": "Cinematic Ocean Depth 6",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-37",
+    "name": "Cinematic Spring Blossom 5",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-36",
+    "name": "Cinematic Regal Purple 5",
+    "category": "Islamic"
+  },
+  {
+    "id": "mockup-theme-35",
+    "name": "Cinematic Winter Frost 3",
+    "category": "Floral"
+  },
+  {
+    "id": "mockup-theme-33",
+    "name": "Cinematic Regal Purple 3",
+    "category": "Elegant"
+  },
+  {
+    "id": "mockup-theme-32",
+    "name": "Cinematic Autumn Rustic 3",
+    "category": "Minimalist"
+  },
+  {
+    "id": "mockup-theme-31",
+    "name": "Cinematic Autumn Rustic 2",
+    "category": "Floral"
+  },
+  {
+    "id": "mockup-theme-30",
+    "name": "Cinematic Forest Mint 5",
+    "category": "Floral"
+  },
+  {
+    "id": "mockup-theme-29",
+    "name": "Cinematic Forest Mint 4",
+    "category": "Dark"
+  },
+  {
+    "id": "mockup-theme-28",
+    "name": "Cinematic Rose Gold 2",
+    "category": "Minimalist"
+  },
+  {
+    "id": "theme-1780248020011",
+    "name": "tema baru",
+    "category": "Premium"
+  },
+  {
+    "id": "scandinavian-minimalist",
+    "name": "Scandinavian Minimalist",
+    "category": "Minimalist"
+  },
+  {
+    "id": "cinematic-love-story",
+    "name": "Cinematic Love Story",
+    "category": "Premium"
+  },
+  {
+    "id": "japanese-sakura-garden",
+    "name": "Japanese Sakura Garden",
+    "category": "Premium"
+  },
+  {
+    "id": "ultra-premium-interactive",
+    "name": "Ultra Premium Interactive",
+    "category": "Premium"
+  },
+  {
+    "id": "royal-gold-luxury",
+    "name": "Royal Gold Luxury",
+    "category": "Elegant"
+  },
+  {
+    "id": "glassmorphism-elegance",
+    "name": "Glassmorphism Elegance",
+    "category": "Elegant"
+  },
+  {
+    "id": "rustic-vintage",
+    "name": "Rustic Vintage",
+    "category": "Rustic"
+  },
+  {
+    "id": "ocean-breeze",
+    "name": "Ocean Breeze",
+    "category": "Tropical"
+  },
+  {
+    "id": "floral-blossom",
+    "name": "Floral Blossom",
+    "category": "Floral"
+  },
+  {
+    "id": "tropical-bali",
+    "name": "Tropical Bali Wedding",
+    "category": "Tropical"
+  },
+  {
+    "id": "islamic-elegant",
+    "name": "Islamic Elegant",
+    "category": "Islamic"
+  },
+  {
+    "id": "fairytale-castle",
+    "name": "Fairytale Castle",
+    "category": "Premium"
+  },
+  {
+    "id": "minimalist-monochrome",
+    "name": "Monochrome Minimalist",
+    "category": "Minimalist"
+  },
+  {
+    "id": "realistic-romance",
+    "name": "Realistic Romance",
+    "category": "Elegant"
+  },
+  {
+    "id": "elegant-gold",
+    "name": "Elegant Gold V1",
+    "category": "Elegant"
+  },
+  {
+    "id": "dark-premium",
+    "name": "Midnight Glamour",
+    "category": "Dark"
+  }
+]

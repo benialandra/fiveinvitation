@@ -1,121 +1,121 @@
 import React from 'react';
-const ElegantGold = React.lazy(() => import('./ElegantGold'));
-const DarkPremium = React.lazy(() => import('./DarkPremium'));
-const RealisticRomance = React.lazy(() => import('./RealisticRomance'));
+const Luxury26 = React.lazy(() => import('./Luxury/Luxury26'));
+const Dark18 = React.lazy(() => import('./Dark/Dark18'));
+const Luxury25 = React.lazy(() => import('./Luxury/Luxury25'));
 
-const MinimalistMonochrome = React.lazy(() => import('./MinimalistMonochrome'));
-const FloralBlossom = React.lazy(() => import('./FloralBlossom'));
-const GlassmorphismElegance = React.lazy(() => import('./GlassmorphismElegance'));
-const RusticVintage = React.lazy(() => import('./RusticVintage'));
-const OceanBreeze = React.lazy(() => import('./OceanBreeze'));
-const RoyalGoldLuxury = React.lazy(() => import('./RoyalGoldLuxury'));
-const UltraPremiumInteractive = React.lazy(() => import('./UltraPremiumInteractive'));
-const JapaneseSakuraGarden = React.lazy(() => import('./JapaneseSakuraGarden'));
-const CinematicLoveStory = React.lazy(() => import('./CinematicLoveStory'));
-const ScandinavianMinimalist = React.lazy(() => import('./ScandinavianMinimalist'));
-const TropicalBaliWedding = React.lazy(() => import('./TropicalBaliWedding'));
-const IslamicElegant = React.lazy(() => import('./IslamicElegant'));
-const FairytaleCastle = React.lazy(() => import('./FairytaleCastle'));
-const TemaBaru = React.lazy(() => import('./TemaBaru'));
-const CinematicRoseGold_2 = React.lazy(() => import('./CinematicRoseGold_2'));
-const CinematicForestMint_4 = React.lazy(() => import('./CinematicForestMint_4'));
-const CinematicForestMint_5 = React.lazy(() => import('./CinematicForestMint_5'));
-const CinematicAutumnRustic_2 = React.lazy(() => import('./CinematicAutumnRustic_2'));
-const CinematicAutumnRustic_3 = React.lazy(() => import('./CinematicAutumnRustic_3'));
-const CinematicRegalPurple_3 = React.lazy(() => import('./CinematicRegalPurple_3'));
-const CinematicWinterFrost_3 = React.lazy(() => import('./CinematicWinterFrost_3'));
-const CinematicRegalPurple_5 = React.lazy(() => import('./CinematicRegalPurple_5'));
-const CinematicSpringBlossom_5 = React.lazy(() => import('./CinematicSpringBlossom_5'));
-const CinematicOceanDepth_6 = React.lazy(() => import('./CinematicOceanDepth_6'));
-const CinematicOceanDepth_7 = React.lazy(() => import('./CinematicOceanDepth_7'));
-const CinematicSpringBlossom_6 = React.lazy(() => import('./CinematicSpringBlossom_6'));
-const CinematicForestMint_6 = React.lazy(() => import('./CinematicForestMint_6'));
-const CinematicMidnightGold_2 = React.lazy(() => import('./CinematicMidnightGold_2'));
-const CinematicSpringBlossom_7 = React.lazy(() => import('./CinematicSpringBlossom_7'));
-const CinematicMidnightGold_3 = React.lazy(() => import('./CinematicMidnightGold_3'));
-const CinematicRoseGold_3 = React.lazy(() => import('./CinematicRoseGold_3'));
-const CinematicAutumnRustic_4 = React.lazy(() => import('./CinematicAutumnRustic_4'));
-const CinematicSpringBlossom_8 = React.lazy(() => import('./CinematicSpringBlossom_8'));
-const CinematicAutumnRustic_5 = React.lazy(() => import('./CinematicAutumnRustic_5'));
-const CinematicRoseGold_4 = React.lazy(() => import('./CinematicRoseGold_4'));
-const CinematicWinterFrost_4 = React.lazy(() => import('./CinematicWinterFrost_4'));
-const CinematicRegalPurple_6 = React.lazy(() => import('./CinematicRegalPurple_6'));
-const CinematicOceanDepth_8 = React.lazy(() => import('./CinematicOceanDepth_8'));
-const CinematicAutumnRustic_6 = React.lazy(() => import('./CinematicAutumnRustic_6'));
-const CinematicRegalPurple_7 = React.lazy(() => import('./CinematicRegalPurple_7'));
-const CinematicSpringBlossom_9 = React.lazy(() => import('./CinematicSpringBlossom_9'));
-const CinematicRegalPurple_8 = React.lazy(() => import('./CinematicRegalPurple_8'));
-const CinematicMidnightGold_4 = React.lazy(() => import('./CinematicMidnightGold_4'));
-const CinematicWinterFrost_5 = React.lazy(() => import('./CinematicWinterFrost_5'));
-const CinematicRegalPurple_9 = React.lazy(() => import('./CinematicRegalPurple_9'));
-const CinematicOceanDepth_9 = React.lazy(() => import('./CinematicOceanDepth_9'));
-const CinematicRoseGold_5 = React.lazy(() => import('./CinematicRoseGold_5'));
-const CinematicRegalPurple_10 = React.lazy(() => import('./CinematicRegalPurple_10'));
-const CinematicRoseGold_6 = React.lazy(() => import('./CinematicRoseGold_6'));
-const CinematicSpringBlossom_10 = React.lazy(() => import('./CinematicSpringBlossom_10'));
-const CinematicWinterFrost_6 = React.lazy(() => import('./CinematicWinterFrost_6'));
-const CinematicRoseGold_7 = React.lazy(() => import('./CinematicRoseGold_7'));
-const CinematicSpringBlossom_11 = React.lazy(() => import('./CinematicSpringBlossom_11'));
-const CinematicMidnightGold_5 = React.lazy(() => import('./CinematicMidnightGold_5'));
-const CinematicForestMint_7 = React.lazy(() => import('./CinematicForestMint_7'));
-const CinematicSpringBlossom_12 = React.lazy(() => import('./CinematicSpringBlossom_12'));
-const CleanVanilla = React.lazy(() => import('./CleanVanilla'));
-const FloralBliss = React.lazy(() => import('./FloralBliss'));
-const WinterRomance = React.lazy(() => import('./WinterRomance'));
-const AutumnSunset = React.lazy(() => import('./AutumnSunset'));
-const MagicalFairytale = React.lazy(() => import('./MagicalFairytale'));
-const CinematicAutumnRustic_9 = React.lazy(() => import('./CinematicAutumnRustic_9'));
-const CinematicSpringBlossom_1 = React.lazy(() => import('./CinematicSpringBlossom_1'));
-const CinematicRoseGold_1 = React.lazy(() => import('./CinematicRoseGold_1'));
-const CinematicOceanDepth_1 = React.lazy(() => import('./CinematicOceanDepth_1'));
-const CinematicForestMint_1 = React.lazy(() => import('./CinematicForestMint_1'));
-const CinematicAutumnRustic_1 = React.lazy(() => import('./CinematicAutumnRustic_1'));
-const CinematicForestMint_8 = React.lazy(() => import('./CinematicForestMint_8'));
-const CinematicForestMint_2 = React.lazy(() => import('./CinematicForestMint_2'));
-const CinematicSpringBlossom_17 = React.lazy(() => import('./CinematicSpringBlossom_17'));
-const CinematicMidnightGold_8 = React.lazy(() => import('./CinematicMidnightGold_8'));
-const CinematicWinterFrost_11 = React.lazy(() => import('./CinematicWinterFrost_11'));
-const ClassicWhite = React.lazy(() => import('./ClassicWhite'));
-const CinematicWinterFrost_7 = React.lazy(() => import('./CinematicWinterFrost_7'));
-const CinematicWinterFrost_8 = React.lazy(() => import('./CinematicWinterFrost_8'));
-const CinematicSpringBlossom_13 = React.lazy(() => import('./CinematicSpringBlossom_13'));
-const CinematicRegalPurple_11 = React.lazy(() => import('./CinematicRegalPurple_11'));
-const CinematicAutumnRustic_7 = React.lazy(() => import('./CinematicAutumnRustic_7'));
-const CinematicWinterFrost_9 = React.lazy(() => import('./CinematicWinterFrost_9'));
-const CinematicRegalPurple_12 = React.lazy(() => import('./CinematicRegalPurple_12'));
-const CinematicWinterFrost_10 = React.lazy(() => import('./CinematicWinterFrost_10'));
-const CinematicMidnightGold_6 = React.lazy(() => import('./CinematicMidnightGold_6'));
-const CinematicForestMint_9 = React.lazy(() => import('./CinematicForestMint_9'));
-const CinematicForestMint_10 = React.lazy(() => import('./CinematicForestMint_10'));
-const CinematicWinterFrost_1 = React.lazy(() => import('./CinematicWinterFrost_1'));
-const CinematicSpringBlossom_14 = React.lazy(() => import('./CinematicSpringBlossom_14'));
-const CinematicAutumnRustic_8 = React.lazy(() => import('./CinematicAutumnRustic_8'));
-const CinematicOceanDepth_10 = React.lazy(() => import('./CinematicOceanDepth_10'));
-const CinematicOceanDepth_11 = React.lazy(() => import('./CinematicOceanDepth_11'));
-const CinematicForestMint_11 = React.lazy(() => import('./CinematicForestMint_11'));
-const CinematicRegalPurple_13 = React.lazy(() => import('./CinematicRegalPurple_13'));
-const CinematicSpringBlossom_15 = React.lazy(() => import('./CinematicSpringBlossom_15'));
-const CinematicRoseGold_8 = React.lazy(() => import('./CinematicRoseGold_8'));
-const CinematicSpringBlossom_16 = React.lazy(() => import('./CinematicSpringBlossom_16'));
-const CinematicOceanDepth_12 = React.lazy(() => import('./CinematicOceanDepth_12'));
-const CinematicRegalPurple_14 = React.lazy(() => import('./CinematicRegalPurple_14'));
-const CinematicRegalPurple_15 = React.lazy(() => import('./CinematicRegalPurple_15'));
-const CinematicForestMint_12 = React.lazy(() => import('./CinematicForestMint_12'));
-const CinematicRegalPurple_4 = React.lazy(() => import('./CinematicRegalPurple_4'));
-const CinematicMidnightGold_7 = React.lazy(() => import('./CinematicMidnightGold_7'));
-const IslamicHeritage = React.lazy(() => import('./IslamicHeritage'));
-const CinematicOceanDepth_2 = React.lazy(() => import('./CinematicOceanDepth_2'));
-const CinematicOceanDepth_3 = React.lazy(() => import('./CinematicOceanDepth_3'));
-const CinematicOceanDepth_4 = React.lazy(() => import('./CinematicOceanDepth_4'));
-const CinematicRegalPurple_1 = React.lazy(() => import('./CinematicRegalPurple_1'));
-const CinematicForestMint_3 = React.lazy(() => import('./CinematicForestMint_3'));
-const CinematicMidnightGold_1 = React.lazy(() => import('./CinematicMidnightGold_1'));
-const CinematicRegalPurple_2 = React.lazy(() => import('./CinematicRegalPurple_2'));
-const CinematicSpringBlossom_2 = React.lazy(() => import('./CinematicSpringBlossom_2'));
-const CinematicSpringBlossom_3 = React.lazy(() => import('./CinematicSpringBlossom_3'));
-const CinematicWinterFrost_2 = React.lazy(() => import('./CinematicWinterFrost_2'));
-const CinematicSpringBlossom_4 = React.lazy(() => import('./CinematicSpringBlossom_4'));
-const CinematicOceanDepth_5 = React.lazy(() => import('./CinematicOceanDepth_5'));
+const Minimal28 = React.lazy(() => import('./Minimalist/Minimal28'));
+const Floral25 = React.lazy(() => import('./Floral/Floral25'));
+const Luxury23 = React.lazy(() => import('./Luxury/Luxury23'));
+const Rustic01 = React.lazy(() => import('./Rustic/Rustic01'));
+const Tropical01 = React.lazy(() => import('./Tropical/Tropical01'));
+const Luxury22 = React.lazy(() => import('./Luxury/Luxury22'));
+const Luxury21 = React.lazy(() => import('./Luxury/Luxury21'));
+const Luxury20 = React.lazy(() => import('./Luxury/Luxury20'));
+const Luxury19 = React.lazy(() => import('./Luxury/Luxury19'));
+const Minimal27 = React.lazy(() => import('./Minimalist/Minimal27'));
+const Tropical02 = React.lazy(() => import('./Tropical/Tropical02'));
+const Islamic16 = React.lazy(() => import('./Islamic/Islamic16'));
+const Luxury24 = React.lazy(() => import('./Luxury/Luxury24'));
+const Luxury18 = React.lazy(() => import('./Luxury/Luxury18'));
+const Minimal26 = React.lazy(() => import('./Minimalist/Minimal26'));
+const Dark17 = React.lazy(() => import('./Dark/Dark17'));
+const Floral24 = React.lazy(() => import('./Floral/Floral24'));
+const Floral23 = React.lazy(() => import('./Floral/Floral23'));
+const Minimal25 = React.lazy(() => import('./Minimalist/Minimal25'));
+const Luxury17 = React.lazy(() => import('./Luxury/Luxury17'));
+const Floral22 = React.lazy(() => import('./Floral/Floral22'));
+const Islamic15 = React.lazy(() => import('./Islamic/Islamic15'));
+const Minimal24 = React.lazy(() => import('./Minimalist/Minimal24'));
+const Minimal23 = React.lazy(() => import('./Minimalist/Minimal23'));
+const Minimal22 = React.lazy(() => import('./Minimalist/Minimal22'));
+const Minimal21 = React.lazy(() => import('./Minimalist/Minimal21'));
+const Luxury16 = React.lazy(() => import('./Luxury/Luxury16'));
+const Minimal20 = React.lazy(() => import('./Minimalist/Minimal20'));
+const Islamic14 = React.lazy(() => import('./Islamic/Islamic14'));
+const Islamic13 = React.lazy(() => import('./Islamic/Islamic13'));
+const Dark16 = React.lazy(() => import('./Dark/Dark16'));
+const Floral21 = React.lazy(() => import('./Floral/Floral21'));
+const Minimal19 = React.lazy(() => import('./Minimalist/Minimal19'));
+const Floral20 = React.lazy(() => import('./Floral/Floral20'));
+const Floral19 = React.lazy(() => import('./Floral/Floral19'));
+const Islamic12 = React.lazy(() => import('./Islamic/Islamic12'));
+const Floral18 = React.lazy(() => import('./Floral/Floral18'));
+const Dark15 = React.lazy(() => import('./Dark/Dark15'));
+const Dark14 = React.lazy(() => import('./Dark/Dark14'));
+const Floral17 = React.lazy(() => import('./Floral/Floral17'));
+const Islamic11 = React.lazy(() => import('./Islamic/Islamic11'));
+const Dark13 = React.lazy(() => import('./Dark/Dark13'));
+const Minimal18 = React.lazy(() => import('./Minimalist/Minimal18'));
+const Dark12 = React.lazy(() => import('./Dark/Dark12'));
+const Islamic10 = React.lazy(() => import('./Islamic/Islamic10'));
+const Minimal17 = React.lazy(() => import('./Minimalist/Minimal17'));
+const Dark11 = React.lazy(() => import('./Dark/Dark11'));
+const Floral16 = React.lazy(() => import('./Floral/Floral16'));
+const Floral15 = React.lazy(() => import('./Floral/Floral15'));
+const Floral14 = React.lazy(() => import('./Floral/Floral14'));
+const Minimal16 = React.lazy(() => import('./Minimalist/Minimal16'));
+const Luxury15 = React.lazy(() => import('./Luxury/Luxury15'));
+const Dark10 = React.lazy(() => import('./Dark/Dark10'));
+const Dark09 = React.lazy(() => import('./Dark/Dark09'));
+const Dark08 = React.lazy(() => import('./Dark/Dark08'));
+const Luxury14 = React.lazy(() => import('./Luxury/Luxury14'));
+const Minimal15 = React.lazy(() => import('./Minimalist/Minimal15'));
+const Floral13 = React.lazy(() => import('./Floral/Floral13'));
+const Luxury13 = React.lazy(() => import('./Luxury/Luxury13'));
+const Luxury11 = React.lazy(() => import('./Luxury/Luxury11'));
+const Luxury12 = React.lazy(() => import('./Luxury/Luxury12'));
+const Minimal14 = React.lazy(() => import('./Minimalist/Minimal14'));
+const Islamic09 = React.lazy(() => import('./Islamic/Islamic09'));
+const Dark07 = React.lazy(() => import('./Dark/Dark07'));
+const Minimal13 = React.lazy(() => import('./Minimalist/Minimal13'));
+const Floral12 = React.lazy(() => import('./Floral/Floral12'));
+const Luxury10 = React.lazy(() => import('./Luxury/Luxury10'));
+const Minimal12 = React.lazy(() => import('./Minimalist/Minimal12'));
+const Islamic08 = React.lazy(() => import('./Islamic/Islamic08'));
+const Luxury09 = React.lazy(() => import('./Luxury/Luxury09'));
+const Islamic07 = React.lazy(() => import('./Islamic/Islamic07'));
+const Floral11 = React.lazy(() => import('./Floral/Floral11'));
+const Minimal11 = React.lazy(() => import('./Minimalist/Minimal11'));
+const Islamic06 = React.lazy(() => import('./Islamic/Islamic06'));
+const Luxury08 = React.lazy(() => import('./Luxury/Luxury08'));
+const Dark06 = React.lazy(() => import('./Dark/Dark06'));
+const Islamic05 = React.lazy(() => import('./Islamic/Islamic05'));
+const Floral10 = React.lazy(() => import('./Floral/Floral10'));
+const Dark05 = React.lazy(() => import('./Dark/Dark05'));
+const Minimal10 = React.lazy(() => import('./Minimalist/Minimal10'));
+const Minimal09 = React.lazy(() => import('./Minimalist/Minimal09'));
+const Floral09 = React.lazy(() => import('./Floral/Floral09'));
+const Minimal08 = React.lazy(() => import('./Minimalist/Minimal08'));
+const Floral08 = React.lazy(() => import('./Floral/Floral08'));
+const Floral07 = React.lazy(() => import('./Floral/Floral07'));
+const Floral06 = React.lazy(() => import('./Floral/Floral06'));
+const Islamic04 = React.lazy(() => import('./Islamic/Islamic04'));
+const Minimal07 = React.lazy(() => import('./Minimalist/Minimal07'));
+const Luxury07 = React.lazy(() => import('./Luxury/Luxury07'));
+const Dark04 = React.lazy(() => import('./Dark/Dark04'));
+const Luxury06 = React.lazy(() => import('./Luxury/Luxury06'));
+const Minimal06 = React.lazy(() => import('./Minimalist/Minimal06'));
+const Islamic03 = React.lazy(() => import('./Islamic/Islamic03'));
+const Minimal05 = React.lazy(() => import('./Minimalist/Minimal05'));
+const Islamic02 = React.lazy(() => import('./Islamic/Islamic02'));
+const Luxury05 = React.lazy(() => import('./Luxury/Luxury05'));
+const Luxury04 = React.lazy(() => import('./Luxury/Luxury04'));
+const Minimal04 = React.lazy(() => import('./Minimalist/Minimal04'));
+const Luxury03 = React.lazy(() => import('./Luxury/Luxury03'));
+const Dark03 = React.lazy(() => import('./Dark/Dark03'));
+const Islamic01 = React.lazy(() => import('./Islamic/Islamic01'));
+const Floral05 = React.lazy(() => import('./Floral/Floral05'));
+const Minimal03 = React.lazy(() => import('./Minimalist/Minimal03'));
+const Luxury02 = React.lazy(() => import('./Luxury/Luxury02'));
+const Floral04 = React.lazy(() => import('./Floral/Floral04'));
+const Floral03 = React.lazy(() => import('./Floral/Floral03'));
+const Dark02 = React.lazy(() => import('./Dark/Dark02'));
+const Minimal02 = React.lazy(() => import('./Minimalist/Minimal02'));
+const Luxury01 = React.lazy(() => import('./Luxury/Luxury01'));
+const Dark01 = React.lazy(() => import('./Dark/Dark01'));
+const Floral02 = React.lazy(() => import('./Floral/Floral02'));
+const Floral01 = React.lazy(() => import('./Floral/Floral01'));
+const Minimal01 = React.lazy(() => import('./Minimalist/Minimal01'));
 
 export type ThemeCategory = 'Elegant' | 'Dark' | 'Minimalist' | 'Islamic' | 'Floral' | 'Rustic' | 'Tropical' | 'Premium';
 
@@ -131,832 +131,832 @@ export interface ThemeMeta {
 
 export const THEME_REGISTRY: ThemeMeta[] = [
   {
-    id: 'mockup-theme-27',
+    id: 'minimal01',
     name: 'Cinematic Ocean Depth 5',
     category: 'Minimalist',
     price: 150000,
     thumbnail: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicOceanDepth_5
+    component: Minimal01
   },{
-    id: 'mockup-theme-26',
+    id: 'floral01',
     name: 'Cinematic Spring Blossom 4',
     category: 'Floral',
     price: 150000,
     thumbnail: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicSpringBlossom_4
+    component: Floral01
   },{
-    id: 'mockup-theme-25',
+    id: 'floral02',
     name: 'Cinematic Winter Frost 2',
     category: 'Floral',
     price: 140000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicWinterFrost_2
+    component: Floral02
   },{
-    id: 'mockup-theme-24',
+    id: 'dark01',
     name: 'Cinematic Spring Blossom 3',
     category: 'Dark',
     price: 190000,
     thumbnail: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicSpringBlossom_3
+    component: Dark01
   },{
-    id: 'mockup-theme-23',
+    id: 'luxury01',
     name: 'Cinematic Spring Blossom 2',
     category: 'Elegant',
     price: 150000,
     thumbnail: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicSpringBlossom_2
+    component: Luxury01
   },{
-    id: 'mockup-theme-22',
+    id: 'minimal02',
     name: 'Cinematic Regal Purple 2',
     category: 'Minimalist',
     price: 100000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRegalPurple_2
+    component: Minimal02
   },{
-    id: 'mockup-theme-21',
+    id: 'dark02',
     name: 'Cinematic Midnight Gold 1',
     category: 'Dark',
     price: 180000,
     thumbnail: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicMidnightGold_1
+    component: Dark02
   },{
-    id: 'mockup-theme-20',
+    id: 'floral03',
     name: 'Cinematic Forest Mint 3',
     category: 'Floral',
     price: 140000,
     thumbnail: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicForestMint_3
+    component: Floral03
   },{
-    id: 'mockup-theme-19',
+    id: 'floral04',
     name: 'Cinematic Regal Purple 1',
     category: 'Floral',
     price: 130000,
     thumbnail: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRegalPurple_1
+    component: Floral04
   },{
-    id: 'mockup-theme-18',
+    id: 'luxury02',
     name: 'Cinematic Ocean Depth 4',
     category: 'Elegant',
     price: 100000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicOceanDepth_4
+    component: Luxury02
   },{
-    id: 'mockup-theme-17',
+    id: 'minimal03',
     name: 'Cinematic Ocean Depth 3',
     category: 'Minimalist',
     price: 160000,
     thumbnail: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicOceanDepth_3
+    component: Minimal03
   },{
-    id: 'mockup-theme-16',
+    id: 'floral05',
     name: 'Cinematic Ocean Depth 2',
     category: 'Floral',
     price: 140000,
     thumbnail: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicOceanDepth_2
+    component: Floral05
   },{
-    id: 'islamic-heritage',
+    id: 'islamic01',
     name: 'Islamic Heritage',
     category: 'Islamic',
     price: 175000,
     thumbnail: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?q=60&w=800&auto=format&fit=crop&fm=webp&q=60',
-    component: IslamicHeritage
+    component: Islamic01
   },{
-    id: 'mockup-theme-96',
+    id: 'dark03',
     name: 'Cinematic Midnight Gold 7',
     category: 'Dark',
     price: 160000,
     thumbnail: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicMidnightGold_7
+    component: Dark03
   },{
-    id: 'mockup-theme-34',
+    id: 'luxury03',
     name: 'Cinematic Regal Purple 4',
     category: 'Elegant',
     price: 130000,
     thumbnail: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRegalPurple_4
+    component: Luxury03
   },{
-    id: 'mockup-theme-95',
+    id: 'minimal04',
     name: 'Cinematic Forest Mint 12',
     category: 'Minimalist',
     price: 190000,
     thumbnail: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicForestMint_12
+    component: Minimal04
   },{
-    id: 'mockup-theme-94',
+    id: 'luxury04',
     name: 'Cinematic Regal Purple 15',
     category: 'Elegant',
     price: 160000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRegalPurple_15
+    component: Luxury04
   },{
-    id: 'mockup-theme-93',
+    id: 'luxury05',
     name: 'Cinematic Regal Purple 14',
     category: 'Elegant',
     price: 160000,
     thumbnail: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRegalPurple_14
+    component: Luxury05
   },{
-    id: 'mockup-theme-92',
+    id: 'islamic02',
     name: 'Cinematic Ocean Depth 12',
     category: 'Islamic',
     price: 170000,
     thumbnail: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicOceanDepth_12
+    component: Islamic02
   },{
-    id: 'mockup-theme-91',
+    id: 'minimal05',
     name: 'Cinematic Spring Blossom 16',
     category: 'Minimalist',
     price: 130000,
     thumbnail: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicSpringBlossom_16
+    component: Minimal05
   },{
-    id: 'mockup-theme-90',
+    id: 'islamic03',
     name: 'Cinematic Rose Gold 8',
     category: 'Islamic',
     price: 100000,
     thumbnail: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRoseGold_8
+    component: Islamic03
   },{
-    id: 'mockup-theme-89',
+    id: 'minimal06',
     name: 'Cinematic Spring Blossom 15',
     category: 'Minimalist',
     price: 100000,
     thumbnail: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicSpringBlossom_15
+    component: Minimal06
   },{
-    id: 'mockup-theme-88',
+    id: 'luxury06',
     name: 'Cinematic Regal Purple 13',
     category: 'Elegant',
     price: 110000,
     thumbnail: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRegalPurple_13
+    component: Luxury06
   },{
-    id: 'mockup-theme-87',
+    id: 'dark04',
     name: 'Cinematic Forest Mint 11',
     category: 'Dark',
     price: 140000,
     thumbnail: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicForestMint_11
+    component: Dark04
   },{
-    id: 'mockup-theme-86',
+    id: 'luxury07',
     name: 'Cinematic Ocean Depth 11',
     category: 'Elegant',
     price: 150000,
     thumbnail: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicOceanDepth_11
+    component: Luxury07
   },{
-    id: 'mockup-theme-85',
+    id: 'minimal07',
     name: 'Cinematic Ocean Depth 10',
     category: 'Minimalist',
     price: 130000,
     thumbnail: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicOceanDepth_10
+    component: Minimal07
   },{
-    id: 'mockup-theme-84',
+    id: 'islamic04',
     name: 'Cinematic Autumn Rustic 8',
     category: 'Islamic',
     price: 170000,
     thumbnail: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicAutumnRustic_8
+    component: Islamic04
   },{
-    id: 'mockup-theme-83',
+    id: 'floral06',
     name: 'Cinematic Spring Blossom 14',
     category: 'Floral',
     price: 180000,
     thumbnail: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicSpringBlossom_14
+    component: Floral06
   },{
-    id: 'mockup-theme-100',
+    id: 'floral07',
     name: 'Cinematic Winter Frost 1',
     category: 'Floral',
     price: 110000,
     thumbnail: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicWinterFrost_1
+    component: Floral07
   },{
-    id: 'mockup-theme-82',
+    id: 'floral08',
     name: 'Cinematic Forest Mint 10',
     category: 'Floral',
     price: 140000,
     thumbnail: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicForestMint_10
+    component: Floral08
   },{
-    id: 'mockup-theme-81',
+    id: 'minimal08',
     name: 'Cinematic Forest Mint 9',
     category: 'Minimalist',
     price: 150000,
     thumbnail: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicForestMint_9
+    component: Minimal08
   },{
-    id: 'mockup-theme-80',
+    id: 'floral09',
     name: 'Cinematic Midnight Gold 6',
     category: 'Floral',
     price: 190000,
     thumbnail: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicMidnightGold_6
+    component: Floral09
   },{
-    id: 'mockup-theme-79',
+    id: 'minimal09',
     name: 'Cinematic Winter Frost 10',
     category: 'Minimalist',
     price: 170000,
     thumbnail: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicWinterFrost_10
+    component: Minimal09
   },{
-    id: 'mockup-theme-78',
+    id: 'minimal10',
     name: 'Cinematic Regal Purple 12',
     category: 'Minimalist',
     price: 150000,
     thumbnail: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRegalPurple_12
+    component: Minimal10
   },{
-    id: 'mockup-theme-77',
+    id: 'dark05',
     name: 'Cinematic Winter Frost 9',
     category: 'Dark',
     price: 130000,
     thumbnail: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicWinterFrost_9
+    component: Dark05
   },{
-    id: 'mockup-theme-76',
+    id: 'floral10',
     name: 'Cinematic Autumn Rustic 7',
     category: 'Floral',
     price: 120000,
     thumbnail: 'https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicAutumnRustic_7
+    component: Floral10
   },{
-    id: 'mockup-theme-75',
+    id: 'islamic05',
     name: 'Cinematic Regal Purple 11',
     category: 'Islamic',
     price: 100000,
     thumbnail: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRegalPurple_11
+    component: Islamic05
   },{
-    id: 'mockup-theme-74',
+    id: 'dark06',
     name: 'Cinematic Spring Blossom 13',
     category: 'Dark',
     price: 130000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicSpringBlossom_13
+    component: Dark06
   },{
-    id: 'mockup-theme-73',
+    id: 'luxury08',
     name: 'Cinematic Winter Frost 8',
     category: 'Elegant',
     price: 190000,
     thumbnail: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicWinterFrost_8
+    component: Luxury08
   },{
-    id: 'mockup-theme-72',
+    id: 'islamic06',
     name: 'Cinematic Winter Frost 7',
     category: 'Islamic',
     price: 160000,
     thumbnail: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicWinterFrost_7
+    component: Islamic06
   },{
-    id: 'classic-white',
+    id: 'minimal11',
     name: 'Classic White',
     category: 'Minimalist',
     price: 110000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: ClassicWhite
+    component: Minimal11
   },{
-    id: 'mockup-theme-99',
+    id: 'floral11',
     name: 'Cinematic Winter Frost 11',
     category: 'Floral',
     price: 150000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicWinterFrost_11
+    component: Floral11
   },{
-    id: 'mockup-theme-98',
+    id: 'islamic07',
     name: 'Cinematic Midnight Gold 8',
     category: 'Islamic',
     price: 120000,
     thumbnail: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicMidnightGold_8
+    component: Islamic07
   },{
-    id: 'mockup-theme-97',
+    id: 'luxury09',
     name: 'Cinematic Spring Blossom 17',
     category: 'Elegant',
     price: 150000,
     thumbnail: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicSpringBlossom_17
+    component: Luxury09
   },{
-    id: 'mockup-theme-15',
+    id: 'islamic08',
     name: 'Cinematic Forest Mint 2',
     category: 'Islamic',
     price: 180000,
     thumbnail: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicForestMint_2
+    component: Islamic08
   },{
-    id: 'mockup-theme-71',
+    id: 'minimal12',
     name: 'Cinematic Forest Mint 8',
     category: 'Minimalist',
     price: 140000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicForestMint_8
+    component: Minimal12
   },{
-    id: 'mockup-theme-14',
+    id: 'luxury10',
     name: 'Cinematic Autumn Rustic 1',
     category: 'Elegant',
     price: 170000,
     thumbnail: 'https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicAutumnRustic_1
+    component: Luxury10
   },{
-    id: 'mockup-theme-13',
+    id: 'floral12',
     name: 'Cinematic Forest Mint 1',
     category: 'Floral',
     price: 120000,
     thumbnail: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicForestMint_1
+    component: Floral12
   },{
-    id: 'mockup-theme-12',
+    id: 'minimal13',
     name: 'Cinematic Ocean Depth 1',
     category: 'Minimalist',
     price: 180000,
     thumbnail: 'https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicOceanDepth_1
+    component: Minimal13
   },{
-    id: 'mockup-theme-11',
+    id: 'dark07',
     name: 'Cinematic Rose Gold 1',
     category: 'Dark',
     price: 130000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRoseGold_1
+    component: Dark07
   },{
-    id: 'mockup-theme-10',
+    id: 'islamic09',
     name: 'Cinematic Spring Blossom 1',
     category: 'Islamic',
     price: 140000,
     thumbnail: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicSpringBlossom_1
+    component: Islamic09
   },{
-    id: 'mockup-theme-9',
+    id: 'minimal14',
     name: 'Cinematic Autumn Rustic 9',
     category: 'Minimalist',
     price: 140000,
     thumbnail: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicAutumnRustic_9
+    component: Minimal14
   },{
-    id: 'autumn-sunset',
+    id: 'luxury11',
     name: 'Autumn Sunset',
     category: 'Premium',
     price: 160000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: AutumnSunset
+    component: Luxury11
   },{
-    id: 'magical-fairytale',
+    id: 'luxury12',
     name: 'Magical Fairytale',
     category: 'Premium',
     price: 175000,
     thumbnail: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: MagicalFairytale
+    component: Luxury12
   },{
-    id: 'winter-romance',
+    id: 'luxury13',
     name: 'Winter Romance',
     category: 'Premium',
     price: 150000,
     thumbnail: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: WinterRomance
+    component: Luxury13
   },{
-    id: 'floral-bliss',
+    id: 'floral13',
     name: 'Floral Bliss',
     category: 'Floral',
     price: 125000,
     thumbnail: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=60&w=800&auto=format&fit=crop&fm=webp&q=60',
-    component: FloralBliss
+    component: Floral13
   },{
-    id: 'minimalist',
+    id: 'minimal15',
     name: 'Clean Vanilla',
     category: 'Minimalist',
     price: 99000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CleanVanilla
+    component: Minimal15
   },{
-    id: 'mockup-theme-70',
+    id: 'luxury14',
     name: 'Cinematic Spring Blossom 12',
     category: 'Elegant',
     price: 170000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicSpringBlossom_12
+    component: Luxury14
   },{
-    id: 'mockup-theme-69',
+    id: 'dark08',
     name: 'Cinematic Forest Mint 7',
     category: 'Dark',
     price: 120000,
     thumbnail: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicForestMint_7
+    component: Dark08
   },{
-    id: 'mockup-theme-68',
+    id: 'dark09',
     name: 'Cinematic Midnight Gold 5',
     category: 'Dark',
     price: 160000,
     thumbnail: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicMidnightGold_5
+    component: Dark09
   },{
-    id: 'mockup-theme-67',
+    id: 'dark10',
     name: 'Cinematic Spring Blossom 11',
     category: 'Dark',
     price: 180000,
     thumbnail: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicSpringBlossom_11
+    component: Dark10
   },{
-    id: 'mockup-theme-66',
+    id: 'luxury15',
     name: 'Cinematic Rose Gold 7',
     category: 'Elegant',
     price: 150000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRoseGold_7
+    component: Luxury15
   },{
-    id: 'mockup-theme-65',
+    id: 'minimal16',
     name: 'Cinematic Winter Frost 6',
     category: 'Minimalist',
     price: 160000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicWinterFrost_6
+    component: Minimal16
   },{
-    id: 'mockup-theme-64',
+    id: 'floral14',
     name: 'Cinematic Spring Blossom 10',
     category: 'Floral',
     price: 120000,
     thumbnail: 'https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicSpringBlossom_10
+    component: Floral14
   },{
-    id: 'mockup-theme-63',
+    id: 'floral15',
     name: 'Cinematic Rose Gold 6',
     category: 'Floral',
     price: 110000,
     thumbnail: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRoseGold_6
+    component: Floral15
   },{
-    id: 'mockup-theme-62',
+    id: 'floral16',
     name: 'Cinematic Regal Purple 10',
     category: 'Floral',
     price: 100000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRegalPurple_10
+    component: Floral16
   },{
-    id: 'mockup-theme-61',
+    id: 'dark11',
     name: 'Cinematic Rose Gold 5',
     category: 'Dark',
     price: 160000,
     thumbnail: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRoseGold_5
+    component: Dark11
   },{
-    id: 'mockup-theme-60',
+    id: 'minimal17',
     name: 'Cinematic Ocean Depth 9',
     category: 'Minimalist',
     price: 140000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicOceanDepth_9
+    component: Minimal17
   },{
-    id: 'mockup-theme-59',
+    id: 'islamic10',
     name: 'Cinematic Regal Purple 9',
     category: 'Islamic',
     price: 150000,
     thumbnail: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRegalPurple_9
+    component: Islamic10
   },{
-    id: 'mockup-theme-58',
+    id: 'dark12',
     name: 'Cinematic Winter Frost 5',
     category: 'Dark',
     price: 130000,
     thumbnail: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicWinterFrost_5
+    component: Dark12
   },{
-    id: 'mockup-theme-57',
+    id: 'minimal18',
     name: 'Cinematic Midnight Gold 4',
     category: 'Minimalist',
     price: 170000,
     thumbnail: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicMidnightGold_4
+    component: Minimal18
   },{
-    id: 'mockup-theme-56',
+    id: 'dark13',
     name: 'Cinematic Regal Purple 8',
     category: 'Dark',
     price: 120000,
     thumbnail: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRegalPurple_8
+    component: Dark13
   },{
-    id: 'mockup-theme-55',
+    id: 'islamic11',
     name: 'Cinematic Spring Blossom 9',
     category: 'Islamic',
     price: 160000,
     thumbnail: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicSpringBlossom_9
+    component: Islamic11
   },{
-    id: 'mockup-theme-54',
+    id: 'floral17',
     name: 'Cinematic Regal Purple 7',
     category: 'Floral',
     price: 180000,
     thumbnail: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRegalPurple_7
+    component: Floral17
   },{
-    id: 'mockup-theme-53',
+    id: 'dark14',
     name: 'Cinematic Autumn Rustic 6',
     category: 'Dark',
     price: 150000,
     thumbnail: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicAutumnRustic_6
+    component: Dark14
   },{
-    id: 'mockup-theme-52',
+    id: 'dark15',
     name: 'Cinematic Ocean Depth 8',
     category: 'Dark',
     price: 160000,
     thumbnail: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicOceanDepth_8
+    component: Dark15
   },{
-    id: 'mockup-theme-51',
+    id: 'floral18',
     name: 'Cinematic Regal Purple 6',
     category: 'Floral',
     price: 180000,
     thumbnail: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRegalPurple_6
+    component: Floral18
   },{
-    id: 'mockup-theme-50',
+    id: 'islamic12',
     name: 'Cinematic Winter Frost 4',
     category: 'Islamic',
     price: 140000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicWinterFrost_4
+    component: Islamic12
   },{
-    id: 'mockup-theme-49',
+    id: 'floral19',
     name: 'Cinematic Rose Gold 4',
     category: 'Floral',
     price: 110000,
     thumbnail: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRoseGold_4
+    component: Floral19
   },{
-    id: 'mockup-theme-48',
+    id: 'floral20',
     name: 'Cinematic Autumn Rustic 5',
     category: 'Floral',
     price: 170000,
     thumbnail: 'https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicAutumnRustic_5
+    component: Floral20
   },{
-    id: 'mockup-theme-47',
+    id: 'minimal19',
     name: 'Cinematic Spring Blossom 8',
     category: 'Minimalist',
     price: 110000,
     thumbnail: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicSpringBlossom_8
+    component: Minimal19
   },{
-    id: 'mockup-theme-46',
+    id: 'floral21',
     name: 'Cinematic Autumn Rustic 4',
     category: 'Floral',
     price: 130000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicAutumnRustic_4
+    component: Floral21
   },{
-    id: 'mockup-theme-45',
+    id: 'dark16',
     name: 'Cinematic Rose Gold 3',
     category: 'Dark',
     price: 170000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRoseGold_3
+    component: Dark16
   },{
-    id: 'mockup-theme-44',
+    id: 'islamic13',
     name: 'Cinematic Midnight Gold 3',
     category: 'Islamic',
     price: 100000,
     thumbnail: 'https://images.unsplash.com/photo-1478146896981-b80fe463b330?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicMidnightGold_3
+    component: Islamic13
   },{
-    id: 'mockup-theme-43',
+    id: 'islamic14',
     name: 'Cinematic Spring Blossom 7',
     category: 'Islamic',
     price: 140000,
     thumbnail: 'https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicSpringBlossom_7
+    component: Islamic14
   },{
-    id: 'mockup-theme-42',
+    id: 'minimal20',
     name: 'Cinematic Midnight Gold 2',
     category: 'Minimalist',
     price: 170000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicMidnightGold_2
+    component: Minimal20
   },{
-    id: 'mockup-theme-41',
+    id: 'luxury16',
     name: 'Cinematic Forest Mint 6',
     category: 'Elegant',
     price: 110000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicForestMint_6
+    component: Luxury16
   },{
-    id: 'mockup-theme-40',
+    id: 'minimal21',
     name: 'Cinematic Spring Blossom 6',
     category: 'Minimalist',
     price: 130000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicSpringBlossom_6
+    component: Minimal21
   },{
-    id: 'mockup-theme-39',
+    id: 'minimal22',
     name: 'Cinematic Ocean Depth 7',
     category: 'Minimalist',
     price: 180000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicOceanDepth_7
+    component: Minimal22
   },{
-    id: 'mockup-theme-38',
+    id: 'minimal23',
     name: 'Cinematic Ocean Depth 6',
     category: 'Minimalist',
     price: 170000,
     thumbnail: 'https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicOceanDepth_6
+    component: Minimal23
   },{
-    id: 'mockup-theme-37',
+    id: 'minimal24',
     name: 'Cinematic Spring Blossom 5',
     category: 'Minimalist',
     price: 160000,
     thumbnail: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicSpringBlossom_5
+    component: Minimal24
   },{
-    id: 'mockup-theme-36',
+    id: 'islamic15',
     name: 'Cinematic Regal Purple 5',
     category: 'Islamic',
     price: 190000,
     thumbnail: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRegalPurple_5
+    component: Islamic15
   },{
-    id: 'mockup-theme-35',
+    id: 'floral22',
     name: 'Cinematic Winter Frost 3',
     category: 'Floral',
     price: 180000,
     thumbnail: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicWinterFrost_3
+    component: Floral22
   },{
-    id: 'mockup-theme-33',
+    id: 'luxury17',
     name: 'Cinematic Regal Purple 3',
     category: 'Elegant',
     price: 180000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRegalPurple_3
+    component: Luxury17
   },{
-    id: 'mockup-theme-32',
+    id: 'minimal25',
     name: 'Cinematic Autumn Rustic 3',
     category: 'Minimalist',
     price: 160000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicAutumnRustic_3
+    component: Minimal25
   },{
-    id: 'mockup-theme-31',
+    id: 'floral23',
     name: 'Cinematic Autumn Rustic 2',
     category: 'Floral',
     price: 170000,
     thumbnail: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicAutumnRustic_2
+    component: Floral23
   },{
-    id: 'mockup-theme-30',
+    id: 'floral24',
     name: 'Cinematic Forest Mint 5',
     category: 'Floral',
     price: 140000,
     thumbnail: 'https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicForestMint_5
+    component: Floral24
   },{
-    id: 'mockup-theme-29',
+    id: 'dark17',
     name: 'Cinematic Forest Mint 4',
     category: 'Dark',
     price: 100000,
     thumbnail: 'https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicForestMint_4
+    component: Dark17
   },{
-    id: 'mockup-theme-28',
+    id: 'minimal26',
     name: 'Cinematic Rose Gold 2',
     category: 'Minimalist',
     price: 160000,
     thumbnail: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=60&w=300&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicRoseGold_2
+    component: Minimal26
   },{
-    id: 'theme-1780248020011',
+    id: 'luxury18',
     name: 'tema baru',
     category: 'Premium',
     price: 150000,
     thumbnail: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=60&w=1000&auto=format&fit=crop&fm=webp&q=60',
-    component: TemaBaru
+    component: Luxury18
   },{
-    id: 'scandinavian-minimalist',
+    id: 'minimal27',
     name: 'Scandinavian Minimalist',
     category: 'Minimalist',
     price: 350000,
     thumbnail: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=60&w=800&auto=format&fit=crop&fm=webp&q=60',
-    component: ScandinavianMinimalist
+    component: Minimal27
   },
   {
-    id: 'cinematic-love-story',
+    id: 'luxury19',
     name: 'Cinematic Love Story',
     category: 'Premium',
     price: 1500000,
     thumbnail: 'https://images.unsplash.com/photo-1543269865-cbf427effbad?q=60&w=800&auto=format&fit=crop&fm=webp&q=60',
-    component: CinematicLoveStory
+    component: Luxury19
   },
   {
-    id: 'japanese-sakura-garden',
+    id: 'luxury20',
     name: 'Japanese Sakura Garden',
     category: 'Premium',
     price: 1500000,
     thumbnail: 'https://images.unsplash.com/photo-1522383225653-ed111181a951?q=60&w=800&auto=format&fit=crop&fm=webp&q=60',
-    component: JapaneseSakuraGarden
+    component: Luxury20
   },
   {
-    id: 'ultra-premium-interactive',
+    id: 'luxury21',
     name: 'Ultra Premium Interactive',
     category: 'Premium',
     price: 1500000,
     thumbnail: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?q=60&w=800&auto=format&fit=crop&fm=webp&q=60',
-    component: UltraPremiumInteractive
+    component: Luxury21
   },
   {
-    id: 'royal-gold-luxury',
+    id: 'luxury22',
     name: 'Royal Gold Luxury',
     category: 'Elegant',
     price: 450000,
     thumbnail: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=60&w=800&auto=format&fit=crop&fm=webp&q=60',
-    component: RoyalGoldLuxury
+    component: Luxury22
   },
   {
-    id: 'glassmorphism-elegance',
+    id: 'luxury23',
     name: 'Glassmorphism Elegance',
     category: 'Elegant',
     price: 399000,
     thumbnail: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=60&w=800&auto=format&fit=crop&fm=webp&q=60',
-    component: GlassmorphismElegance
+    component: Luxury23
   },
   {
-    id: 'rustic-vintage',
+    id: 'rustic01',
     name: 'Rustic Vintage',
     category: 'Rustic',
     price: 299000,
     thumbnail: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=60&w=800&auto=format&fit=crop&fm=webp&q=60',
-    component: RusticVintage
+    component: Rustic01
   },
   {
-    id: 'ocean-breeze',
+    id: 'tropical01',
     name: 'Ocean Breeze',
     category: 'Tropical',
     price: 349000,
     thumbnail: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?q=60&w=800&auto=format&fit=crop&fm=webp&q=60',
-    component: OceanBreeze
+    component: Tropical01
   },
   {
-    id: 'floral-blossom',
+    id: 'floral25',
     name: 'Floral Blossom',
     category: 'Floral',
     price: 180000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=800&auto=format&fit=crop&fm=webp&q=60',
-    component: FloralBlossom
+    component: Floral25
   },
   {
-    id: 'tropical-bali',
+    id: 'tropical02',
     name: 'Tropical Bali Wedding',
     category: 'Tropical',
     price: 349000,
     thumbnail: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=60&w=800&auto=format&fit=crop&fm=webp&q=60',
-    component: TropicalBaliWedding
+    component: Tropical02
   },
   {
-    id: 'islamic-elegant',
+    id: 'islamic16',
     name: 'Islamic Elegant',
     category: 'Islamic',
     price: 350000,
     thumbnail: 'https://images.unsplash.com/photo-1585036156171-384164a8c675?q=60&w=800&auto=format&fit=crop&fm=webp&q=60',
-    component: IslamicElegant
+    component: Islamic16
   },
   {
-    id: 'fairytale-castle',
+    id: 'luxury24',
     name: 'Fairytale Castle',
     category: 'Premium',
     price: 550000,
     thumbnail: 'https://images.unsplash.com/photo-1549488344-1f9b8d2bd1f3?q=60&w=800&auto=format&fit=crop&fm=webp&q=60',
-    component: FairytaleCastle
+    component: Luxury24
   },
   {
-    id: 'minimalist-monochrome',
+    id: 'minimal28',
     name: 'Monochrome Minimalist',
     category: 'Minimalist',
     price: 180000,
     thumbnail: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=60&w=800&auto=format&fit=crop&fm=webp&q=60',
-    component: MinimalistMonochrome
+    component: Minimal28
   },
   {
-    id: 'realistic-romance',
+    id: 'luxury25',
     name: 'Realistic Romance',
     category: 'Elegant',
     price: 350000,
     thumbnail: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=60&w=800&auto=format&fit=crop&fm=webp&q=60',
-    component: RealisticRomance
+    component: Luxury25
   },
   {
-    id: 'elegant-gold',
+    id: 'luxury26',
     name: 'Elegant Gold V1',
     category: 'Elegant',
     price: 150000,
     thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=60&w=800&auto=format&fit=crop&fm=webp&q=60',
-    component: ElegantGold
+    component: Luxury26
   },
   {
-    id: 'dark-premium',
+    id: 'dark18',
     name: 'Midnight Glamour',
     category: 'Dark',
     price: 200000,
     thumbnail: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=60&w=800&auto=format&fit=crop&fm=webp&q=60',
-    component: DarkPremium
+    component: Dark18
   }
 ];
 

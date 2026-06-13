@@ -63,6 +63,10 @@ setInterval(() => {
 // SECURITY: Admin Session Management
 // ==========================================
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+if (process.env.NODE_ENV === 'production' && !process.env.ADMIN_PASSWORD) {
+  console.error("CRITICAL: ADMIN_PASSWORD is not set in environment variables!");
+  process.exit(1);
+}
 const ADMIN_TOKEN_SECRET = process.env.ADMIN_TOKEN_SECRET || crypto.randomBytes(32).toString('hex');
 const adminSessions = new Map<string, { createdAt: number; expiresAt: number }>();
 const otpStore = new Map<string, { otp: string; expiresAt: number }>();

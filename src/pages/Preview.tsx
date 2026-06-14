@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { THEME_REGISTRY } from '../themes/registry';
 import MasterTheme from '../themes/MasterTheme';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../supabase/supabase';
 import { ArrowLeft, Loader2, Smartphone, Tablet, Monitor } from 'lucide-react';
 import { LazyMotion, domAnimation } from 'framer-motion';
 
@@ -19,8 +19,9 @@ export default function Preview() {
     const controller = new AbortController();
     const fetchTheme = async () => {
        try {
-         const { data } = await supabase.from('themes').select('*').eq('id', themeId).abortSignal(controller.signal).maybeSingle();
-         if (data) {
+         const res = await fetch(`/api/themes/${themeId}`, { signal: controller.signal });
+         if (res.ok) {
+             const data = await res.json();
              const registryTheme = THEME_REGISTRY.find(t => t.id === themeId);
              setTheme({ ...registryTheme, ...data, thumbnail: data.thumbnail || registryTheme?.thumbnail });
          }

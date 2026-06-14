@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../supabase/supabase';
 import { getThemeById } from '../themes/registry';
 import MasterTheme from '../themes/MasterTheme';
 import { Loader2 } from 'lucide-react';
@@ -16,36 +16,26 @@ export default function Invitation() {
 
   useEffect(() => {
     const fetchInvite = async () => {
-      let data = null;
       try {
-        const res = await supabase.from('orders').select('*').eq('slug', slug).single();
-        data = res.data;
+        const res = await fetch(`/api/public-invitation/${slug}`);
+        if (res.ok) {
+          const data = await res.json();
+          setOrder(data.order);
+          if (data.theme) setThemeData(data.theme);
+        } else {
+          // Mock fallback for preview purposes
+          const mockTheme = slug === 'budi-tina' ? 'dark-premium' : 'elegant-gold';
+          if (slug) {
+              setOrder({
+                  theme_id: mockTheme,
+                  groom_name: slug.split('-')[0] || 'Groom',
+                  bride_name: slug.split('-')[1] || 'Bride',
+                  status: 'PAID'
+              });
+          }
+        }
       } catch (err) {
-        console.warn("Supabase fetch order failed", err);
-      }
-      
-      if (data) {
-        setOrder(data);
-        // Fetch theme data dynamically
-        if (data.theme_id) {
-           try {
-             const { data: tData } = await supabase.from('themes').select('*').eq('id', data.theme_id).single();
-             if (tData) setThemeData(tData);
-           } catch {
-             // Fallback to registry
-           }
-        }
-      } else {
-        // Mock fallback for preview purposes
-        const mockTheme = slug === 'budi-tina' ? 'dark-premium' : 'elegant-gold';
-        if (slug) {
-            setOrder({
-                theme_id: mockTheme,
-                groom_name: slug.split('-')[0] || 'Groom',
-                bride_name: slug.split('-')[1] || 'Bride',
-                status: 'PAID'
-            });
-        }
+        console.warn("Fetch order failed", err);
       }
       setLoading(false);
     }

@@ -1,8 +1,17 @@
-export { default as Hero } from './Hero';
-export { default as BrideGroom } from './BrideGroom';
-export { default as Countdown } from './Countdown';
-export { default as Story } from './Story';
-export { default as Gallery } from './Gallery';
-export { default as RSVP } from './RSVP';
-export { default as Gift } from './Gift';
-export * from './types';
+export { default as SharedHero } from './SharedHero';
+export type { SharedHeroProps } from './SharedHero';
+
+export { default as SharedCountdown } from './SharedCountdown';
+export type { SharedCountdownProps } from './SharedCountdown';
+
+export { default as SharedStory } from './SharedStory';
+export type { SharedStoryProps } from './SharedStory';
+
+export { default as SharedGallery } from './SharedGallery';
+export type { SharedGalleryProps } from './SharedGallery';
+
+export { default as SharedRSVP } from './SharedRSVP';
+export type { SharedRSVPProps } from './SharedRSVP';
+
+export { default as SharedGift } from './SharedGift';
+export type { SharedGiftProps } from './SharedGift';

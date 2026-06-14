@@ -80,32 +80,51 @@ function generateAdminToken(): string {
   return `${payload}.${hmac}`;
 }
 
-function validateAdminToken(token: string): boolean {
-  const session = adminSessions.get(token);
-  if (!session) return false;
-  if (Date.now() > session.expiresAt) {
-    adminSessions.delete(token);
-    return false;
+async function validateAdminToken(token: string): Promise<boolean> {
+  if (supabaseUrl === 'https://mock.supabase.co') {
+    const session = adminSessions.get(token);
+    if (!session) return false;
+    if (Date.now() > session.expiresAt) {
+      adminSessions.delete(token);
+      return false;
+    }
+    return true;
+  } else {
+    try {
+      const { data, error } = await supabase.from('admin_sessions').select('*').eq('token', token).single();
+      if (error || !data) return false;
+      if (Date.now() > new Date(data.expires_at).getTime()) {
+        await supabase.from('admin_sessions').delete().eq('token', token);
+        return false;
+      }
+      return true;
+    } catch {
+      return false;
+    }
   }
-  return true;
 }
 
 // Clean up expired sessions every 30 minutes
-setInterval(() => {
+setInterval(async () => {
   const now = Date.now();
   for (const [token, session] of adminSessions.entries()) {
     if (now > session.expiresAt) adminSessions.delete(token);
   }
+  if (supabaseUrl !== 'https://mock.supabase.co') {
+    try {
+       await supabase.from('admin_sessions').delete().lt('expires_at', new Date(now).toISOString());
+    } catch {}
+  }
 }, 30 * 60 * 1000);
 
 // Admin auth middleware — validates Bearer token in Authorization header
-function requireAdmin(req: express.Request, res: express.Response, next: express.NextFunction) {
+async function requireAdmin(req: express.Request, res: express.Response, next: express.NextFunction) {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: "Unauthorized: Missing or invalid token" });
   }
   const token = authHeader.slice(7);
-  if (!validateAdminToken(token)) {
+  if (!(await validateAdminToken(token))) {
     return res.status(401).json({ error: "Unauthorized: Token expired or invalid" });
   }
   next();
@@ -166,7 +185,7 @@ app.use('/uploads', express.static(uploadsDir));
 // Initialize Supabase Server Client
 const rawSupabaseUrl = process.env.VITE_SUPABASE_URL || 'https://mock.supabase.co';
 const supabaseUrl = rawSupabaseUrl.replace(/^["']|["']$/g, '');
-const supabaseKey = (process.env.VITE_SUPABASE_ANON_KEY || 'mock-key').replace(/^["']|["']$/g, '');
+const supabaseKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || 'mock-key').replace(/^["']|["']$/g, '');
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Initialize Midtrans Core API / Snap
@@ -184,22 +203,44 @@ const snap = new midtransClient.Snap({
 // ==========================================
 
 // Admin Login Endpoint (server-side authentication)
-app.post("/api/admin/login", rateLimiter(RATE_LIMIT_AUTH_MAX), (req, res) => {
+app.post("/api/admin/login", rateLimiter(RATE_LIMIT_AUTH_MAX), async (req, res) => {
   const { password } = req.body;
   if (!password || password !== ADMIN_PASSWORD) {
     return res.status(401).json({ error: "Password salah." });
   }
   const token = generateAdminToken();
   const now = Date.now();
-  adminSessions.set(token, { createdAt: now, expiresAt: now + ADMIN_SESSION_TTL });
+  const expiresAt = now + ADMIN_SESSION_TTL;
+  
+  if (supabaseUrl !== 'https://mock.supabase.co') {
+    try {
+       const { error } = await supabase.from('admin_sessions').insert({
+         token,
+         expires_at: new Date(expiresAt).toISOString()
+       });
+       if (error) throw error;
+    } catch (err: any) {
+       console.error("Login session creation failed:", err);
+       return res.status(500).json({ error: "Failed to create session" });
+    }
+  } else {
+    adminSessions.set(token, { createdAt: now, expiresAt });
+  }
+  
   return res.json({ success: true, token, expiresIn: ADMIN_SESSION_TTL });
 });
 
 // Admin Logout Endpoint
-app.post("/api/admin/logout", (req, res) => {
+app.post("/api/admin/logout", async (req, res) => {
   const authHeader = req.headers.authorization;
   if (authHeader && authHeader.startsWith('Bearer ')) {
-    adminSessions.delete(authHeader.slice(7));
+    const token = authHeader.slice(7);
+    adminSessions.delete(token);
+    if (supabaseUrl !== 'https://mock.supabase.co') {
+      try {
+        await supabase.from('admin_sessions').delete().eq('token', token);
+      } catch {}
+    }
   }
   return res.json({ success: true });
 });
@@ -243,7 +284,8 @@ app.get("/api/themes", async (req, res) => {
       return res.json(cachedThemes);
     }
     
-    const { data, error } = await supabase.from('themes').select('*').order('created_at', { ascending: false });
+    const limit = parseInt(req.query.limit as string) || 100;
+    const { data, error } = await supabase.from('themes').select('*').order('created_at', { ascending: false }).limit(limit);
     if (error) {
        console.error("Supabase fetch error:", error);
        return res.json([]);
@@ -284,7 +326,9 @@ app.post("/api/admin/themes", requireAdmin, upload.fields([{ name: 'zipFile', ma
     
     let parsedConfig: any = null;
     try {
-        if (config_json) parsedConfig = typeof config_json === 'string' ? JSON.parse(config_json) : config_json;
+        if (config_json && config_json !== 'undefined') {
+            parsedConfig = typeof config_json === 'string' ? JSON.parse(config_json) : config_json;
+        }
     } catch {
        return res.status(400).json({ error: "Invalid JSON format in config_json" });
     }
@@ -344,7 +388,9 @@ app.put("/api/admin/themes/:id", requireAdmin, upload.fields([{ name: 'thumbnail
     
     let parsedConfig: any = undefined;
     try {
-        if (config_json) parsedConfig = typeof config_json === 'string' ? JSON.parse(config_json) : config_json;
+        if (config_json && config_json !== 'undefined') {
+            parsedConfig = typeof config_json === 'string' ? JSON.parse(config_json) : config_json;
+        }
     } catch {
        return res.status(400).json({ error: "Invalid JSON format in config_json" });
     }
@@ -384,11 +430,12 @@ app.put("/api/admin/themes/:id", requireAdmin, upload.fields([{ name: 'thumbnail
   }
 });
 
-// 1. Fetch all orders
+// 1. Fetch all orders (Paginated to prevent memory exhaustion)
 app.get("/api/orders", async (req, res) => {
   try {
     if (supabaseUrl === 'https://mock.supabase.co') return res.json([]);
-    const { data, error } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
+    const limit = parseInt(req.query.limit as string) || 100;
+    const { data, error } = await supabase.from('orders').select('*').order('created_at', { ascending: false }).limit(limit);
     if (error) {
        console.error("Supabase fetch error:", error);
        return res.json([]);
@@ -400,7 +447,7 @@ app.get("/api/orders", async (req, res) => {
   }
 });
 
-// Fetch single order
+// Fetch single order for admin/tracking
 app.get("/api/orders/:orderCode", async (req, res) => {
   try {
     if (supabaseUrl === 'https://mock.supabase.co') return res.status(404).json({error: "Not found"});
@@ -411,6 +458,30 @@ app.get("/api/orders/:orderCode", async (req, res) => {
     res.json(data);
   } catch (err) {
     console.error("Failed to fetch order:", err);
+    res.status(500).json({error: "Server error"});
+  }
+});
+
+// Secure Public Endpoint for Invitations
+app.get("/api/public-invitation/:slug", async (req, res) => {
+  try {
+    if (supabaseUrl === 'https://mock.supabase.co') return res.status(404).json({error: "Mock DB"});
+    
+    // Only select public-safe columns
+    const { data: order, error } = await supabase
+      .from('orders')
+      .select('unique_code, groom_name, bride_name, groom_parents, bride_parents, akad_date, resepsi_date, location_name, maps_link, story, cover_image, hero_image, music_url, theme_id, status, customizations')
+      .eq('slug', req.params.slug)
+      .single();
+    
+    if (error || !order) return res.status(404).json({error: "Invitation not found"});
+    
+    if (order.status !== 'PAID') return res.status(403).json({error: "Invitation is not active yet (Pending Payment)"});
+    
+    const { data: theme } = await supabase.from('themes').select('id, name, config_json').eq('id', order.theme_id).single();
+    
+    res.json({ order, theme });
+  } catch (err) {
     res.status(500).json({error: "Server error"});
   }
 });
@@ -485,7 +556,15 @@ app.post("/api/otp/send-email", async (req, res) => {
   const otp = Math.floor(1000 + Math.random() * 9000).toString();
   const expiresAt = Date.now() + 5 * 60 * 1000; // 5 minutes
   
-  otpStore.set(email, { otp, expiresAt });
+  if (supabaseUrl !== 'https://mock.supabase.co') {
+     try {
+        await supabase.from('otp_store').upsert([{ email, otp, expires_at: new Date(expiresAt).toISOString() }], { onConflict: 'email' });
+     } catch (err) {
+        otpStore.set(email, { otp, expiresAt });
+     }
+  } else {
+     otpStore.set(email, { otp, expiresAt });
+  }
 
   try {
     if (process.env.SMTP_USER) {
@@ -511,22 +590,44 @@ app.post("/api/otp/send-email", async (req, res) => {
 });
 
 // Verify OTP
-app.post("/api/otp/verify", (req, res) => {
+app.post("/api/otp/verify", async (req, res) => {
   const { email, otp } = req.body;
-  const stored = otpStore.get(email);
+  let storedOtp = null;
+  let storedExpiresAt = 0;
 
-  if (!stored) {
+  if (supabaseUrl !== 'https://mock.supabase.co') {
+     try {
+       const { data, error } = await supabase.from('otp_store').select('*').eq('email', email).single();
+       if (!error && data) {
+         storedOtp = data.otp;
+         storedExpiresAt = new Date(data.expires_at).getTime();
+       } else {
+         const mem = otpStore.get(email);
+         if (mem) { storedOtp = mem.otp; storedExpiresAt = mem.expiresAt; }
+       }
+     } catch {
+       const mem = otpStore.get(email);
+       if (mem) { storedOtp = mem.otp; storedExpiresAt = mem.expiresAt; }
+     }
+  } else {
+     const mem = otpStore.get(email);
+     if (mem) { storedOtp = mem.otp; storedExpiresAt = mem.expiresAt; }
+  }
+
+  if (!storedOtp) {
     return res.status(400).json({ error: "Kode OTP tidak ditemukan atau belum dikirim." });
   }
-  if (Date.now() > stored.expiresAt) {
+  if (Date.now() > storedExpiresAt) {
+    if (supabaseUrl !== 'https://mock.supabase.co') { await supabase.from('otp_store').delete().eq('email', email); }
     otpStore.delete(email);
     return res.status(400).json({ error: "Kode OTP sudah kedaluwarsa. Silakan kirim ulang." });
   }
-  if (stored.otp !== otp) {
+  if (storedOtp !== otp) {
     return res.status(400).json({ error: "Kode OTP salah." });
   }
 
   // Valid
+  if (supabaseUrl !== 'https://mock.supabase.co') { await supabase.from('otp_store').delete().eq('email', email); }
   otpStore.delete(email);
   return res.json({ success: true, message: "Email berhasil diverifikasi." });
 });
@@ -796,9 +897,9 @@ async function setupServer() {
     app.get("*", async (req, res) => {
       try {
         let html = fs.readFileSync(path.join(distPath, "index.html"), "utf-8");
-        const match = req.path.match(/^\/([^\/]+)$/);
-        const ignoreList = ['admin', 'order', 'track', 'preview', 'themes', 'privacy-policy', 'terms-of-service', 'api'];
-        if (match && !ignoreList.includes(match[1])) {
+        const match = req.path.match(/^\/invitation\/([^\/]+)$/);
+        
+        if (match) {
            const slug = match[1];
            if (supabaseUrl !== 'https://mock.supabase.co') {
              const { data: orderData } = await supabase.from('orders').select('groom_name, bride_name, cover_image').eq('slug', slug).single();

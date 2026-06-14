@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
 import { THEME_REGISTRY } from '../themes/registry';
-import { generateOrderCode } from '../lib/utils';
+import { generateOrderCode } from '../utils/utils';
 import { ChevronRight, ChevronLeft, ArrowLeft, Loader2, CheckCircle2, Paintbrush, Type } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../supabase/supabase';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 

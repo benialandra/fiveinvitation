@@ -3,7 +3,7 @@ import imageCompression from 'browser-image-compression';
 import { LayoutDashboard, ShoppingBag, Palette, LogOut, CheckCircle2, Clock, Database, Menu, Moon, Sun, Info, Settings, Loader2, Home as HomeIcon, Search, ChevronLeft, ChevronRight, ArrowUpDown, X, Upload as UploadIcon, Image as ImageIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../supabase/supabase';
 import { THEME_REGISTRY } from '../themes/registry';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -1028,6 +1028,7 @@ export default function Admin() {
                  
                  const res = await fetch('/api/admin/themes', {
                    method: 'POST',
+                   headers: adminHeaders(),
                    body: fd
                  });
                  const result = await res.json();
@@ -1194,6 +1195,7 @@ export default function Admin() {
 
                  const res = await fetch(`/api/admin/themes/${editingTheme.id}`, {
                    method: 'PUT',
+                   headers: adminHeaders(),
                    body: formData
                  });
                  const result = await res.json();

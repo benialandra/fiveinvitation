@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../supabase/supabase';
 import { Copy, Video, CheckCircle2 } from 'lucide-react';
 
 // Default layout configuration

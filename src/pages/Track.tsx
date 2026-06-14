@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useOutletContext, useNavigate, useSearchParams } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../supabase/supabase';
 import { CheckCircle2, Clock, Eye, AlertCircle, Search, ArrowRight, Loader2, RefreshCw, PartyPopper, Copy, Check, FileText, ExternalLink, Send } from 'lucide-react';
 import { THEME_REGISTRY } from '../themes/registry';
 import toast from 'react-hot-toast';
@@ -43,32 +43,13 @@ export default function Track() {
     try {
       const response = await fetch(`/api/orders/${orderCode}`);
       if (!response.ok) {
-         const errData = await response.json().catch(() => ({}));
-         if (response.status === 404 && errData.error === 'Not found') {
-           setOrder(null);
-         } else {
-           setOrder({
-             unique_code: orderCode,
-             status: 'PAID',
-             groom_name: 'Beni',
-             bride_name: 'Salsa',
-             slug: 'beni-salsa',
-             theme_id: 'elegant-gold'
-           });
-         }
+         setOrder(null);
       } else {
          const data = await response.json();
          setOrder(data);
       }
     } catch(e) {
-      setOrder({
-         unique_code: orderCode,
-         status: 'PAID',
-         groom_name: 'Beni',
-         bride_name: 'Salsa',
-         slug: 'beni-salsa',
-         theme_id: 'elegant-gold'
-      });
+      setOrder(null);
     }
     setLoading(false);
   }

@@ -1,403 +1,167 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
 import { id as localeId, enUS as localeEn } from 'date-fns/locale';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Heart, Music, VolumeX } from 'lucide-react';
 import SmoothScrollLayout from '../../components/Interactive/SmoothScrollLayout';
-import AudioController from '../../components/Interactive/AudioController';
-import { Calendar, Clock, MapPin } from 'lucide-react';
+import { SharedHero, SharedStory, SharedCountdown, SharedGallery, SharedGift, SharedRSVP } from '../../components/Theme';
 
-gsap.registerPlugin(ScrollTrigger);
+export default function Minimal27({ data, guestName, lang = 'id' }: any) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const { scrollYProgress } = useScroll();
 
-interface ThemeProps {
-  data?: any;
-  guestName?: string;
-  lang?: 'en' | 'id';
-}
-
-export default function ScandinavianMinimalist({ data, guestName, lang = 'id' }: ThemeProps) {
-  const [isOpened, setIsOpened] = useState(false);
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const groomName = data?.groom_name || "Ahmad Rifqi";
+  const brideName = data?.bride_name || "Sarah Kamila";
+  const dateStr = data?.akad_date || "2026-11-20T09:00:00";
   
-  const [comments, setComments] = useState([
-    { id: 1, name: 'Tante Rina', message: 'Selamat menempuh hidup baru.' },
-    { id: 2, name: 'Anton', message: 'Semoga menjadi keluarga yang bahagia selamanya!' }
-  ]);
-  const [newName, setNewName] = useState('');
-  const [newMessage, setNewMessage] = useState('');
-  const [isCopied, setIsCopied] = useState(false);
-
-  if (!data) return <div className="min-h-screen flex items-center justify-center bg-[#F9F9F7]">Loading...</div>;
-
+  const bankName = data?.customizations?.bank_name || "BCA";
+  const bankAccount = data?.customizations?.bank_account || "1234567890";
+  const bankOwner = data?.customizations?.bank_owner || groomName;
+  
+  const galleryImages = [
+    data?.customizations?.gallery_1 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1000",
+    data?.customizations?.gallery_2 || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1000",
+    data?.customizations?.gallery_3 || "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1000",
+    data?.customizations?.gallery_4 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1000"
+  ];
+  
+  const coverImage = data?.cover_image || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=60&w=600";
+  const heroImage = data?.hero_image || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=60&w=600";
+  
+  const weddingDate = new Date(dateStr);
   const currentLocale = lang === 'en' ? localeEn : localeId;
-  const t = {
-    open: lang === 'en' ? 'Open Invitation' : 'Buka Undangan',
-    dear: lang === 'en' ? 'Dear:' : 'Kepada Yth:',
-    matrimony: lang === 'en' ? 'Holy Matrimony' : 'Akad Nikah',
-    reception: lang === 'en' ? 'Wedding Reception' : 'Resepsi Pernikahan',
-    countdown: lang === 'en' ? 'Countdown' : 'Menuju Hari H',
-    story: lang === 'en' ? 'Our Story' : 'Kisah Kami',
-    gallery: lang === 'en' ? 'Gallery' : 'Galeri',
-    gift: lang === 'en' ? 'Wedding Gift' : 'Tanda Kasih',
-    guestbook: lang === 'en' ? 'Guest Book' : 'Buku Tamu',
-    attendance: lang === 'en' ? 'Attendance' : 'Kehadiran',
-    sendReply: lang === 'en' ? 'Send Reply' : 'Kirim Balasan',
-  };
 
-  const groom = data.groom_name || 'Daniel';
-  const bride = data.bride_name || 'Sophia';
-  const akadDateStr = data.akad_date || '2026-10-24T10:00:00';
-  const resepsiDateStr = data.resepsi_date || '2026-10-24T18:00:00';
-  
-  const coverImage = data.cover_image || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=60&fm=webp&q=60";
-  const heroImage = data.hero_image || "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=60&fm=webp&q=60";
-  const groomImg = data.groom_image || data.gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=60&fm=webp&q=60";
-  const brideImg = data.bride_image || data.gallery_2 || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=60&fm=webp&q=60";
-  const gallery1 = data.gallery_1 || "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=60&fm=webp&q=60";
-  const gallery2 = data.gallery_2 || "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=60&fm=webp&q=60";
-  const gallery3 = data.gallery_3 || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=60&fm=webp&q=60";
-  const gallery4 = data.gallery_4 || "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=60&fm=webp&q=60";
-  const story = data.story || "In the simplicity of everyday life, we found an extraordinary love. A love built on quiet mornings, shared silence, and a deep understanding.";
+  // Configuration for Minimal theme
+  const colors = { primary: '#4A5568', background: '#FFFFFF', text: '#1A202C' };
+  const fonts = { heading: "'DM Sans', sans-serif", body: "'Manrope', sans-serif" };
+
+  // Phase 4: Placeholder Standardization (Lorem Ipsum)
+  const storyText = data?.story || "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
 
   useEffect(() => {
-    const targetDate = new Date(akadDateStr).getTime();
-    const interval = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = targetDate - now;
-      if (distance < 0) {
-        clearInterval(interval);
-        return;
-      }
-      setTimeLeft({
-        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds: Math.floor((distance % (1000 * 60)) / 1000)
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [akadDateStr]);
+    const link = document.createElement('link');
+    const fontStr = fonts.heading.replace(/['"]/g, '').split(',')[0].replace(/ /g, '+') + '&family=' + fonts.body.replace(/['"]/g, '').split(',')[0].replace(/ /g, '+');
+    link.href = 'https://fonts.googleapis.com/css2?family=' + fontStr + ':wght@300;400;500;600;700&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+    return () => { document.head.removeChild(link); };
+  }, []);
 
-  useEffect(() => {
-    if (!isOpened) return;
-
-    // Simple Fade & Elegant Scroll Reveal
-    const elements = gsap.utils.toArray('.scandi-reveal');
-    elements.forEach((el: any) => {
-      gsap.fromTo(el, 
-        { y: 50, opacity: 0 },
-        {
-          y: 0, opacity: 1,
-          duration: 1.2,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 85%',
-          }
-        }
-      );
-    });
-
-    // Parallax on Grid Images
-    const images = gsap.utils.toArray('.scandi-parallax');
-    images.forEach((img: any) => {
-      gsap.to(img, {
-        yPercent: 15,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: img.parentElement,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: true
-        }
-      });
-    });
-  }, [isOpened]);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(data.bank_account_1 || "0987654321");
-    setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 2000);
+  const handleOpen = () => {
+    setIsOpen(true);
+    if (audioRef.current) {
+      audioRef.current.play().catch(() => {});
+      setIsPlaying(true);
+    }
   };
 
-  const handleAddComment = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newName && newMessage) {
-      setComments([{ id: Date.now(), name: newName, message: newMessage }, ...comments]);
-      setNewName('');
-      setNewMessage('');
+  const toggleAudio = () => {
+    if (audioRef.current) {
+      if (isPlaying) audioRef.current.pause();
+      else audioRef.current.play();
+      setIsPlaying(!isPlaying);
     }
   };
 
   return (
-    <SmoothScrollLayout>
-      <div className="bg-[#F9F9F7] min-h-screen text-[#2D2D2D] font-sans selection:bg-[#E5E0D8] selection:text-black overflow-x-hidden">
-        
-        {isOpened && (
-          <AudioController src={data.music_url || "https://assets.mixkit.co/music/preview/mixkit-relaxing-light-piano-music-421.mp3"} />
-        )}
+    <div className="antialiased bg-white text-gray-900 py-14 px-6" style={{ fontFamily: fonts.body, backgroundColor: colors.background, color: colors.text }}>
+      <audio ref={audioRef} loop>
+        <source src="https://assets.mixkit.co/music/preview/mixkit-relaxing-light-piano-music-421.mp3" type="audio/mpeg" />
+      </audio>
 
-        {/* Minimalist Opening Screen */}
-        <AnimatePresence>
-          {!isOpened && (
-            <motion.div 
-              exit={{ opacity: 0, y: '-100%' }}
-              transition={{ duration: 1.5, ease: [0.76, 0, 0.24, 1] }}
-              className="fixed inset-0 z-50 flex flex-col items-center justify-center p-6 bg-[#F9F9F7]"
-            >
-              <div className="relative z-10 text-center flex flex-col items-center w-full max-w-md">
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 1.5, ease: "easeOut" }}
-                  className="w-full aspect-[3/4] mb-12 overflow-hidden bg-[#EAE8E3] rounded-t-[10rem]"
-                >
-                  <img src={coverImage} alt="Cover" className="w-full h-full object-cover opacity-90" />
-                </motion.div>
-                
-                <motion.h1 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 0.5 }}
-                  className="text-4xl md:text-5xl font-light tracking-tight mb-8 text-[#1A1A1A]"
-                  style={{ fontFamily: '"Inter", sans-serif' }}
-                >
-                  {groom} & {bride}
-                </motion.h1>
-                
-                {guestName && (
-                  <motion.div 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 1, delay: 0.8 }}
-                    className="mb-12 border-t border-b border-[#D1CEC5] py-4"
-                  >
-                    <p className="text-xs tracking-[0.2em] uppercase text-[#7A7A7A] mb-2">{t.dear}</p>
-                    <p className="text-xl font-medium text-[#1A1A1A]">{guestName}</p>
-                  </motion.div>
-                )}
-                
-                <motion.button
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1.2, duration: 1 }}
-                  onClick={() => setIsOpened(true)}
-                  className="group relative px-8 py-3 overflow-hidden text-xs uppercase tracking-widest font-medium border border-[#D1CEC5] hover:border-[#1A1A1A] transition-colors duration-500 text-[#1A1A1A] rounded-full"
-                >
-                  <span className="relative z-10">{t.open}</span>
-                </motion.button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Main Content */}
-        {isOpened && (
-          <div className="relative z-10 pb-32">
-            
-            {/* Hero Section */}
-            <section className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
-              <motion.div 
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1.5, ease: "easeOut", delay: 0.5 }}
-                className="max-w-3xl mx-auto w-full pt-20"
-              >
-                <p className="text-[#8B8881] text-xs uppercase tracking-[0.3em] mb-8 font-medium">The Wedding Celebration</p>
-                
-                <h1 className="text-6xl md:text-8xl font-light tracking-tighter text-[#1A1A1A] mb-6 leading-none">
-                  {groom} <br/> <span className="text-[#A39E93] font-serif italic text-5xl md:text-7xl">&</span> <br/> {bride}
-                </h1>
-                
-                <div className="mt-20 w-[1px] h-24 bg-[#D1CEC5] mx-auto origin-top" />
+      <AnimatePresence>
+        {isOpen && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.7 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.7 }}
+            onClick={toggleAudio}
+            className="fixed bottom-6 right-6 z-50 p-4 rounded-full backdrop-blur-md transition-all duration-300 flex items-center justify-center cursor-pointer shadow-lg"
+            style={{ backgroundColor: colors.primary + '30', color: colors.primary, border: '1px solid ' + colors.primary + '50' }}
+          >
+            {isPlaying ? (
+              <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 8, ease: "linear" }}>
+                <Music size={22} />
               </motion.div>
-            </section>
-
-            {/* Profiles */}
-            <section className="py-24 px-6 scandi-reveal">
-               <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-16 justify-center">
-                  <div className="flex flex-col items-center text-center">
-                      <div className="w-48 h-64 md:w-64 md:h-80 rounded-t-[10rem] overflow-hidden bg-[#EAE8E3] mb-8">
-                         <img loading="lazy" src={groomImg} className="w-full h-full object-cover" alt={groom} />
-                      </div>
-                      <h3 className="text-3xl font-light mb-2">{groom}</h3>
-                      <p className="text-[#8B8881] text-xs uppercase tracking-widest">Putra dari<br/><span className="text-[#1A1A1A] font-medium">{data.groom_parents || 'Bpk. Hendra & Ibu Susi'}</span></p>
-                   </div>
-                   <div className="flex flex-col items-center text-center">
-                      <div className="w-48 h-64 md:w-64 md:h-80 rounded-t-[10rem] overflow-hidden bg-[#EAE8E3] mb-8">
-                         <img loading="lazy" src={brideImg} className="w-full h-full object-cover" alt={bride} />
-                      </div>
-                     <h3 className="text-3xl font-light mb-2">{bride}</h3>
-                     <p className="text-[#8B8881] text-xs uppercase tracking-widest">Putri dari<br/><span className="text-[#1A1A1A] font-medium">{data.bride_parents || 'Bpk. Budi & Ibu Ani'}</span></p>
-                  </div>
-               </div>
-            </section>
-
-            {/* Quote / Introduction */}
-            <section className="py-24 px-6 scandi-reveal bg-[#F0EFEB]">
-              <div className="max-w-2xl mx-auto text-center">
-                <p className="text-[#8B8881] text-xs uppercase tracking-[0.3em] mb-12">{t.story}</p>
-                <p className="text-xl md:text-3xl font-light text-[#4A4A4A] leading-relaxed tracking-tight">
-                  "{story}"
-                </p>
-              </div>
-            </section>
-
-            {/* Countdown */}
-            <section className="py-24 px-6 scandi-reveal">
-               <div className="max-w-3xl mx-auto text-center">
-                  <p className="text-[#8B8881] text-xs uppercase tracking-[0.3em] mb-12">{t.countdown}</p>
-                  <div className="grid grid-cols-4 gap-4 md:gap-8 bg-white rounded-[2rem] p-8 md:p-12 shadow-sm border border-[#EAE8E3]">
-                     {[
-                       { label: "Days", value: timeLeft.days },
-                       { label: "Hours", value: timeLeft.hours },
-                       { label: "Mins", value: timeLeft.minutes },
-                       { label: "Secs", value: timeLeft.seconds }
-                     ].map((item, idx) => (
-                       <div key={idx} className="flex flex-col items-center justify-center">
-                          <div className="text-3xl md:text-5xl font-light text-[#1A1A1A] mb-2">{item.value}</div>
-                          <div className="text-[10px] md:text-xs uppercase tracking-widest text-[#8B8881]">{item.label}</div>
-                       </div>
-                     ))}
-                  </div>
-               </div>
-            </section>
-
-            {/* Gallery Grid - Clean 4 Photos */}
-            <section className="py-24 px-6 md:px-12 max-w-6xl mx-auto scandi-reveal">
-              <p className="text-[#8B8881] text-xs uppercase tracking-[0.3em] mb-12 text-center">{t.gallery}</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
-                {[gallery1, gallery2, gallery3, gallery4].map((img, i) => (
-                  <div key={i} className={`overflow-hidden bg-[#EAE8E3] rounded-[2rem] ${i === 0 || i === 3 ? 'aspect-[4/5]' : 'aspect-square'} relative group`}>
-                    <div className="w-full h-[130%] -top-[15%] absolute">
-                      <img loading="lazy" src={img} alt="Gallery" className="w-full h-full object-cover scandi-parallax opacity-90 transition-opacity duration-700 group-hover:opacity-100" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {/* Event Details */}
-            <section className="py-32 px-6 bg-white scandi-reveal rounded-t-[4rem] rounded-b-[4rem]">
-              <div className="max-w-4xl mx-auto">
-                <h2 className="text-3xl md:text-4xl font-light tracking-tight text-center mb-24">The Details</h2>
-                
-                <div className="grid md:grid-cols-2 gap-16 md:gap-24">
-                  <div className="flex flex-col text-center md:text-left">
-                    <p className="text-[#8B8881] text-xs uppercase tracking-[0.2em] mb-6">{t.matrimony}</p>
-                    <h3 className="text-4xl font-light text-[#1A1A1A] mb-2">{format(parseISO(akadDateStr), 'dd')}</h3>
-                    <h4 className="text-xl font-light text-[#1A1A1A] mb-8">{format(parseISO(akadDateStr), 'MMMM yyyy', { locale: currentLocale })}</h4>
-                    <div className="space-y-4 text-[#4A4A4A] font-light">
-                      <div className="flex flex-col md:flex-row items-center md:items-start gap-2 md:gap-4">
-                        <Clock size={18} className="text-[#A39E93] shrink-0" />
-                        <p>{format(parseISO(akadDateStr), 'HH:mm')} WIB</p>
-                      </div>
-                      <div className="flex flex-col md:flex-row items-center md:items-start gap-2 md:gap-4">
-                        <MapPin size={18} className="text-[#A39E93] shrink-0" />
-                        <p>{data.location_name || 'The Glasshouse'}</p>
-                      </div>
-                      {data.maps_link && (
-                         <a href={data.maps_link} target="_blank" rel="noreferrer" className="inline-block mt-4 border-b border-[#D1CEC5] pb-1 text-xs uppercase tracking-widest text-[#1A1A1A] hover:text-[#8B8881] transition-colors">Open Maps</a>
-                      )}
-                    </div>
-                  </div>
-                  
-                  <div className="flex flex-col text-center md:text-left">
-                    <p className="text-[#8B8881] text-xs uppercase tracking-[0.2em] mb-6">{t.reception}</p>
-                    <h3 className="text-4xl font-light text-[#1A1A1A] mb-2">{format(parseISO(resepsiDateStr), 'dd')}</h3>
-                    <h4 className="text-xl font-light text-[#1A1A1A] mb-8">{format(parseISO(resepsiDateStr), 'MMMM yyyy', { locale: currentLocale })}</h4>
-                    <div className="space-y-4 text-[#4A4A4A] font-light">
-                      <div className="flex flex-col md:flex-row items-center md:items-start gap-2 md:gap-4">
-                        <Clock size={18} className="text-[#A39E93] shrink-0" />
-                        <p>{format(parseISO(resepsiDateStr), 'HH:mm')} WIB</p>
-                      </div>
-                      <div className="flex flex-col md:flex-row items-center md:items-start gap-2 md:gap-4">
-                        <MapPin size={18} className="text-[#A39E93] shrink-0" />
-                        <p>{data.location_name || 'The Glasshouse'}</p>
-                      </div>
-                      {data.maps_link && (
-                         <a href={data.maps_link} target="_blank" rel="noreferrer" className="inline-block mt-4 border-b border-[#D1CEC5] pb-1 text-xs uppercase tracking-widest text-[#1A1A1A] hover:text-[#8B8881] transition-colors">Open Maps</a>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* Gift */}
-            <section className="py-24 px-6 scandi-reveal text-center">
-               <div className="max-w-2xl mx-auto">
-                  <p className="text-[#8B8881] text-xs uppercase tracking-[0.3em] mb-8">{t.gift}</p>
-                  <p className="text-[#4A4A4A] font-light mb-12 leading-relaxed">Your presence is the greatest gift of all. However, should you wish to help us celebrate with a gift, a wishing well will be provided on the day.</p>
-                  
-                  <div className="bg-white border border-[#EAE8E3] rounded-[2rem] p-10 max-w-md mx-auto shadow-sm">
-                     <p className="text-lg font-medium text-[#1A1A1A] mb-2 uppercase tracking-widest">{data.bank_name_1 || "BCA"}</p>
-                     <p className="text-2xl font-light text-[#1A1A1A] tracking-widest mb-4 font-mono">{data.bank_account_1 || "0987654321"}</p>
-                     <p className="text-sm text-[#8B8881] uppercase tracking-widest mb-8">A.N {data.bank_account_name_1 || groom}</p>
-                     <button 
-                       onClick={handleCopy}
-                       className="w-full bg-[#EAE8E3] text-[#1A1A1A] py-4 rounded-full uppercase tracking-[0.2em] text-xs font-medium hover:bg-[#D1CEC5] transition-colors duration-300"
-                     >
-                       {isCopied ? 'Copied!' : 'Copy Account Number'}
-                     </button>
-                  </div>
-               </div>
-            </section>
-
-            {/* RSVP & Guestbook */}
-            <section className="py-32 px-6 scandi-reveal bg-[#EAE8E3]/30 rounded-t-[4rem]">
-              <div className="max-w-xl mx-auto mb-20">
-                <h2 className="text-3xl font-light tracking-tight text-center mb-8">R.S.V.P</h2>
-                <p className="text-center text-[#7A7A7A] mb-12 text-sm">Please let us know your presence.</p>
-                
-                <form onSubmit={handleAddComment} className="space-y-8 bg-white p-8 md:p-12 rounded-[2rem] shadow-sm border border-[#EAE8E3]">
-                  <div>
-                    <label className="block text-xs uppercase tracking-widest text-[#4A4A4A] mb-2">Guest Name</label>
-                    <input 
-                      type="text" 
-                      value={newName}
-                      onChange={e => setNewName(e.target.value)}
-                      className="w-full bg-transparent border-b border-[#D1CEC5] px-0 py-3 focus:outline-none focus:border-[#1A1A1A] transition-colors text-sm" 
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs uppercase tracking-widest text-[#4A4A4A] mb-2">Message</label>
-                    <textarea 
-                      value={newMessage}
-                      onChange={e => setNewMessage(e.target.value)}
-                      rows={3}
-                      className="w-full bg-transparent border-b border-[#D1CEC5] px-0 py-3 focus:outline-none focus:border-[#1A1A1A] transition-colors text-sm resize-none" 
-                      required
-                    />
-                  </div>
-                  <button type="submit" className="w-full bg-[#1A1A1A] text-white py-4 rounded-full uppercase tracking-[0.2em] text-xs font-medium hover:bg-[#333] transition-colors duration-300 mt-8">
-                    {t.sendReply}
-                  </button>
-                </form>
-              </div>
-
-              {/* Comments List */}
-              <div className="max-w-xl mx-auto space-y-6 max-h-[400px] overflow-y-auto pr-4 scrollbar-thin scrollbar-thumb-[#D1CEC5]">
-                <h3 className="text-center text-xs uppercase tracking-[0.3em] text-[#8B8881] mb-8">{t.guestbook}</h3>
-                {comments.map((comment) => (
-                  <div key={comment.id} className="bg-white border border-[#EAE8E3] rounded-[1.5rem] p-6 shadow-sm">
-                    <p className="font-medium text-[#1A1A1A] text-sm uppercase tracking-widest mb-2">{comment.name}</p>
-                    <p className="text-[#4A4A4A] font-light text-sm leading-relaxed">{comment.message}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
-            
-            {/* Footer */}
-            <footer className="pt-24 pb-12 text-center text-[#A39E93] text-xs uppercase tracking-[0.3em] scandi-reveal">
-              <p>Looking forward to celebrating with you.</p>
-              <p className="mt-4 text-[#1A1A1A] font-serif italic text-lg">{groom} & {bride}</p>
-            </footer>
-          </div>
+            ) : <VolumeX size={22} />}
+          </motion.button>
         )}
-      </div>
-    </SmoothScrollLayout>
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {!isOpen && (
+          <motion.div
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, y: '-100%' }}
+            transition={{ duration: 1.2, ease: [0.77, 0, 0.175, 1] }}
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center text-center px-6 overflow-hidden"
+            style={{ backgroundColor: colors.background }}
+          >
+            <div className="absolute inset-0 z-0">
+              <img loading="lazy" src={coverImage} alt="Cover" className="w-full h-full object-cover opacity-20 filter blur-xs" />
+              <div className="absolute inset-0 bg-gradient-to-t" style={{ backgroundImage: 'linear-gradient(to top, ' + colors.background + ', transparent)' }} />
+            </div>
+
+            <div className="relative z-10 max-w-xl mx-auto flex flex-col items-center justify-center h-full pt-10">
+              <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="mb-4" style={{ color: colors.primary }}>
+                <Heart size={32} className="stroke-1" />
+              </motion.div>
+
+              <motion.h1 
+                initial={{ opacity: 0, y: 25 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2, delay: 0.4 }}
+                className="text-4xl md:text-6xl font-normal tracking-wide mb-2" style={{ fontFamily: fonts.heading, color: colors.text }}
+              >
+                {brideName} <span className="font-light italic" style={{ color: colors.primary }}>&amp;</span> {groomName}
+              </motion.h1>
+
+              {guestName && (
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.7 }} className="mb-10 px-8 py-5 rounded-2xl backdrop-blur-md shadow-2xl border" style={{ backgroundColor: colors.background + 'dd', borderColor: colors.primary + '40' }}>
+                  <p className="text-[10px] tracking-[0.25em] uppercase mb-2 font-medium" style={{ color: colors.text }}>Kepada Yth:</p>
+                  <p className="text-xl font-semibold tracking-wide" style={{ fontFamily: fonts.heading, color: colors.text }}>{guestName}</p>
+                </motion.div>
+              )}
+
+              <motion.button
+                onClick={handleOpen}
+                className="hover:-translate-y-1 hover:shadow-lg px-8 py-4 rounded-full font-medium tracking-widest text-xs uppercase shadow-xl transition-all duration-500 flex items-center gap-3 border"
+                style={{ backgroundColor: colors.primary, color: '#fff', borderColor: colors.primary }}
+              >
+                <Heart size={14} className="fill-current animate-pulse" />
+                Buka Undangan
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {isOpen && (
+        <SmoothScrollLayout>
+          {/* Phase 1: Shared component injection */}
+          <SharedHero brideName={brideName} groomName={groomName} dateStr={format(weddingDate, 'EEEE, d MMMM yyyy', { locale: currentLocale })} heroImage={heroImage} colors={colors} fonts={fonts} />
+          
+          <div className="relative z-10 opacity-95 scale-100">
+             <SharedStory storyText={storyText} colors={colors} fonts={fonts} />
+          </div>
+
+          <div className="relative z-10 opacity-95 scale-100">
+             <SharedCountdown targetDate={weddingDate} colors={colors} fonts={fonts} />
+          </div>
+
+          <div className="overflow-hidden bg-transparent">
+             <SharedGallery colors={colors} fonts={fonts} images={galleryImages} />
+          </div>
+
+          <div className="overflow-hidden bg-transparent">
+             <SharedGift colors={colors} fonts={fonts} bankName={bankName} bankAccount={bankAccount} bankOwner={bankOwner} />
+          </div>
+
+          <div className="relative z-10 opacity-95 scale-100">
+             <SharedRSVP colors={colors} fonts={fonts} />
+          </div>
+        </SmoothScrollLayout>
+      )}
+    </div>
   );
 }

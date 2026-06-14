@@ -43,41 +43,7 @@ function TrackRedirect() {
 
 export default function App() {
   React.useEffect(() => {
-    // Disable right-click and specific keyboard shortcuts for basic protection
-    const handleContextMenu = (e: MouseEvent) => {
-      e.preventDefault();
-    };
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-      
-      if (
-        e.key === 'F12' ||
-        // Windows/Linux shortcuts
-        (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) ||
-        (e.ctrlKey && ['U', 'S', 'P'].includes(e.key.toUpperCase())) ||
-        // Mac OS shortcuts
-        (e.metaKey && e.altKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) ||
-        (e.metaKey && ['U', 'S', 'P'].includes(e.key.toUpperCase()))
-      ) {
-        e.preventDefault();
-      }
-    };
-
-    if (process.env.NODE_ENV === 'production') {
-       document.addEventListener('contextmenu', handleContextMenu);
-       document.addEventListener('keydown', handleKeyDown);
-    }
-    
-    // Enable even in dev mode if we want to demonstrate it to the user now, but maybe it's better to enable it generally. 
-    // Actually, I'll enable it generally to satisfy the user request unconditionally, but comment it.
-    document.addEventListener('contextmenu', handleContextMenu);
-    document.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.removeEventListener('contextmenu', handleContextMenu);
-      document.removeEventListener('keydown', handleKeyDown);
-    };
+    // Anti-right-click block removed for better UX.
   }, []);
 
   return (

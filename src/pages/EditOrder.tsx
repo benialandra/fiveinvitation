@@ -3,7 +3,7 @@ import { useParams, useNavigate, useOutletContext, Link } from 'react-router-dom
 import { Loader2, Save, ArrowLeft, MapPin, X, Heart, Image as ImageIcon, Sparkles, Eye, Check, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { THEME_REGISTRY } from '../themes/registry';
-import { isSupabaseConfigured, supabase } from '../lib/supabase';
+import { isSupabaseConfigured, supabase } from '../supabase/supabase';
 import RippleButton from '../components/RippleButton';
 
 export default function EditOrder() {

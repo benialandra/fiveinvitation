@@ -97,3 +97,23 @@ a, button, [role="button"], .cursor-pointer {
 .animate-marquee:hover, .animate-marquee-reverse:hover {
   animation-play-state: paused;
 }
+
+/* --- Mobile Performance Optimization (Issue 4 Fix) --- */
+@media (max-width: 768px) {
+  .glass-card {
+    backdrop-filter: none !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+  }
+  .dark .glass-card {
+    background: rgba(10, 10, 11, 0.95) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

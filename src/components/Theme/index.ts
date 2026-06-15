@@ -15,3 +15,11 @@ export type { SharedRSVPProps } from './SharedRSVP';
 
 export { default as SharedGift } from './SharedGift';
 export type { SharedGiftProps } from './SharedGift';
+
+export { default as SharedFooter } from './SharedFooter';
+
+export { default as PremiumGallery } from './PremiumGallery';
+export type { PremiumGalleryProps } from './PremiumGallery';
+
+export { default as PremiumRSVP } from './PremiumRSVP';
+export type { PremiumRSVPProps } from './PremiumRSVP';

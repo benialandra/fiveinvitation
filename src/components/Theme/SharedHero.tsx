@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { motion } from 'framer-motion';
+
 import { ChevronDown, Sparkles } from 'lucide-react';
 
 export interface SharedHeroProps {
@@ -44,11 +44,8 @@ const SharedHero = memo<SharedHeroProps>(({
       </div>
 
       <div className="relative z-10 text-center px-4 max-w-3xl mx-auto flex flex-col items-center w-full">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          className="flex flex-col items-center w-full"
+        <div
+          className="animate-reveal-up flex flex-col items-center w-full"
         >
           {labels.announcement && (
             <span 
@@ -75,18 +72,16 @@ const SharedHero = memo<SharedHeroProps>(({
 
           {/* Scroll Down */}
           {labels.scrollDown && (
-            <motion.div 
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              className="mt-20 flex flex-col items-center gap-2 cursor-pointer"
+            <div 
+              className="animate-bounce-small mt-20 flex flex-col items-center gap-2 cursor-pointer"
               style={{ color: colors.primary, opacity: 0.7 }}
               onClick={onScrollClick}
             >
               <span className="text-[10px] tracking-[0.3em] uppercase font-semibold">{labels.scrollDown}</span>
-              <ChevronDown size={24} className="animate-bounce mt-1" />
-            </motion.div>
+              <ChevronDown size={24} className="mt-1" />
+            </div>
           )}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

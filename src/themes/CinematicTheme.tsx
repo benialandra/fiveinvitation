@@ -1,10 +1,11 @@
+import { GoldenParticles, FallingFlowers, FallingLeaves, SnowEffect, LightParticles, IslamicParticles, SubtleParticles } from '../components/Theme/Animations';
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { m, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
 import { id as localeId, enUS as localeEn } from 'date-fns/locale';
 import { Heart, Music, VolumeX } from 'lucide-react';
 import SmoothScrollLayout from '../components/Interactive/SmoothScrollLayout';
-import { SharedHero, SharedStory, SharedCountdown, SharedGallery, SharedGift, SharedRSVP } from '../components/Theme';
+import { SharedHero, SharedStory, SharedCountdown, SharedGallery, SharedGift, SharedRSVP, SharedFooter } from '../components/Theme';
 
 export default function CinematicTheme({ data, guestName, lang = 'id' }: any) {
   const [isOpen, setIsOpen] = useState(false);
@@ -67,13 +68,14 @@ export default function CinematicTheme({ data, guestName, lang = 'id' }: any) {
 
   return (
     <div className="w-full overflow-x-hidden py-12 px-6" style={{ fontFamily: fonts.body, backgroundColor: colors.background, color: colors.text }}>
+      <SnowEffect />
       <audio ref={audioRef} loop>
         <source src="https://assets.mixkit.co/music/preview/mixkit-relaxing-light-piano-music-421.mp3" type="audio/mpeg" />
       </audio>
 
       <AnimatePresence>
         {isOpen && (
-          <motion.button
+          <m.button
             initial={{ opacity: 0, scale: 0.7 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.7 }}
@@ -82,17 +84,17 @@ export default function CinematicTheme({ data, guestName, lang = 'id' }: any) {
             style={{ backgroundColor: colors.primary + '30', color: colors.primary, border: '1px solid ' + colors.primary + '50' }}
           >
             {isPlaying ? (
-              <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 8, ease: "linear" }}>
+              <m.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 8, ease: "linear" }}>
                 <Music size={22} />
-              </motion.div>
+              </m.div>
             ) : <VolumeX size={22} />}
-          </motion.button>
+          </m.button>
         )}
       </AnimatePresence>
 
       <AnimatePresence>
         {!isOpen && (
-          <motion.div
+          <m.div
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, y: '-100%' }}
             transition={{ duration: 1.2, ease: [0.77, 0, 0.175, 1] }}
@@ -105,34 +107,34 @@ export default function CinematicTheme({ data, guestName, lang = 'id' }: any) {
             </div>
 
             <div className="relative z-10 max-w-xl mx-auto flex flex-col items-center justify-center h-full pt-10">
-              <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="mb-4" style={{ color: colors.primary }}>
+              <m.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="mb-4" style={{ color: colors.primary }}>
                 <Heart size={32} className="stroke-1" />
-              </motion.div>
+              </m.div>
 
-              <motion.h1 
+              <m.h1 
                 initial={{ opacity: 0, y: 25 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2, delay: 0.4 }}
                 className="text-4xl md:text-6xl font-normal tracking-wide mb-2" style={{ fontFamily: fonts.heading, color: colors.text }}
               >
                 {brideName} <span className="font-light italic" style={{ color: colors.primary }}>&amp;</span> {groomName}
-              </motion.h1>
+              </m.h1>
 
               {guestName && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.7 }} className="mb-10 px-8 py-5 rounded-2xl backdrop-blur-md shadow-2xl border" style={{ backgroundColor: colors.background + 'dd', borderColor: colors.primary + '40' }}>
+                <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.7 }} className="mb-10 px-8 py-5 rounded-2xl backdrop-blur-md shadow-2xl border" style={{ backgroundColor: colors.background + 'dd', borderColor: colors.primary + '40' }}>
                   <p className="text-[10px] tracking-[0.25em] uppercase mb-2 font-medium" style={{ color: colors.text }}>Kepada Yth:</p>
                   <p className="text-xl font-semibold tracking-wide" style={{ fontFamily: fonts.heading, color: colors.text }}>{guestName}</p>
-                </motion.div>
+                </m.div>
               )}
 
-              <motion.button
+              <m.button
                 onClick={handleOpen}
                 className="hover:-translate-y-1 hover:shadow-lg px-8 py-4 rounded-full font-medium tracking-widest text-xs uppercase shadow-xl transition-all duration-500 flex items-center gap-3 border"
                 style={{ backgroundColor: colors.primary, color: '#fff', borderColor: colors.primary }}
               >
                 <Heart size={14} className="fill-current animate-pulse" />
                 Buka Undangan
-              </motion.button>
+              </m.button>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 
@@ -159,6 +161,10 @@ export default function CinematicTheme({ data, guestName, lang = 'id' }: any) {
 
           <div className="relative z-10 opacity-95 scale-100">
              <SharedRSVP colors={colors} fonts={fonts} />
+          </div>
+        
+          <div className="relative z-10 opacity-100 scale-100 bg-transparent w-full">
+             <SharedFooter colors={colors} fonts={fonts} data={data} lang={lang} />
           </div>
         </SmoothScrollLayout>
       )}

@@ -84,21 +84,20 @@ export default function Preview() {
   };
 
   let content = null;
-  if (theme.config_json && themeId !== 'winter-romance') {
-     content = <MasterTheme {...sampleProps} config_json={theme.config_json} hero_image={theme.thumbnail} />;
+  const ThemeComponent = theme.component;
+  
+  if (ThemeComponent) {
+      content = (
+        <React.Suspense fallback={<div className="h-full min-h-[500px] flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-[#C5A059]" /></div>}>
+          <LazyMotion features={domAnimation}>
+            <ThemeComponent {...sampleProps} />
+          </LazyMotion>
+        </React.Suspense>
+      );
+  } else if (theme.config_json && themeId !== 'winter-romance') {
+      content = <MasterTheme {...sampleProps} config_json={theme.config_json} hero_image={theme.thumbnail} />;
   } else {
-     const ThemeComponent = theme.component;
-     if (ThemeComponent) {
-        content = (
-          <React.Suspense fallback={<div className="h-full min-h-[500px] flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-[#C5A059]" /></div>}>
-            <LazyMotion features={domAnimation}>
-              <ThemeComponent {...sampleProps} />
-            </LazyMotion>
-          </React.Suspense>
-        );
-     } else {
-        content = <div className="p-8 text-center">Komponen Tema tidak tersedia</div>;
-     }
+      content = <div className="p-8 text-center">Komponen Tema tidak tersedia</div>;
   }
 
   let customStyles = null;

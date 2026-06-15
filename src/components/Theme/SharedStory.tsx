@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { motion } from 'framer-motion';
+import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
 
 export interface SharedStoryProps {
   storyText: string;
@@ -25,17 +25,15 @@ const SharedStory = memo<SharedStoryProps>(({
   labels = { title: 'Kisah Kami' },
   className = ''
 }) => {
+  const { ref, inView } = useIntersectionObserver({ once: true, rootMargin: "-50px" });
   if (!storyText) return null;
 
   return (
     <section className={`py-24 px-6 relative w-full ${className}`} style={{ backgroundColor: colors.background }}>
       <div className="max-w-3xl mx-auto text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="p-8 md:p-12 rounded-3xl border shadow-sm relative overflow-hidden"
+        <div
+          ref={ref}
+          className={`reveal-up ${inView ? 'in-view' : ''} p-8 md:p-12 rounded-3xl border shadow-sm relative overflow-hidden`}
           style={{ borderColor: colors.primary ? `${colors.primary}30` : '#e5e5e5' }}
         >
           {labels.title && (
@@ -63,7 +61,7 @@ const SharedStory = memo<SharedStoryProps>(({
           >
             "
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

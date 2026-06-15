@@ -108,6 +108,7 @@ export default function Admin() {
 
   const [dbThemes, setDbThemes] = useState<any[]>([]);
   const [loadingThemes, setLoadingThemes] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
   const [isSeeding, setIsSeeding] = useState(false);
 
   const bgClass = themeMode === 'dark' ? 'bg-[#0A0A0B] text-[#E5E5E5]' : 'bg-[#F4F4F5] text-gray-900';
@@ -202,11 +203,30 @@ export default function Admin() {
             setDbThemes(refetchData);
          }
 
-         toast.success('Data tema TSX dan Database berhasil disinkronisasi!');
-      } catch (err: any) {
-         toast.error(err.message);
+         toast.success('Data tema TSX dan Database berhasil disinkronisasi!', { id: tId });
+      } catch (err) {
+         console.error("Failed to seed", err);
+         toast.error("Gagal melakukan seeding DB", { id: tId });
       } finally {
          setIsSeeding(false);
+      }
+  };
+
+  const handleSyncRegistry = async () => {
+      const tId = toast.loading("Mensinkronisasi registry dan memvalidasi build...");
+      setIsSyncing(true);
+      try {
+          const res = await fetch('/api/admin/themes/sync', {
+              method: 'POST',
+              headers: adminHeaders()
+          });
+          const result = await res.json();
+          if (!res.ok) throw new Error(result.error || "Gagal sync registry");
+          toast.success("Registry berhasil disinkronisasi & divalidasi!", { id: tId, duration: 4000 });
+      } catch (err: any) {
+          toast.error(err.message, { id: tId });
+      } finally {
+          setIsSyncing(false);
       }
   };
 
@@ -267,7 +287,7 @@ export default function Admin() {
         ...t,
         ...override,
         // Simulate sales based on string length and index for consistent dummy data
-        sales: t.sales || (t.id.length * 10 + (50 - idx * 5))
+        sales: t.sales || ((t.id?.length || 5) * 10 + (50 - idx * 5))
       };
     });
   }, [dbThemes, THEME_REGISTRY, uploadedThemes, themeOverrides]);
@@ -277,17 +297,23 @@ export default function Admin() {
     
     if (themeSearch) {
       const lowerSearch = themeSearch.toLowerCase();
-      result = result.filter(t => 
-        t.name.toLowerCase().includes(lowerSearch) || 
-        t.category.toLowerCase().includes(lowerSearch)
-      );
+      result = result.filter(t => {
+        const name = t.name || 'Unknown Theme';
+        const category = t.category || 'Unknown Category';
+        return name.toLowerCase().includes(lowerSearch) || 
+               category.toLowerCase().includes(lowerSearch);
+      });
     }
     
     if (themeSortBy === 'bestseller') {
       result.sort((a, b) => b.sales - a.sales);
     } else {
       // sort by detail (alphabetical name)
-      result.sort((a, b) => a.name.localeCompare(b.name));
+      result.sort((a, b) => {
+        const nameA = a.name || 'Unknown Theme';
+        const nameB = b.name || 'Unknown Theme';
+        return nameA.localeCompare(nameB);
+      });
     }
     
     return result;
@@ -707,6 +733,13 @@ export default function Admin() {
                           className={`px-4 py-3 text-left text-xs font-bold uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-white/5 border-b border-black/5 dark:border-white/5 text-gray-900 dark:text-white transition-colors flex items-center gap-3 ${isSeeding ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                           {isSeeding ? <Loader2 size={14} className="animate-spin text-[#C5A059]" /> : <Database size={14} className="text-[#C5A059]" />} Seed DB
+                        </button>
+                        <button 
+                          onClick={handleSyncRegistry} 
+                          disabled={isSyncing}
+                          className={`px-4 py-3 text-left text-xs font-bold uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-white/5 border-b border-black/5 dark:border-white/5 text-gray-900 dark:text-white transition-colors flex items-center gap-3 ${isSyncing ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        >
+                          {isSyncing ? <Loader2 size={14} className="animate-spin text-[#C5A059]" /> : <Settings size={14} className="text-[#C5A059]" />} Sync Registry
                         </button>
                         <button 
                           onClick={() => setShowDocs(!showDocs)} 

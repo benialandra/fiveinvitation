@@ -1,11 +1,41 @@
+# Dependencies
 node_modules/
-build/
+
+# Production builds
 dist/
-coverage/
-.DS_Store
-*.log
-.env*
+build/
+dist-ssr/
+
+# Local env files
+.env
+.env.*
 !.env.example
 
-public/uploads/
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# Testing & Coverage
+coverage/
+playwright-report/
+test-results/
 .playwright-mcp/
+
+# OS/Editor files
+.DS_Store
+.idea/
+.vscode/
+!.vscode/extensions.json
+
+# Project specific ignores
+public/uploads/
+project_data/
+scratch/
+/assets/
+
+# Temporary files / Junk
+dummy.jpg
+duplicate_clusters.json
+ignored_files_list.txt

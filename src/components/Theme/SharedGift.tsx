@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { motion } from 'framer-motion';
+import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
 import { Copy } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -37,6 +37,7 @@ const SharedGift = memo<SharedGiftProps>(({
   },
   className = ''
 }) => {
+  const { ref, inView } = useIntersectionObserver({ once: true, rootMargin: "-50px" });
   if (!bankAccount) return null;
 
   const copyToClipboard = (text: string) => {
@@ -64,13 +65,10 @@ const SharedGift = memo<SharedGiftProps>(({
 
   return (
     <section className={`py-12 px-6 w-full ${className}`} style={{ backgroundColor: colors.background }}>
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }} 
-        whileInView={{ opacity: 1, scale: 1 }} 
-        viewport={{ once: true }} 
-        transition={{ duration: 0.5, delay: 0.2 }} 
-        className="max-w-md mx-auto p-8 rounded-3xl shadow-2xl relative overflow-hidden text-white" 
-        style={{ backgroundColor: colors.primary }}
+      <div 
+        ref={ref}
+        className={`reveal-up ${inView ? 'in-view' : ''} max-w-md mx-auto p-8 rounded-3xl shadow-2xl relative overflow-hidden text-white`}
+        style={{ backgroundColor: colors.primary, transitionDelay: '0.2s' }}
       >
         <div className="absolute -top-24 -right-24 w-48 h-48 bg-white opacity-10 rounded-full blur-2xl pointer-events-none"></div>
         <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-black opacity-10 rounded-full blur-2xl pointer-events-none"></div>
@@ -102,7 +100,7 @@ const SharedGift = memo<SharedGiftProps>(({
             {labels.copyButton}
           </button>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 });

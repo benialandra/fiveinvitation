@@ -69,14 +69,17 @@ export default function Themes() {
 
   const filteredThemes = useMemo(() => {
     let result = baseThemes.filter(theme => {
-      const matchSearch = theme.name.toLowerCase().includes(search.toLowerCase());
+      const themeName = theme.name || 'Unknown Theme';
+      const matchSearch = themeName.toLowerCase().includes(search.toLowerCase());
       const matchCategory = category === 'All' || theme.category === category;
       return matchSearch && matchCategory;
     });
     
     result.sort((a, b) => {
-      if (sortOrder === 'asc') return a.name.localeCompare(b.name);
-      return b.name.localeCompare(a.name);
+      const nameA = a.name || 'Unknown Theme';
+      const nameB = b.name || 'Unknown Theme';
+      if (sortOrder === 'asc') return nameA.localeCompare(nameB);
+      return nameB.localeCompare(nameA);
     });
     
     return result;
@@ -234,13 +237,13 @@ export default function Themes() {
                     <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-1">{theme.name}</h3>
                     
                     <div className="flex items-center gap-4 text-xs font-medium text-gray-500 dark:text-gray-400 mb-4">
-                      <span className="flex items-center gap-1.5" title={lang === 'id' ? 'Dilihat' : 'Views'}><Eye size={14} /> {theme.id.length * 142}</span>
-                      <span className="flex items-center gap-1.5" title={lang === 'id' ? 'Terjual' : 'Sold'}><ShoppingCart size={14} /> {theme.id.length * 23}</span>
+                      <span className="flex items-center gap-1.5" title={lang === 'id' ? 'Dilihat' : 'Views'}><Eye size={14} /> {(theme.id?.length || 5) * 142}</span>
+                      <span className="flex items-center gap-1.5" title={lang === 'id' ? 'Terjual' : 'Sold'}><ShoppingCart size={14} /> {(theme.id?.length || 5) * 23}</span>
                     </div>
 
                     <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100 dark:border-white/5">
                       <span className="font-bold text-[#C5A059] text-[15px]">
-                        Rp {theme.price.toLocaleString('id-ID')}
+                        Rp {(theme.price || 149000).toLocaleString('id-ID')}
                       </span>
                     </div>
                   </div>

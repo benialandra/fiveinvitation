@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { supabase } from '../supabase/supabase';
 import { Copy, Video, CheckCircle2 } from 'lucide-react';
@@ -212,7 +212,7 @@ export default function MasterTheme({
               backgroundPosition: 'center'
             }}>
             <div className="absolute inset-0 bg-black/50 z-0"></div>
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1 }}
@@ -227,7 +227,7 @@ export default function MasterTheme({
               {data?.akad_date && (
                 <CountdownTimer targetDate={data.akad_date} colors={colors} fonts={fonts} />
               )}
-            </motion.div>
+            </m.div>
           </div>
         );
 
@@ -236,7 +236,7 @@ export default function MasterTheme({
         const finalBrideImage = data?.bride_image || bride_image || gallery_2 || "https://images.unsplash.com/photo-1546822830-4663ec40a3dd?auto=format&fit=crop&q=60&w=800&fm=webp&q=60";
         return (
           <div key={index} className="py-24 px-6 max-w-4xl mx-auto text-center" style={{ backgroundColor: colors?.background }}>
-            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
+            <m.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
               <h2 className="text-3xl md:text-5xl mb-12" style={titleStyle}>Mempelai</h2>
               <div className="flex flex-col md:flex-row justify-center items-center gap-12 md:gap-24">
                 <div className="flex flex-col items-center">
@@ -262,7 +262,7 @@ export default function MasterTheme({
                   <p className="leading-relaxed opacity-80 italic">{story}</p>
                 </div>
               )}
-            </motion.div>
+            </m.div>
           </div>
         );
 
@@ -270,7 +270,7 @@ export default function MasterTheme({
         return (
           <div key={index} className="py-24 px-6" style={{ backgroundColor: colors?.accent ? colors.accent + '15' : '#f9f9f9' }}>
             <div className="max-w-4xl mx-auto">
-              <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
+              <m.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
                 <h2 className="text-3xl md:text-5xl mb-16 text-center" style={titleStyle}>Rangkaian Acara</h2>
                 <div className="grid md:grid-cols-2 gap-12 text-center mb-16">
                   <div className="p-10 rounded-3xl shadow-lg border relative overflow-hidden group hover:-translate-y-2 transition-transform duration-300" style={{ backgroundColor: colors?.background, borderColor: colors?.primary + '30' }}>
@@ -302,7 +302,7 @@ export default function MasterTheme({
                     </a>
                   )}
                 </div>
-              </motion.div>
+              </m.div>
             </div>
           </div>
         );
@@ -317,7 +317,7 @@ export default function MasterTheme({
 
         return (
           <div key={index} className="py-24 px-6 max-w-5xl mx-auto text-center" style={{ backgroundColor: colors?.background }}>
-            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
+            <m.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
               <h2 className="text-3xl md:text-5xl mb-12" style={titleStyle}>Galeri Bahagia</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full perspective-1000">
                 {galleryImages.map((img: string, i: number) => (
@@ -329,7 +329,7 @@ export default function MasterTheme({
 
               {/* Digital Envelope Section */}
               {bank_account && (
-                <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="mt-24 max-w-md mx-auto p-8 rounded-3xl shadow-2xl relative overflow-hidden" style={{ backgroundColor: colors?.primary, color: '#fff' }}>
+                <m.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="mt-24 max-w-md mx-auto p-8 rounded-3xl shadow-2xl relative overflow-hidden" style={{ backgroundColor: colors?.primary, color: '#fff' }}>
                   <div className="absolute -top-24 -right-24 w-48 h-48 bg-white opacity-10 rounded-full blur-2xl"></div>
                   <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-black opacity-10 rounded-full blur-2xl"></div>
 
@@ -351,13 +351,13 @@ export default function MasterTheme({
                       Salin Rekening
                     </button>
                   </div>
-                </motion.div>
+                </m.div>
               )}
 
               <p className="mt-24 text-xl max-w-2xl mx-auto italic" style={{ fontFamily: fonts?.heading }}>
                 "{finalMessage}"
               </p>
-            </motion.div>
+            </m.div>
           </div>
         );
 
@@ -380,7 +380,7 @@ export default function MasterTheme({
 
       {/* RSVP & Guestbook Section */}
       <div className="py-24 px-6 w-full" style={{ backgroundColor: colors?.accent ? colors.accent + '15' : '#fcfcfc' }}>
-        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="max-w-4xl mx-auto">
+        <m.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-5xl mb-4 text-center" style={titleStyle}>RSVP & Ucapan</h2>
           <p className="text-center mb-12 opacity-80 max-w-xl mx-auto leading-relaxed">Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir di acara pernikahan kami.</p>
 
@@ -422,7 +422,7 @@ export default function MasterTheme({
               {submitting ? 'Mengirim...' : <><CheckCircle2 size={18} /> Kirim RSVP & Ucapan</>}
             </button>
           </form>
-        </motion.div>
+        </m.div>
       </div>
     </div>
   );

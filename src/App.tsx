@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Layout from './layouts/Layout';
 import { Loader2 } from 'lucide-react';
 import { LazyMotion, domAnimation } from 'framer-motion';
+import ScrollToTop from './components/ScrollToTop';
 
 // Lazy-loaded components to reduce initial bundle size
 const FakeSalesNotification = React.lazy(() => import('./components/FakeSalesNotification'));
@@ -50,6 +51,7 @@ export default function App() {
     <ErrorBoundary>
       <LazyMotion features={domAnimation}>
         <BrowserRouter>
+          <ScrollToTop />
           <Suspense fallback={null}>
             <FakeSalesNotification />
           </Suspense>

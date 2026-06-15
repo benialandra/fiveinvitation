@@ -50,8 +50,16 @@ export default function Invitation() {
   if (!order || order.status !== 'PAID') return <div className="h-screen w-screen flex items-center justify-center bg-white text-black">Undangan tidak ditemukan atau belum aktif.</div>;
 
   let content = null;
+  const ThemeComponent = getThemeById(order.theme_id)?.component;
   
-  if (themeData && themeData.config_json && order.theme_id !== 'winter-romance') {
+  if (ThemeComponent) {
+     const mergedData = { ...order, ...(order?.customizations || {}) };
+     content = (
+       <React.Suspense fallback={<div className="h-screen w-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-[#C5A059]" /></div>}>
+         <ThemeComponent data={mergedData} guestName={guestName || ''} />
+       </React.Suspense>
+     );
+  } else if (themeData && themeData.config_json && order.theme_id !== 'winter-romance') {
      content = <MasterTheme 
                  bride={order.bride_name} 
                  groom={order.groom_name} 
@@ -61,14 +69,7 @@ export default function Invitation() {
                  config_json={themeData.config_json} 
                />;
   } else {
-     const ThemeComponent = getThemeById(order.theme_id)?.component;
-     if (!ThemeComponent) return <div className="h-screen w-screen flex items-center justify-center">Tema rusak.</div>;
-     const mergedData = { ...order, ...(order?.customizations || {}) };
-     content = (
-       <React.Suspense fallback={<div className="h-screen w-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-[#C5A059]" /></div>}>
-         <ThemeComponent data={mergedData} guestName={guestName || ''} />
-       </React.Suspense>
-     );
+     return <div className="h-screen w-screen flex items-center justify-center">Tema rusak.</div>;
   }
 
   let customStyles = null;

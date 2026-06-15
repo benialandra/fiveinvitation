@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from 'react';
-import { motion } from 'framer-motion';
+import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
 
 export interface SharedCountdownProps {
   targetDate: string | Date;
@@ -32,6 +32,7 @@ const SharedCountdown = memo<SharedCountdownProps>(({
 }) => {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isExpired, setIsExpired] = useState(false);
+  const { ref, inView } = useIntersectionObserver({ once: true, rootMargin: "-50px" });
 
   useEffect(() => {
     if (!targetDate) return;
@@ -63,18 +64,14 @@ const SharedCountdown = memo<SharedCountdownProps>(({
   if (!targetDate || isExpired) return null;
 
   return (
-    <div className={`w-full max-w-2xl mx-auto text-center ${className}`}>
+    <div ref={ref} className={`w-full max-w-2xl mx-auto text-center ${className}`}>
       {labels.title && (
-        <motion.h3 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-2xl md:text-3xl mb-8"
+        <h3 
+          className={`reveal-up ${inView ? 'in-view' : ''} text-2xl md:text-3xl mb-8`}
           style={{ fontFamily: fonts.heading, color: colors.text }}
         >
           {labels.title}
-        </motion.h3>
+        </h3>
       )}
       
       <div className="grid grid-cols-4 gap-3 md:gap-6">
@@ -84,13 +81,10 @@ const SharedCountdown = memo<SharedCountdownProps>(({
           { label: labels.minutes, value: timeLeft.minutes },
           { label: labels.seconds, value: timeLeft.seconds },
         ].map((item, idx) => (
-          <motion.div 
+          <div 
             key={idx}
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: idx * 0.1 }}
-            className="flex flex-col items-center"
+            className={`reveal-up ${inView ? 'in-view' : ''} flex flex-col items-center`}
+            style={{ transitionDelay: `${idx * 0.1}s` }}
           >
             <div 
               className="w-16 h-18 md:w-24 md:h-24 rounded-2xl flex flex-col items-center justify-center shadow-lg backdrop-blur-sm border"
@@ -103,7 +97,7 @@ const SharedCountdown = memo<SharedCountdownProps>(({
             <span className="text-[10px] md:text-xs uppercase tracking-wider mt-3 font-semibold" style={{ color: colors.text, fontFamily: fonts.body }}>
               {item.label}
             </span>
-          </motion.div>
+          </div>
         ))}
       </div>
     </div>

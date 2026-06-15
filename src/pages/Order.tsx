@@ -53,6 +53,7 @@ export default function Order() {
   const navigate = useNavigate();
   
   React.useEffect(() => {
+     window.scrollTo(0, 0);
      fetch('/api/themes')
        .then(res => res.json())
        .then(data => {

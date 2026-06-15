@@ -43,12 +43,6 @@ export default function FakeSalesNotification() {
                animation: 'toast-progress 5s linear forwards'
              }}
           />
-          <style dangerouslySetInnerHTML={{ __html: `
-            @keyframes toast-progress {
-              from { width: 100%; }
-              to { width: 0%; }
-            }
-          `}} />
           <div className="flex-1 w-0 p-4">
             <div className="flex items-start">
               <div className="flex-shrink-0 pt-0.5">

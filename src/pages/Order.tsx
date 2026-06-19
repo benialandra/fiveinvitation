@@ -27,7 +27,7 @@ function FloatingInput({ id, label, type = 'text', required = false, value, onCh
       />
       <label
         htmlFor={id}
-        className="absolute left-4 top-2 text-[10px] font-semibold uppercase tracking-widest text-[#C5A059] transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:tracking-normal peer-placeholder-shown:text-gray-400 peer-placeholder-shown:uppercase-none peer-focus:top-2 peer-focus:text-[10px] peer-focus:font-semibold peer-focus:uppercase peer-focus:tracking-widest peer-focus:text-[#C5A059]"
+        className="absolute left-4 right-4 top-2 text-[10px] font-semibold uppercase tracking-widest text-[#C5A059] transition-all whitespace-nowrap overflow-hidden text-ellipsis peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:tracking-normal peer-placeholder-shown:text-gray-400 peer-placeholder-shown:uppercase-none peer-focus:top-2 peer-focus:text-[10px] peer-focus:font-semibold peer-focus:uppercase peer-focus:tracking-widest peer-focus:text-[#C5A059]"
       >
         {label}
       </label>
@@ -376,7 +376,7 @@ export default function Order() {
                       {/* 3. Data Mempelai */}
                       <div className="space-y-4 pt-6 border-t border-black/5 dark:border-white/5">
                         <h2 className="text-lg font-semibold text-gray-900 dark:text-white">2. Data Mempelai</h2>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <FloatingInput
                             id="groom" label="Nama Panggilan Pria" required
                             value={formData.groom_name} onChange={e => setFormData({...formData, groom_name: e.target.value})}
@@ -403,7 +403,7 @@ export default function Order() {
                         <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                           4. Validasi Kontak {otpVerified && <CheckCircle2 className="text-green-500 w-5 h-5" />}
                         </h2>
-                        <div className="flex gap-4">
+                        <div className="flex flex-col sm:flex-row gap-4">
                           <div className="flex-1">
                             <FloatingInput
                               id="email" label="Email Pemesan" type="email" required
@@ -414,7 +414,7 @@ export default function Order() {
                           {!otpVerified && (
                             <button 
                               type="button" onClick={handleSendOTP} disabled={otpLoading || otpSent || !formData.email}
-                              className="px-6 rounded-xl bg-black dark:bg-white text-white dark:text-black font-semibold text-sm hover:opacity-90 disabled:opacity-50"
+                              className="h-14 px-6 rounded-xl bg-black dark:bg-white text-white dark:text-black font-semibold text-sm hover:opacity-90 disabled:opacity-50"
                             >
                               {otpLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : (otpSent ? 'Terkirim' : 'Kirim OTP')}
                             </button>
@@ -423,7 +423,7 @@ export default function Order() {
 
                         <AnimatePresence>
                           {otpSent && !otpVerified && (
-                            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="flex gap-4 pt-2">
+                            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="flex flex-col sm:flex-row gap-4 pt-2">
                               <div className="flex-1">
                                 <FloatingInput
                                   id="otp" label="Masukkan 4 Digit OTP" required
@@ -432,7 +432,7 @@ export default function Order() {
                               </div>
                               <button 
                                 type="button" onClick={handleVerifyOTP} disabled={otpLoading || !otp}
-                                className="px-6 rounded-xl bg-[#C5A059] text-white font-semibold text-sm hover:opacity-90"
+                                className="h-14 px-6 rounded-xl bg-[#C5A059] text-white font-semibold text-sm hover:opacity-90"
                               >
                                 Verifikasi
                               </button>

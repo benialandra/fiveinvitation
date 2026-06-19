@@ -9,6 +9,8 @@ const Minimal01 = React.lazy(() => import('./Minimalist/Minimal01'));
 const Islamic01 = React.lazy(() => import('./Islamic/Islamic01'));
 const Dark01 = React.lazy(() => import('./Dark/Dark01'));
 const CinematicTheme = React.lazy(() => import('./CinematicTheme'));
+const Luxury05 = React.lazy(() => import('./Luxury/Luxury05'));
+const Luxury06 = React.lazy(() => import('./Luxury/Luxury06'));
 
 export type ThemeCategory = 'Elegant' | 'Dark' | 'Minimalist' | 'Islamic' | 'Floral' | 'Rustic' | 'Tropical' | 'Premium';
 
@@ -54,6 +56,22 @@ export const THEME_REGISTRY: ThemeMeta[] = [
     price: 400000,
     thumbnail: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=60&w=300&auto=format&fit=crop&fm=webp',
     component: Luxury04
+  },
+  {
+    id: 'luxury05',
+    name: 'Royal Elegance',
+    category: 'Premium',
+    price: 410000,
+    thumbnail: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=60&w=300&auto=format&fit=crop&fm=webp',
+    component: Luxury05
+  },
+  {
+    id: 'luxury06',
+    name: 'Golden Majesty',
+    category: 'Premium',
+    price: 425000,
+    thumbnail: 'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?q=60&w=300&auto=format&fit=crop&fm=webp',
+    component: Luxury06
   },
   {
     id: 'floral01',

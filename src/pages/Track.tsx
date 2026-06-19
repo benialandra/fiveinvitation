@@ -41,7 +41,7 @@ export default function Track() {
     }
     
     try {
-      const response = await fetch(`/api/orders/${orderCode}`);
+      const response = await fetch(`/api/orders?orderCode=${orderCode}`);
       if (!response.ok) {
          setOrder(null);
       } else {

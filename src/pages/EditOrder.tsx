@@ -59,7 +59,7 @@ export default function EditOrder() {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const response = await fetch(`/api/orders/${orderCode}`);
+        const response = await fetch(`/api/orders?orderCode=${orderCode}`);
         if (response.ok) {
           const data = await response.json();
           setThemeId(data.theme_id || '');
@@ -117,20 +117,17 @@ export default function EditOrder() {
     e.preventDefault();
     setSaving(true);
     try {
-      const dataToSubmit = new FormData();
-
-      // Standard text fields
+      const payload: any = {};
       const textKeys = [
         'groom_name', 'bride_name', 'groom_parents', 'bride_parents',
         'location_name', 'maps_link', 'story', 'music_url', 'slug'
       ];
       textKeys.forEach(key => {
-        dataToSubmit.append(key, (formData as any)[key]);
+        payload[key] = (formData as any)[key];
       });
 
-      // Dates fields
-      dataToSubmit.append('akad_date', formData.akad_date ? new Date(formData.akad_date).toISOString() : '');
-      dataToSubmit.append('resepsi_date', formData.resepsi_date ? new Date(formData.resepsi_date).toISOString() : '');
+      payload.akad_date = formData.akad_date ? new Date(formData.akad_date).toISOString() : '';
+      payload.resepsi_date = formData.resepsi_date ? new Date(formData.resepsi_date).toISOString() : '';
 
       // Upload files
       const uploadedUrls: { [key: string]: string } = {};
@@ -153,14 +150,10 @@ export default function EditOrder() {
         }
       }
 
-      const finalCoverImage = uploadedUrls.cover_image || formData.cover_image;
-      const finalHeroImage = uploadedUrls.hero_image || formData.hero_image;
+      payload.cover_image = uploadedUrls.cover_image || formData.cover_image;
+      payload.hero_image = uploadedUrls.hero_image || formData.hero_image;
 
-      if (finalCoverImage) dataToSubmit.append('cover_image', finalCoverImage);
-      if (finalHeroImage) dataToSubmit.append('hero_image', finalHeroImage);
-
-      // Customizations
-      const finalCustomizations = {
+      payload.customizations = {
         groom_image: uploadedUrls.groom_image || formData.groom_image,
         bride_image: uploadedUrls.bride_image || formData.bride_image,
         gallery_1: uploadedUrls.gallery_1 || formData.gallery_1,
@@ -173,11 +166,10 @@ export default function EditOrder() {
         live_stream_url: formData.live_stream_url
       };
 
-      dataToSubmit.append('customizations', JSON.stringify(finalCustomizations));
-
-      const response = await fetch(`/api/orders/${orderCode}`, {
+      const response = await fetch(`/api/orders?orderCode=${orderCode}`, {
         method: 'PUT',
-        body: dataToSubmit
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
       });
 
       if (response.ok) {

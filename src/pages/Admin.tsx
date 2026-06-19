@@ -188,10 +188,10 @@ export default function Admin() {
              thumbnail: t.thumbnail,
              sales: 0
          }));
-          const res = await fetch('/api/admin/themes/seed', {
+          const res = await fetch('/api/admin-themes', {
               method: 'POST',
               headers: adminHeaders({ 'Content-Type': 'application/json' }),
-              body: JSON.stringify({ themes: themesToSeed })
+              body: JSON.stringify({ action: 'seed', themes: themesToSeed })
           });
          const data = await res.json();
          if (!res.ok) throw new Error(data.error || 'Failed to seed');
@@ -216,9 +216,10 @@ export default function Admin() {
       const tId = toast.loading("Mensinkronisasi registry dan memvalidasi build...");
       setIsSyncing(true);
       try {
-          const res = await fetch('/api/admin/themes/sync', {
+          const res = await fetch('/api/admin-themes', {
               method: 'POST',
-              headers: adminHeaders()
+              headers: adminHeaders({ 'Content-Type': 'application/json' }),
+              body: JSON.stringify({ action: 'sync' })
           });
           const result = await res.json();
           if (!res.ok) throw new Error(result.error || "Gagal sync registry");
@@ -335,10 +336,10 @@ export default function Admin() {
     e.preventDefault();
     setLoginLoading(true);
     try {
-      const res = await fetch('/api/admin/login', {
+      const res = await fetch('/api/admin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password })
+        body: JSON.stringify({ action: 'login', password })
       });
       const data = await res.json();
       if (!res.ok) {
@@ -419,9 +420,10 @@ export default function Admin() {
                </button>
                <button onClick={async () => {
                    try {
-                     await fetch('/api/admin/logout', {
+                     await fetch('/api/admin', {
                        method: 'POST',
-                       headers: adminHeaders()
+                       headers: adminHeaders(),
+                       body: JSON.stringify({ action: 'logout' })
                      });
                    } catch {}
                    sessionStorage.removeItem('adminToken');
@@ -538,7 +540,7 @@ export default function Admin() {
                       
                       <div className="relative z-10 w-full text-sm leading-relaxed text-opacity-80">
                          <p className="mb-3">Untuk menerima pembayaran instan, daftarkan akun di Midtrans dan dapatkan <code>Client Key</code> serta <code>Server Key</code> Anda.</p>
-                         <p>Setelah aplikasi Anda dihosting (misalnya di Vercel), atur <b>Payment Notification URL</b> di dashboard Midtrans agar mengarah ke <code>https://domain-anda.com/api/webhook/midtrans</code>. Status <b>PENDING</b> pada Order akan otomatis berubah menjadi <b>PAID</b> ketika pelanggan selesai membayar.</p>
+                         <p>Setelah aplikasi Anda dihosting (misalnya di Vercel), atur <b>Payment Notification URL</b> di dashboard Midtrans agar mengarah ke <code>https://domain-anda.com/api/webhook</code>. Status <b>PENDING</b> pada Order akan otomatis berubah menjadi <b>PAID</b> ketika pelanggan selesai membayar.</p>
                       </div>
                   </div>
 
@@ -1059,10 +1061,19 @@ export default function Admin() {
                  
                  toast.loading('Menyimpan tema...', { id: loadingToast });
                  
-                 const res = await fetch('/api/admin/themes', {
+                 const payload = {
+                   action: 'create',
+                   name: fd.get('name'),
+                   category: fd.get('category'),
+                   price: fd.get('price'),
+                   config_json: fd.get('config_json'),
+                   thumbnail: fd.get('thumbnail')
+                 };
+                 
+                 const res = await fetch('/api/admin-themes', {
                    method: 'POST',
-                   headers: adminHeaders(),
-                   body: fd
+                   headers: adminHeaders({ 'Content-Type': 'application/json' }),
+                   body: JSON.stringify(payload)
                  });
                  const result = await res.json();
                  
@@ -1226,10 +1237,21 @@ export default function Admin() {
                  
                  toast.loading('Menyimpan perubahan...', { id: loadingToast });
 
-                 const res = await fetch(`/api/admin/themes/${editingTheme.id}`, {
+                 const payload = {
+                   action: 'update',
+                   id: editingTheme.id,
+                   name: formData.get('name'),
+                   category: formData.get('category'),
+                   price: formData.get('price'),
+                   config_json: formData.get('config_json'),
+                   thumbnail: formData.get('thumbnail'),
+                   keep_images: formData.get('keep_images')
+                 };
+
+                 const res = await fetch(`/api/admin-themes`, {
                    method: 'PUT',
-                   headers: adminHeaders(),
-                   body: formData
+                   headers: adminHeaders({ 'Content-Type': 'application/json' }),
+                   body: JSON.stringify(payload)
                  });
                  const result = await res.json();
                  if (!res.ok) {

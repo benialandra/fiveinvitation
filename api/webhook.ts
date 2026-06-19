@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { supabase, isMock } from '../_lib/supabase';
+import { supabase, isMock } from './_lib/supabase';
 // @ts-ignore
 import midtransClient from 'midtrans-client';
 import crypto from 'crypto';

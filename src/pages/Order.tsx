@@ -132,10 +132,9 @@ export default function Order() {
     setOtpLoading(true);
     setErrorMessage('');
     try {
-      const res = await fetch('/api/otp/send-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: formData.email })
+      const res = await fetch('/api/otp', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'send', email: formData.email })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Gagal mengirim OTP");
@@ -154,10 +153,9 @@ export default function Order() {
     setOtpLoading(true);
     setErrorMessage('');
     try {
-      const res = await fetch('/api/otp/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: formData.email, otp })
+      const res = await fetch('/api/otp', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'verify', email: formData.email, otp })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "OTP salah");
@@ -200,7 +198,7 @@ export default function Order() {
       
       const customizations = { font: customFont, color: customColor };
 
-      const res = await fetch('/api/order/create', {
+      const res = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

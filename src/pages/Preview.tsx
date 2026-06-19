@@ -19,7 +19,7 @@ export default function Preview() {
     const controller = new AbortController();
     const fetchTheme = async () => {
        try {
-         const res = await fetch(`/api/themes/${themeId}`, { signal: controller.signal });
+         const res = await fetch(`/api/themes?id=${themeId}`, { signal: controller.signal });
          if (res.ok) {
              const data = await res.json();
              const registryTheme = THEME_REGISTRY.find(t => t.id === themeId);

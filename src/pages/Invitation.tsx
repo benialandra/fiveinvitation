@@ -17,7 +17,7 @@ export default function Invitation() {
   useEffect(() => {
     const fetchInvite = async () => {
       try {
-        const res = await fetch(`/api/public-invitation/${slug}`);
+        const res = await fetch(`/api/public-invitation?slug=${slug}`);
         if (res.ok) {
           const data = await res.json();
           setOrder(data.order);

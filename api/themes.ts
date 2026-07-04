@@ -19,7 +19,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     } else {
       const { data, error } = await supabase.from('themes').select('*').order('created_at', { ascending: false });
       if (error) throw error;
-      return res.json({ themes: data });
+      return res.json(data || []);
     }
   } catch (err: any) {
     console.error('Failed to fetch themes:', err);

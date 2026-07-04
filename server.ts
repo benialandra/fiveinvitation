@@ -663,95 +663,101 @@ app.put("/api/orders/:orderCode", upload.fields([{ name: 'cover_image' }, { name
 // OTP VALIDATION ENDPOINTS
 // ==========================================
 
-// Send OTP to email
-app.post("/api/otp/send-email", async (req, res) => {
-  const { email } = req.body;
-  if (!email || !email.includes('@')) {
-    return res.status(400).json({ error: "Email tidak valid." });
-  }
+// Send & Verify OTP to email (Unified route to match Vercel API and frontend)
+app.post("/api/otp", async (req, res) => {
+  const { action, email, otp } = req.body || {};
 
-  // Generate 4-digit OTP
-  const otp = Math.floor(1000 + Math.random() * 9000).toString();
-  const expiresAt = Date.now() + 5 * 60 * 1000; // 5 minutes
-  
-  // Selalu simpan di memory sebagai fallback yang paling reliable (seperti admin_sessions)
-  otpStore.set(email, { otp, expiresAt });
-
-  if (supabaseUrl !== 'https://mock.supabase.co') {
-     try {
-        const { error } = await supabase.from('otp_store').upsert([{ email, otp, expires_at: new Date(expiresAt).toISOString() }], { onConflict: 'email' });
-        if (error) {
-           console.warn("Supabase otp_store upsert failed (table might not exist), using memory fallback:", error.message);
-        }
-     } catch (err: any) {
-        console.warn("Supabase otp_store exception:", err.message);
-     }
-  }
-
-  try {
-    if (process.env.SMTP_USER) {
-      await sendEmailNotification(
-        email,
-        "Kode OTP Verifikasi - FiveInvitation",
-        `Kode OTP Anda adalah: ${otp}. Kode ini berlaku selama 5 menit.`,
-        `<div style="font-family: sans-serif; text-align: center; padding: 20px;">
-          <h2>Verifikasi Email Anda</h2>
-          <p>Gunakan kode OTP berikut untuk melanjutkan pesanan Anda:</p>
-          <h1 style="color: #C5A059; letter-spacing: 5px; font-size: 32px;">${otp}</h1>
-          <p>Kode ini hanya berlaku selama 5 menit.</p>
-        </div>`
-      );
-    } else {
-      console.log(`[DEV MODE] Simulated OTP for ${email}: ${otp}`);
+  if (action === 'send') {
+    if (!email || !email.includes('@')) {
+      return res.status(400).json({ error: "Email tidak valid." });
     }
-    return res.json({ success: true, message: "OTP terkirim." });
-  } catch (error: any) {
-    console.error("Gagal mengirim OTP:", error);
-    return res.status(500).json({ error: "Gagal mengirim email OTP. Pastikan konfigurasi SMTP benar." });
+
+    // Generate 4-digit OTP
+    const generatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+    const expiresAt = Date.now() + 5 * 60 * 1000; // 5 minutes
+    
+    // Save to memory fallback
+    otpStore.set(email, { otp: generatedOtp, expiresAt });
+
+    if (supabaseUrl !== 'https://mock.supabase.co') {
+       try {
+          const { error } = await supabase.from('otp_store').upsert([{ email, otp: generatedOtp, expires_at: new Date(expiresAt).toISOString() }], { onConflict: 'email' });
+          if (error) {
+             console.warn("Supabase otp_store upsert failed, using memory fallback:", error.message);
+          }
+       } catch (err: any) {
+          console.warn("Supabase otp_store exception:", err.message);
+       }
+    }
+
+    try {
+      if (process.env.SMTP_USER) {
+        await sendEmailNotification(
+          email,
+          "Kode OTP Verifikasi - FiveInvitation",
+          `Kode OTP Anda adalah: ${generatedOtp}. Kode ini berlaku selama 5 menit.`,
+          `<div style="font-family: sans-serif; text-align: center; padding: 20px;">
+            <h2>Verifikasi Email Anda</h2>
+            <p>Gunakan kode OTP berikut untuk melanjutkan pesanan Anda:</p>
+            <h1 style="color: #C5A059; letter-spacing: 5px; font-size: 32px;">${generatedOtp}</h1>
+            <p>Kode ini hanya berlaku selama 5 menit.</p>
+          </div>`
+        );
+      } else {
+        console.log(`[DEV MODE] Simulated OTP for ${email}: ${generatedOtp}`);
+      }
+      return res.json({ success: true, message: "OTP terkirim." });
+    } catch (error: any) {
+      console.error("Gagal mengirim OTP:", error);
+      return res.status(500).json({ error: "Gagal mengirim email OTP. Pastikan konfigurasi SMTP benar." });
+    }
   }
-});
 
-// Verify OTP
-app.post("/api/otp/verify", async (req, res) => {
-  const { email, otp } = req.body;
-  let storedOtp = null;
-  let storedExpiresAt = 0;
+  if (action === 'verify') {
+    if (!email || !otp) {
+      return res.status(400).json({ error: "Email atau OTP kosong." });
+    }
+    let storedOtp = null;
+    let storedExpiresAt = 0;
 
-  if (supabaseUrl !== 'https://mock.supabase.co') {
-     try {
-       const { data, error } = await supabase.from('otp_store').select('*').eq('email', email).single();
-       if (!error && data) {
-         storedOtp = data.otp;
-         storedExpiresAt = new Date(data.expires_at).getTime();
-       } else {
+    if (supabaseUrl !== 'https://mock.supabase.co') {
+       try {
+         const { data, error } = await supabase.from('otp_store').select('*').eq('email', email).single();
+         if (!error && data) {
+           storedOtp = data.otp;
+           storedExpiresAt = new Date(data.expires_at).getTime();
+         } else {
+           const mem = otpStore.get(email);
+           if (mem) { storedOtp = mem.otp; storedExpiresAt = mem.expiresAt; }
+         }
+       } catch {
          const mem = otpStore.get(email);
          if (mem) { storedOtp = mem.otp; storedExpiresAt = mem.expiresAt; }
        }
-     } catch {
+    } else {
        const mem = otpStore.get(email);
        if (mem) { storedOtp = mem.otp; storedExpiresAt = mem.expiresAt; }
-     }
-  } else {
-     const mem = otpStore.get(email);
-     if (mem) { storedOtp = mem.otp; storedExpiresAt = mem.expiresAt; }
-  }
+    }
 
-  if (!storedOtp) {
-    return res.status(400).json({ error: "Kode OTP tidak ditemukan atau belum dikirim." });
-  }
-  if (Date.now() > storedExpiresAt) {
+    if (!storedOtp) {
+      return res.status(400).json({ error: "Kode OTP tidak ditemukan atau belum dikirim." });
+    }
+    if (Date.now() > storedExpiresAt) {
+      if (supabaseUrl !== 'https://mock.supabase.co') { await supabase.from('otp_store').delete().eq('email', email); }
+      otpStore.delete(email);
+      return res.status(400).json({ error: "Kode OTP sudah kedaluwarsa. Silakan kirim ulang." });
+    }
+    if (storedOtp !== otp) {
+      return res.status(400).json({ error: "Kode OTP salah." });
+    }
+
+    // Valid
     if (supabaseUrl !== 'https://mock.supabase.co') { await supabase.from('otp_store').delete().eq('email', email); }
     otpStore.delete(email);
-    return res.status(400).json({ error: "Kode OTP sudah kedaluwarsa. Silakan kirim ulang." });
-  }
-  if (storedOtp !== otp) {
-    return res.status(400).json({ error: "Kode OTP salah." });
+    return res.json({ success: true, message: "Email berhasil diverifikasi." });
   }
 
-  // Valid
-  if (supabaseUrl !== 'https://mock.supabase.co') { await supabase.from('otp_store').delete().eq('email', email); }
-  otpStore.delete(email);
-  return res.json({ success: true, message: "Email berhasil diverifikasi." });
+  return res.status(400).json({ error: "Invalid action" });
 });
 
 app.post("/api/order/create", async (req, res) => {

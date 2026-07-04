@@ -1,5 +1,5 @@
 {
-  "name": "react-example",
+  "name": "fiveinvitation",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -63,7 +63,7 @@
     "vite": "^6.2.3"
   },
   "description": "Platform pembuatan undangan pernikahan digital modern dan interaktif, dirancang secara khusus bagi para calon pengantin untuk merayakan momen spesial mereka dengan elegan, cepat, dan mudah diakses dari perangkat apapun.",
-  "main": "index.js",
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/benialandra/fiveinvitation.git"
